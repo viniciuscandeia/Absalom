@@ -10,7 +10,7 @@ class GerenciadorTelas:
         self.estado_atual.definir_contexto(self)
 
     def exibir_tela(self):
-        self.estado_atual.exibir()  # Somente exibe a tela atual
+        return self.estado_atual.exibir()  # Somente exibe a tela atual
 
     def proxima_tela(self, opcao: str):
         self.estado_atual.proxima_tela(opcao)

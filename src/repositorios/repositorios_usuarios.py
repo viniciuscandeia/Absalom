@@ -25,7 +25,6 @@ class RepositorioUsuariosDB:
             cls._conexao_db = cls._criar_conexao()
         return cls._instancia
 
-    @staticmethod
     def _criar_conexao():
         # Conecta ao banco de dados SQLite, por exemplo
         conexao = sqlite3.connect(CAMINHO_USUARIOS_DB)

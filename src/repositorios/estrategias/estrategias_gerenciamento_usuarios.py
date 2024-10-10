@@ -10,6 +10,7 @@ from ...entidades.entidades_usuarios import Usuario
 
 # # Criar método de procurar.
 
+
 class GerenciamentoEstrategia(ABC):
     @abstractmethod
     def adicionar(self, id_: int, usuario: Usuario):
@@ -33,6 +34,10 @@ class GerenciamentoEstrategia(ABC):
 
     @abstractmethod
     def listar(self, tipo: str, id_loja: int):
+        pass
+
+    @abstractmethod
+    def validar(self, username: str, senha: str):
         pass
 
 
@@ -70,6 +75,12 @@ class GerenciamentoUsuariosRAM(GerenciamentoEstrategia):
             if (tipo is None or usuario.tipo == tipo) and (id_loja is None or usuario.id_loja == id_loja):
                 lista.append(usuario)
         return lista
+
+    def validar(self, username: str, senha: str):
+        for usuario in self.repositorio.values():
+            if usuario.username == username and usuario.senha == senha:
+                return usuario
+        return None
 
 
 class GerenciamentoUsuariosDB(GerenciamentoEstrategia):
@@ -131,7 +142,6 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia):
         cursor.execute(query, (id_,))
         return cursor.fetchone() is not None
 
-
     def listar(self, tipo: str = None, id_loja: int = None) -> list[Usuario]:
         lista: list[Usuario] = []
         cursor = self.repositorio_db.cursor()
@@ -160,3 +170,25 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia):
             lista.append(usuario)
 
         return lista
+
+    def validar(self, username: str, senha: str):
+        # Supondo que self.repositorio seja o caminho para o banco de dados SQLite
+        cursor = self.repositorio_db.cursor()
+
+        # Executa a consulta SQL para verificar o usuário
+        cursor.execute("""
+            SELECT id, nome, username, email, senha, tipo, id_loja
+            FROM usuarios
+            WHERE username = ? AND senha = ?
+        """, (username, senha))
+
+        # Recupera o resultado da consulta
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # Cria uma instância de Usuario com os dados retornados
+            usuario = Usuario(id_=resultado[0], nome=resultado[1], username=resultado[2],
+                              email=resultado[3], senha=resultado[4], tipo=resultado[5],
+                              id_loja=resultado[6])
+            return usuario
+        return None
