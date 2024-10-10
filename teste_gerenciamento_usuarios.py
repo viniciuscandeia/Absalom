@@ -1,5 +1,5 @@
 from src.fabricas.fabrica_repositorios_usuarios import FabricaRepositoriosUsuarios
-from src.repositorios.estrategias.gerenciador_repositorio import GerenciadorRepositorio
+from src.repositorios.estrategias.gerenciador_repositorio_usuarios import GerenciadorRepositorioUsuarios
 from src.repositorios.estrategias.estrategias_gerenciamento_usuarios import GerenciamentoUsuariosRAM, GerenciamentoUsuariosDB
 from src.entidades.entidades_usuarios import Usuario
 from src.fabricas.fabrica_entidades_usuarios import FabricaEntidadesUsuarios
@@ -7,11 +7,11 @@ from src.fabricas.fabrica_entidades_usuarios import FabricaEntidadesUsuarios
 
 if __name__ == '__main__':
 
-    repositorio = FabricaRepositoriosUsuarios.criar_repositorio('db')
-    gerenciador = GerenciadorRepositorio(GerenciamentoUsuariosDB(repositorio))
+    repositorio = FabricaRepositoriosUsuarios.criar_repositorio('ram')
+    gerenciador = GerenciadorRepositorioUsuarios(GerenciamentoUsuariosRAM(repositorio))
 
-    # repositorio = FabricaRepositoriosUsuarios.criar_repositorio('ram')
-    # gerenciador = GerenciadorRepositorio(GerenciamentoUsuariosRAM(repositorio))
+    # gerenciador = GerenciadorRepositorioUsuarios(GerenciamentoUsuariosDB(repositorio))
+    # repositorio = FabricaRepositoriosUsuarios.criar_repositorio('db')
 
     dados: dict = {
         'id': 1,

@@ -1,7 +1,7 @@
 from .estrategias_gerenciamento_usuarios import GerenciamentoEstrategia
 from ...entidades.entidades_usuarios import Usuario
 
-class GerenciadorRepositorio:
+class GerenciadorRepositorioUsuarios:
     def __init__(self, estrategia: GerenciamentoEstrategia):
         self.estrategia = estrategia
 

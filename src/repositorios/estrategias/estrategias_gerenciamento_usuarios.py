@@ -4,10 +4,11 @@
 # 3. Estratégia para lidar com usuários no BD
 
 
-import sqlite3
+# import sqlite3
 from abc import ABC, abstractmethod
 from ...entidades.entidades_usuarios import Usuario
 
+# # Criar método de procurar.
 
 class GerenciamentoEstrategia(ABC):
     @abstractmethod
