@@ -20,7 +20,7 @@ class TelaGerenciarUsuarios(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
-        from .view_telas_inicais import TelaInicialAdministrador, TelaInicialGerente, TelaInicialVendedor
+        from .view_telas_inicais import TelaInicialAdministrador, TelaInicialGerente
         from .view_adicionar_usuarios import TelaAdicionarUsuarios_Administrador, TelaAdicionarUsuarios_Gerente
 
         self.transicoes = {
@@ -30,7 +30,6 @@ class TelaGerenciarUsuarios(EstadoTela):
             'listar_usuarios': None,
             'voltar_administrador': TelaInicialAdministrador(),
             'voltar_gerente': TelaInicialGerente(),
-            'voltar_vendedor': TelaInicialVendedor(),
         }
 
         if opcao in self.transicoes:

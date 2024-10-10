@@ -19,3 +19,6 @@ class GerenciadorRepositorioUsuarios:
 
     def listar(self, tipo: str = None, id_loja: int = None) -> list[Usuario]:
         return self.estrategia.listar(tipo, id_loja)
+
+    def validar(self, username: str, senha: str) -> Usuario:
+        return self.estrategia.validar(username, senha)

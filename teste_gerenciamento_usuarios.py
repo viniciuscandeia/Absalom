@@ -7,11 +7,11 @@ from src.fabricas.fabrica_entidades_usuarios import FabricaEntidadesUsuarios
 
 if __name__ == '__main__':
 
-    repositorio = FabricaRepositoriosUsuarios.criar_repositorio('ram')
-    gerenciador = GerenciadorRepositorioUsuarios(GerenciamentoUsuariosRAM(repositorio))
+    # repositorio = FabricaRepositoriosUsuarios.criar_repositorio('ram')
+    # gerenciador = GerenciadorRepositorioUsuarios(GerenciamentoUsuariosRAM(repositorio))
 
-    # gerenciador = GerenciadorRepositorioUsuarios(GerenciamentoUsuariosDB(repositorio))
-    # repositorio = FabricaRepositoriosUsuarios.criar_repositorio('db')
+    repositorio = FabricaRepositoriosUsuarios.criar_repositorio('db')
+    gerenciador = GerenciadorRepositorioUsuarios(GerenciamentoUsuariosDB(repositorio))
 
     dados: dict = {
         'id': 1,
@@ -24,17 +24,17 @@ if __name__ == '__main__':
     }
     entidade: Usuario = FabricaEntidadesUsuarios.criar_entidade(
         'gerente', dados)
-    gerenciador.adicionar(entidade.id_, entidade)
+    # gerenciador.adicionar(entidade.id_, entidade)
 
-    lista = gerenciador.listar(tipo='vendedor', id_loja=None)
+    lista = gerenciador.listar(tipo=None, id_loja=None)
     for item in lista:
         print(item)
 
-    entidade_buscada: Usuario = gerenciador.buscar(1)
-    print(f'Busca 1: {entidade_buscada}')
+    # entidade_buscada: Usuario = gerenciador.buscar(1)
+    # print(f'Busca 1: {entidade_buscada}')
 
-    gerenciador.remover(1)
+    # gerenciador.remover(1)
 
-    lista = gerenciador.listar(tipo=None, id_loja=1)
-    for item in lista:
-        print(item)
+    # lista = gerenciador.listar(tipo=None, id_loja=1)
+    # for item in lista:
+    #     print(item)

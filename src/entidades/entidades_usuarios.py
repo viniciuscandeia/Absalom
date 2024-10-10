@@ -8,7 +8,7 @@ class Usuario:
         self.email: str = email
         self.senha: str = senha
         self.tipo: str = tipo
-        self.id_loja: str = id_loja
+        self.id_loja: int = id_loja
 
     def __str__(self) -> str:
         return f"[{self.id_}] Nome: {self.nome}, Email: {self.email}"

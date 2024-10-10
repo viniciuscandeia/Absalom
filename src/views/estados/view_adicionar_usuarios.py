@@ -195,7 +195,7 @@ class TelaAdicionarErroUsername(EstadoTela):
 
     def exibir(self):
         mensagem: str = """
-        --- Erro ao adicionar Usuário! O 'username' digitado já foi cadastrado no sistema. ---
+        --- Erro ao adicionar usuário! O 'username' digitado já foi cadastrado no sistema. ---
         """
         print(mensagem)
 
@@ -220,7 +220,7 @@ class TelaAdicionarErroEmail(EstadoTela):
 
     def exibir(self):
         mensagem: str = """
-        --- Erro ao adicionar Usuário! O 'email' digitado já foi cadastrado no sistema. ---
+        --- Erro ao adicionar usuário! O 'email' digitado já foi cadastrado no sistema. ---
         """
         print(mensagem)
 
@@ -245,7 +245,7 @@ class TelaAdicionarErroSenha(EstadoTela):
 
     def exibir(self):
         mensagem: str = """
-        --- Erro ao adicionar Usuário! A 'senha' deve atender as condições. ---
+        --- Erro ao adicionar usuário! A 'senha' deve atender as condições. ---
         1 - Tamanho mínimo: 8 caracteres.
         2 - Tamanho máximo: 128 caracteres.
         3 - Deve conter, pelo menos, uma letra maiúscula.
