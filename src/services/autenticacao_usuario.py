@@ -17,6 +17,7 @@ class AutenticacaoUsuario:
         if usuario:
             self._usuario_autenticado = usuario
             return True
+        self._usuario_autenticado = None
         return False
 
     def usuario_autenticado(self):

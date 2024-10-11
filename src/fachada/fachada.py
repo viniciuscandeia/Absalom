@@ -15,10 +15,15 @@ class Fachada:
 
     def login(self):
         retorno: dict = self.telas.exibir_tela()
+
+        print(retorno)
+
         self.autenticador.autenticar(
             retorno.get("username", None), retorno.get("senha", None)
         )
         self.usuario_autenticado = self.autenticador.usuario_autenticado()
+
+        print(self.usuario_autenticado)
 
         # Usuário logado
         if self.usuario_autenticado:
@@ -62,12 +67,8 @@ class Fachada:
         elif self.usuario_autenticado.tipo == "vendedor":
             match retorno:
                 case "1":
-                    self.telas.proxima_tela("gerenciar_usuarios")
-                case "2":
-                    self.telas.proxima_tela("gerenciar_produtos")
-                case "3":
                     self.telas.proxima_tela("realizar_venda")
-                case "4":
+                case "2":
                     self.telas.proxima_tela("logout")
                     self.usuario_autenticado = None
                     self.login()
@@ -94,7 +95,7 @@ class Fachada:
 
                 case "1":
                     self.telas.proxima_tela("adicionar_usuario_tela_gerente")
-                    self.adicionar_usuario()
+                    self.adicionar_usuario_tela_gerente()
                 case "2":
                     self.telas.proxima_tela()
                 case "3":

@@ -23,7 +23,7 @@ class TelaLogin(EstadoTela):
             'administrador': TelaInicialAdministrador(),
             'gerente': TelaInicialGerente(),
             'vendedor': TelaInicialVendedor(),
-            'erro': TelaLogin()
+            'erro': TelaLoginErro()
         }
 
         if opcao in self.transicoes:
