@@ -31,6 +31,9 @@ class TelaLogin(EstadoTela):
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
 
+    def preparar_dados_recebidos(self, dados: list):
+        pass
+
 
 class TelaLoginErro(EstadoTela):
     def __init__(self):
@@ -52,3 +55,6 @@ class TelaLoginErro(EstadoTela):
             proximo_estado = self.transicoes[opcao]
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
+
+    def preparar_dados_recebidos(self, dados: list):
+        pass

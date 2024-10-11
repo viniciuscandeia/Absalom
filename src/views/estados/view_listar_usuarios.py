@@ -1,3 +1,4 @@
+from ...entidades.entidades_usuarios import Usuario
 from .view_estado_tela import EstadoTela
 
 # O "_Administrador" indica que é uma tela para o Administrador
@@ -23,7 +24,7 @@ class TelaListar_Administradores(EstadoTela):
         from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
-            "listar": None,
+            "listar": TelaListarAdministradores(),
             "filtrar": None,
             "voltar": TelaGerenciarUsuarios(),
         }
@@ -32,6 +33,9 @@ class TelaListar_Administradores(EstadoTela):
             proximo_estado = self.transicoes[opcao]
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
+
+    def preparar_dados_recebidos(self, dados: list):
+        pass
 
 
 class TelaListar_Gerente(EstadoTela):
@@ -62,18 +66,20 @@ class TelaListar_Gerente(EstadoTela):
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
 
-
-# # Como receber a lista?
+    def preparar_dados_recebidos(self, dados: list):
+        pass
 
 
 class TelaListarAdministradores(EstadoTela):
     def __init__(self):
         super().__init__()
         self.transicoes = {}
+        self.conteudo: str = ""
 
     def exibir(self):
-        mensagem: str = """
+        mensagem: str = f"""
         --- Listar Administradores ---
+        {self.conteudo}
         1 - Visualizar Administrador
         2 - Voltar
         """
@@ -92,6 +98,46 @@ class TelaListarAdministradores(EstadoTela):
             proximo_estado = self.transicoes[opcao]
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
+
+    def preparar_dados_recebidos(self, dados: list):
+        self.dados: list[Usuario] = dados
+        for item in self.dados:
+            self.conteudo += f"[{item.id_}] - {item.username} \n"
+
+
+class TelaListarUsuarios(EstadoTela):
+    def __init__(self):
+        super().__init__()
+        self.transicoes = {}
+        self.conteudo: str = ""
+
+    def exibir(self):
+        mensagem: str = f"""
+        --- Listar Usuários ---
+        {self.conteudo}
+        1 - Visualizar Usuário
+        2 - Voltar
+        """
+        print(mensagem)
+        opcao = input("Opção: ")
+        return opcao
+
+    def proxima_tela(self, opcao):
+
+        self.transicoes = {
+            "visualizar": None,
+            "voltar": TelaListar_Gerente(),
+        }
+
+        if opcao in self.transicoes:
+            proximo_estado = self.transicoes[opcao]
+            proximo_estado.definir_contexto(self.contexto)
+            self.contexto.trocar_estado(proximo_estado)
+
+    def preparar_dados_recebidos(self, dados: list):
+        self.dados: list[Usuario] = dados
+        for item in self.dados:
+            self.conteudo += f"[{item.id_}] - {item.tipo} : {item.username} \n"
 
 
 class TelaFiltrarLoja(EstadoTela):
@@ -123,11 +169,15 @@ class TelaFiltrarLoja(EstadoTela):
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
 
+    def preparar_dados_recebidos(self, dados: list):
+        pass
+
 
 class TelaListarLojas(EstadoTela):
     def __init__(self):
         super().__init__()
         self.transicoes = {}
+        self.conteudo = ""
 
     def exibir(self):
         mensagem: str = """
@@ -150,3 +200,8 @@ class TelaListarLojas(EstadoTela):
             proximo_estado = self.transicoes[opcao]
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
+
+    def preparar_dados_recebidos(self, dados: list):
+        self.dados: list = dados
+        for item in self.dados:
+            pass

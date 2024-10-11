@@ -15,3 +15,7 @@ class EstadoTela(ABC):
     @abstractmethod
     def proxima_tela(self, opcao: str):
         pass
+
+    @abstractmethod
+    def preparar_dados_recebidos(self, dados: list):
+        pass

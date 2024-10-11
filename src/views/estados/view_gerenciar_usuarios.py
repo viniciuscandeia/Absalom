@@ -22,12 +22,14 @@ class TelaGerenciarUsuarios(EstadoTela):
     def proxima_tela(self, opcao):
         from .view_telas_inicais import TelaInicialAdministrador, TelaInicialGerente
         from .view_adicionar_usuarios import TelaAdicionarUsuarios_Administrador, TelaAdicionarUsuarios_Gerente
+        from .view_listar_usuarios import TelaListar_Administradores, TelaListar_Gerente
 
         self.transicoes = {
             'adicionar_usuario_tela_administrador': TelaAdicionarUsuarios_Administrador(),
             'adicionar_usuario_tela_gerente': TelaAdicionarUsuarios_Gerente(),
             'administrador_usuario': None,
-            'listar_usuarios': None,
+            'listar_usuarios_tela_administrador': TelaListar_Administradores(),
+            'listar_usuarios_tela_gerente': TelaListar_Gerente(),
             'voltar_administrador': TelaInicialAdministrador(),
             'voltar_gerente': TelaInicialGerente(),
         }
@@ -36,3 +38,6 @@ class TelaGerenciarUsuarios(EstadoTela):
             proximo_estado = self.transicoes[opcao]
             proximo_estado.definir_contexto(self.contexto)
             self.contexto.trocar_estado(proximo_estado)
+
+    def preparar_dados_recebidos(self, dados: list):
+        pass
