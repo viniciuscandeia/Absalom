@@ -26,10 +26,10 @@ class TelaLogin(EstadoTela):
             'erro': TelaLoginErro()
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -51,10 +51,10 @@ class TelaLoginErro(EstadoTela):
             'login': TelaLogin()
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
 
     def preparar_dados_recebidos(self, dados: list):
         pass

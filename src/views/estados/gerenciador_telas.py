@@ -15,5 +15,8 @@ class GerenciadorTelas:
     def proxima_tela(self, opcao: str):
         self.estado_atual.proxima_tela(opcao)
 
+    def tela_anterior(self, opcao: str):
+        self.estado_atual.tela_anterior(opcao)
+
     def enviar_conteudo(self, dados: list):
         self.estado_atual.preparar_dados_recebidos(dados)

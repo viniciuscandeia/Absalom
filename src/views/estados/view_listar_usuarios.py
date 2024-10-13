@@ -21,18 +21,22 @@ class TelaListar_Administradores(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
-        from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
             "listar": TelaListarAdministradores(),
             "filtrar": None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        from .view_gerenciar_usuarios import TelaGerenciarUsuarios
+
+        self.transicoes = {
             "voltar": TelaGerenciarUsuarios(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -54,17 +58,21 @@ class TelaListar_Gerente(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
-        from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
             "listar": None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        from .view_gerenciar_usuarios import TelaGerenciarUsuarios
+
+        self.transicoes = {
             "voltar": TelaGerenciarUsuarios(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -91,13 +99,17 @@ class TelaListarAdministradores(EstadoTela):
 
         self.transicoes = {
             "visualizar": None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+
+        self.transicoes = {
             "voltar": TelaListar_Administradores(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         self.dados: list[Usuario] = dados
@@ -126,13 +138,17 @@ class TelaListarUsuarios(EstadoTela):
 
         self.transicoes = {
             "visualizar": None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+
+        self.transicoes = {
             "voltar": TelaListar_Gerente(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         self.dados: list[Usuario] = dados
@@ -161,13 +177,17 @@ class TelaFiltrarLoja(EstadoTela):
         self.transicoes = {
             "listar": None,
             "pesquisar": None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+
+        self.transicoes = {
             "voltar": TelaListar_Administradores(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -193,13 +213,17 @@ class TelaListarLojas(EstadoTela):
 
         self.transicoes = {
             "visualizar": None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+
+        self.transicoes = {
             "voltar": TelaFiltrarLoja(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         self.dados: list = dados

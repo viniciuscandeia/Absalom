@@ -21,19 +21,23 @@ class TelaAdicionarUsuarios_Administrador(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
+
+        self.transicoes = {
+            "administrador": TelaAdicionarAdministrador(),
+            "gerente": TelaAdicionarGerente(),
+            "vendedor": TelaAdicionarVendedor(),
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
         from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
-            "adicionar_administrador": TelaAdicionarAdministrador(),
-            "adicionar_gerente": TelaAdicionarGerente(),
-            "adicionar_vendedor": TelaAdicionarVendedor(),
             "voltar": TelaGerenciarUsuarios(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -56,18 +60,22 @@ class TelaAdicionarUsuarios_Gerente(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
+
+        self.transicoes = {
+            "gerente": TelaAdicionarGerente(),
+            "vendedor": TelaAdicionarVendedor(),
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
         from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
-            "adicionar_gerente": TelaAdicionarGerente(),
-            "adicionar_vendedor": TelaAdicionarVendedor(),
             "voltar": TelaGerenciarUsuarios(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -101,12 +109,12 @@ class TelaAdicionarAdministrador(EstadoTela):
             "erro_senha": TelaAdicionarErroSenha(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
+        pass
+
+    def tela_anterior(self, opcao: str):
         pass
 
 
@@ -136,10 +144,10 @@ class TelaAdicionarGerente(EstadoTela):
             "erro_senha": TelaAdicionarErroSenha(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -170,10 +178,10 @@ class TelaAdicionarVendedor(EstadoTela):
             "erro_senha": TelaAdicionarErroSenha(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -193,14 +201,15 @@ class TelaAdicionarSucesso(EstadoTela):
     def proxima_tela(self, opcao):
 
         self.transicoes = {
-            "voltar_administrador": TelaAdicionarUsuarios_Administrador(),
-            "voltar_gerente": TelaAdicionarUsuarios_Gerente(),
+            "administrador": TelaAdicionarUsuarios_Administrador(),
+            "gerente": TelaAdicionarUsuarios_Gerente(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
+
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -220,15 +229,15 @@ class TelaAdicionarErroUsername(EstadoTela):
     def proxima_tela(self, opcao):
 
         self.transicoes = {
-            "voltar_administrador": TelaAdicionarAdministrador(),
-            "voltar_gerente": TelaAdicionarGerente(),
-            "voltar_vendedor": TelaAdicionarVendedor(),
+            "administrador": TelaAdicionarAdministrador(),
+            "gerente": TelaAdicionarGerente(),
+            "vendedor": TelaAdicionarVendedor(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -248,15 +257,16 @@ class TelaAdicionarErroEmail(EstadoTela):
     def proxima_tela(self, opcao):
 
         self.transicoes = {
-            "voltar_administrador": TelaAdicionarAdministrador(),
-            "voltar_gerente": TelaAdicionarGerente(),
-            "voltar_vendedor": TelaAdicionarVendedor(),
+            "administrador": TelaAdicionarAdministrador(),
+            "gerente": TelaAdicionarGerente(),
+            "vendedor": TelaAdicionarVendedor(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
+
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -282,15 +292,15 @@ class TelaAdicionarErroSenha(EstadoTela):
     def proxima_tela(self, opcao):
 
         self.transicoes = {
-            "voltar_administrador": TelaAdicionarAdministrador(),
-            "voltar_gerente": TelaAdicionarGerente(),
-            "voltar_vendedor": TelaAdicionarVendedor(),
+            "administrador": TelaAdicionarAdministrador(),
+            "gerente": TelaAdicionarGerente(),
+            "vendedor": TelaAdicionarVendedor(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        pass
 
     def preparar_dados_recebidos(self, dados: list):
         pass

@@ -19,18 +19,22 @@ class TelaInicialAdministrador(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
-        from .view_login import TelaLogin
         from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
             'gerenciar_usuarios': TelaGerenciarUsuarios(),
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        from .view_login import TelaLogin
+
+        self.transicoes = {
             'logout': TelaLogin(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -56,20 +60,24 @@ class TelaInicialGerente(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
-        from .view_login import TelaLogin
         from .view_gerenciar_usuarios import TelaGerenciarUsuarios
 
         self.transicoes = {
             'gerenciar_usuarios': TelaGerenciarUsuarios(),
             'gerenciar_produtos': None,
             'realizar_venda': None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        from .view_login import TelaLogin
+
+        self.transicoes = {
             'logout': TelaLogin(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
 
     def preparar_dados_recebidos(self, dados: list):
         pass
@@ -93,17 +101,23 @@ class TelaInicialVendedor(EstadoTela):
         return opcao
 
     def proxima_tela(self, opcao):
-        from .view_login import TelaLogin
 
         self.transicoes = {
             'realizar_venda': None,
+        }
+
+        self.atualizar_estado(opcao, self.transicoes)
+
+    def tela_anterior(self, opcao: str):
+        from .view_login import TelaLogin
+
+        self.transicoes = {
             'logout': TelaLogin(),
         }
 
-        if opcao in self.transicoes:
-            proximo_estado = self.transicoes[opcao]
-            proximo_estado.definir_contexto(self.contexto)
-            self.contexto.trocar_estado(proximo_estado)
+        self.atualizar_estado(opcao, self.transicoes)
+
 
     def preparar_dados_recebidos(self, dados: list):
         pass
+
