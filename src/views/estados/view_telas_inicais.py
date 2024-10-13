@@ -6,7 +6,6 @@ class TelaInicialAdministrador(EstadoTela):
         super().__init__()
         self.transicoes = {}
 
-    @classmethod
     def exibir(self):
         mensagem: str = \
             """

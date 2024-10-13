@@ -123,7 +123,6 @@ class TelaAdicionarGerente(EstadoTela):
         super().__init__()
         self.transicoes = {}
 
-    @classmethod
     def exibir(self):
         mensagem: str = """
         --- Adicionar Gerente ---
