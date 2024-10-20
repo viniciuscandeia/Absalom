@@ -15,7 +15,7 @@ class FabricaRepositoriosUsuarios(FabricaRepositorio):
         repositorio_class = FabricaRepositoriosUsuarios._repositorios.get(
             tipo)
         if repositorio_class:
-            return repositorio_class().pegar_repositorio().execute()
+            return repositorio_class().pegar_repositorio()
         else:
             raise ValueError(f"Tipo de repositório desconhecido: {tipo}")
 

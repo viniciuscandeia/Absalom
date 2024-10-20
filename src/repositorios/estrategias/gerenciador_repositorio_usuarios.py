@@ -5,8 +5,8 @@ class GerenciadorRepositorioUsuarios:
     def __init__(self, estrategia: GerenciamentoEstrategia[Usuario]):
         self.estrategia = estrategia
 
-    def adicionar(self, id_: int, entidade: Usuario):
-        self.estrategia.adicionar(id_, entidade)
+    def adicionar(self, entidade: Usuario):
+        self.estrategia.adicionar(entidade)
 
     def remover(self, id_: int):
         self.estrategia.remover(id_)

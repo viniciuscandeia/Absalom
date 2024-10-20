@@ -5,7 +5,7 @@ T = TypeVar('T')
 
 class GerenciamentoEstrategia(ABC, Generic[T]):
     @abstractmethod
-    def adicionar(self, id_: int, entidade: T):
+    def adicionar(self, entidade: T):
         pass
 
     @abstractmethod

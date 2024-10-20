@@ -3,9 +3,27 @@ from ..entidades.entidades_usuarios import Usuario
 
 class FabricaEntidadesUsuarios:
     _entidades: dict = {
-        'administrador': lambda dados: Usuario(dados['id'], dados['nome'], dados['username'], dados['email'], dados['senha'], 'administrador', -1),
-        'gerente': lambda dados: Usuario(dados['id'], dados['nome'], dados['username'], dados['email'], dados['senha'], 'gerente', dados['id_loja']),
-        'vendedor': lambda dados: Usuario(dados['id'], dados['nome'], dados['username'], dados['email'], dados['senha'], 'vendedor', dados['id_loja']),
+        'administrador': lambda dados: Usuario(
+            nome=dados['nome'],
+            username=dados['username'],
+            email=dados['email'],
+            senha=dados['senha'],
+            tipo='administrador',
+            id_loja=dados['id_loja']),
+        'gerente': lambda dados:  Usuario(
+            nome=dados['nome'],
+            username=dados['username'],
+            email=dados['email'],
+            senha=dados['senha'],
+            tipo='gerente',
+            id_loja=dados['id_loja']),
+        'vendedor': lambda dados: Usuario(
+            nome=dados['nome'],
+            username=dados['username'],
+            email=dados['email'],
+            senha=dados['senha'],
+            tipo='vendedor',
+            id_loja=dados['id_loja']),
     }
 
     @staticmethod

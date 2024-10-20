@@ -22,7 +22,7 @@ class RepositorioUsuariosDB:
     def __new__(cls):
         if cls._instancia is None:
             cls._instancia = super().__new__(cls)
-            cls._conexao_db = cls._criar_conexao()
+            cls._conexao_db = cls._criar_conexao(cls)
         return cls._instancia
 
     def _criar_conexao(self):
