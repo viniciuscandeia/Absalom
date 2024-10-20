@@ -1,6 +1,6 @@
 import sqlite3
 
-CAMINHO_USUARIOS_DB: str = "src/repositorios/usuarios.db"
+CAMINHO_USUARIOS_DB: str = "src/repositorios/database.db"
 usuarios: str = "usuarios"
 
 

@@ -1,17 +1,10 @@
-from abc import ABC, abstractmethod
-
+from .fabrica_repositorio import FabricaRepositorio
 from ..repositorios.estrategias.gerenciador_repositorio_usuarios import GerenciadorRepositorioUsuarios
 from ..repositorios.estrategias.estrategias_gerenciamento_usuarios import GerenciamentoUsuariosRAM, GerenciamentoUsuariosDB
 from ..repositorios.repositorios_usuarios import RepositorioUsuariosRAM, RepositorioUsuariosDB
 
 
-class FabricaRepositorioUsuario(ABC):
-    @abstractmethod
-    def criar_repositorio(self, tipo: str):
-        pass
-
-
-class FabricaRepositoriosUsuarios(FabricaRepositorioUsuario):
+class FabricaRepositoriosUsuarios(FabricaRepositorio):
     _repositorios = {
         'ram': RepositorioUsuariosRAM,
         'db': RepositorioUsuariosDB
@@ -22,7 +15,7 @@ class FabricaRepositoriosUsuarios(FabricaRepositorioUsuario):
         repositorio_class = FabricaRepositoriosUsuarios._repositorios.get(
             tipo)
         if repositorio_class:
-            return repositorio_class().pegar_repositorio()
+            return repositorio_class().pegar_repositorio().execute()
         else:
             raise ValueError(f"Tipo de repositório desconhecido: {tipo}")
 

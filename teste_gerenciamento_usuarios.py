@@ -24,7 +24,7 @@ if __name__ == '__main__':
     }
     entidade: Usuario = FabricaEntidadesUsuarios.criar_entidade(
         'gerente', dados)
-    # gerenciador.adicionar(entidade.id_, entidade)
+    gerenciador.adicionar(entidade.id_, entidade)
 
     lista = gerenciador.listar(tipo=None, id_loja=None)
     for item in lista:
