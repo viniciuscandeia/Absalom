@@ -3,7 +3,7 @@ import sqlite3
 CAMINHO_DB: str = 'src/repositorios/database.db'
 
 
-class RepositorioLojasRAM:
+class RepositorioProdutoRAM:
     _instancia = None
 
     def __new__(cls):
@@ -15,7 +15,7 @@ class RepositorioLojasRAM:
     def pegar_repositorio(self):
         return self._repositorio
 
-class RepositorioLojasDB:
+class RepositorioProdutoDB:
     _instancia = None
 
     def __new__(cls):

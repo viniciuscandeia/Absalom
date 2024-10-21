@@ -31,7 +31,7 @@ if __name__ == '__main__':
     gerenciador.adicionar(entidade=loja2)
     # gerenciador.editar(4, entidade= loja2)
 
-    lista = gerenciador.listar()
+    lista = gerenciador.buscar(2)
 
     for item in lista:
         print(item)
