@@ -1,9 +1,9 @@
 import sqlite3
 
-CAMINHO_DB: str = 'src/repositorios/database.db'
+CAMINHO_USUARIOS_DB: str = 'src/repositorios/database.db'
 
 
-class RepositorioUsuariosRAM:
+class RepositorioLojasRAM:
     _instancia = None
 
     def __new__(cls):
@@ -15,8 +15,7 @@ class RepositorioUsuariosRAM:
     def pegar_repositorio(self):
         return self._repositorio
 
-
-class RepositorioUsuariosDB:
+class RepositorioLojasDB:
     _instancia = None
 
     def __new__(cls):
@@ -27,7 +26,7 @@ class RepositorioUsuariosDB:
 
     def _criar_conexao(self):
         # Conecta ao banco de dados SQLite, por exemplo
-        conexao = sqlite3.connect(CAMINHO_DB)
+        conexao = sqlite3.connect(CAMINHO_USUARIOS_DB)
         return conexao
 
     def pegar_repositorio(self):

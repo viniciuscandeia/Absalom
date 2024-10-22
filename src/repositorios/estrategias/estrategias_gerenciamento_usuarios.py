@@ -1,3 +1,6 @@
+from sqlite3 import Connection
+
+
 # Deverão existir 3 estratégias:
 # 1. Estratégia para lidar com usuários na RAM
 # 2. Estratégia para lidar com administradores no BD
@@ -6,42 +9,15 @@
 
 # import sqlite3
 from abc import ABC, abstractmethod
+
+from .gerenciamento_estrategia import GerenciamentoEstrategia
 from ...entidades.entidades_usuarios import Usuario
 
 # # Criar método de procurar.
 
 
-class GerenciamentoEstrategia(ABC):
-    @abstractmethod
-    def adicionar(self, id_: int, usuario: Usuario):
-        pass
 
-    @abstractmethod
-    def remover(self, id_: int):
-        pass
-
-    @abstractmethod
-    def editar(self, id_: int, usuario: Usuario):
-        pass
-
-    @abstractmethod
-    def buscar(self, id_: int):
-        pass
-
-    @abstractmethod
-    def _existe(self, id_: int):
-        pass
-
-    @abstractmethod
-    def listar(self, tipo: str, id_loja: int):
-        pass
-
-    @abstractmethod
-    def validar(self, username: str, senha: str):
-        pass
-
-
-class GerenciamentoUsuariosRAM(GerenciamentoEstrategia):
+class GerenciamentoUsuariosRAM(GerenciamentoEstrategia[Usuario]):
     def __init__(self, repositorio: dict):
         self.repositorio: dict = repositorio
 
@@ -83,8 +59,8 @@ class GerenciamentoUsuariosRAM(GerenciamentoEstrategia):
         return None
 
 
-class GerenciamentoUsuariosDB(GerenciamentoEstrategia):
-    def __init__(self, repositorio_db):
+class GerenciamentoUsuariosDB(GerenciamentoEstrategia[Usuario]):
+    def __init__(self, repositorio_db: Connection):
         self.repositorio_db = repositorio_db
 
     def adicionar(self, id_: int, usuario: Usuario):

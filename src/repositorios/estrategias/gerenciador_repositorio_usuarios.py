@@ -2,17 +2,17 @@ from .estrategias_gerenciamento_usuarios import GerenciamentoEstrategia
 from ...entidades.entidades_usuarios import Usuario
 
 class GerenciadorRepositorioUsuarios:
-    def __init__(self, estrategia: GerenciamentoEstrategia):
+    def __init__(self, estrategia: GerenciamentoEstrategia[Usuario]):
         self.estrategia = estrategia
 
-    def adicionar(self, id_: int, usuario: Usuario):
-        self.estrategia.adicionar(id_, usuario)
+    def adicionar(self, id_: int, entidade: Usuario):
+        self.estrategia.adicionar(id_, entidade)
 
     def remover(self, id_: int):
         self.estrategia.remover(id_)
 
-    def editar(self, id_: int, usuario: Usuario):
-        self.estrategia.editar(id_, usuario)
+    def editar(self, id_: int, entidade: Usuario):
+        self.estrategia.editar(id_, entidade)
 
     def buscar(self, id_: int):
         return self.estrategia.buscar(id_)
