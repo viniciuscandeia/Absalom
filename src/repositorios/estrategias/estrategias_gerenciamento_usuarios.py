@@ -21,11 +21,17 @@ class GerenciamentoUsuariosRAM(GerenciamentoEstrategia[Usuario]):
     def __init__(self, repositorio: dict):
         self.repositorio: dict = repositorio
 
-    def adicionar(self, id_: int, usuario: Usuario):
-        if not self._existe(id_):
-            self.repositorio[id_] = usuario
-        else:
-            raise ValueError("Usuário já existe")
+    def adicionar(self, entidade: Usuario):
+        usuarios: list[Usuario] = self.listar()
+        id: int
+        if len(usuarios) == 0:
+            id = 0
+
+        if len(usuarios) > 0:
+            id = usuarios[len(usuarios) - 1].id_ + 1
+
+        entidade.id_ = id
+        self.repositorio[id] = entidade
 
     def remover(self, id_: int):
         if self._existe(id_):
@@ -63,23 +69,21 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia[Usuario]):
     def __init__(self, repositorio_db: Connection):
         self.repositorio_db = repositorio_db
 
-    def adicionar(self, id_: int, usuario: Usuario):
-        if not self._existe(id_):
+    def adicionar(self, usuario: Usuario):
+            print(usuario)
             cursor = self.repositorio_db.cursor()
             query = """
-                INSERT INTO usuarios (id, nome, username, email, senha, tipo, id_loja)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO usuarios (nome, username, email, senha, tipo, id_loja)
+                VALUES (?, ?, ?, ?, ?, ?)
             """
-            cursor.execute(query, (id_, usuario.nome, usuario.username,
+            cursor.execute(query, ( usuario.nome, usuario.username,
                            usuario.email, usuario.senha, usuario.tipo, usuario.id_loja))
             self.repositorio_db.commit()
-        else:
-            raise ValueError("Usuário já existe")
 
     def remover(self, id_: int):
         if self._existe(id_):
             cursor = self.repositorio_db.cursor()
-            query = "DELETE FROM usuarios WHERE id = ?"
+            query = "DELETE FROM usuario WHERE id = ?"
             cursor.execute(query, (id_,))
             self.repositorio_db.commit()
         else:
@@ -87,7 +91,7 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia[Usuario]):
 
     def buscar(self, id_: int):
         cursor = self.repositorio_db.cursor()
-        query = "SELECT id, nome, username, email, senha, tipo, id_loja FROM usuarios WHERE id = ?"
+        query = "SELECT id, nome, username, email, senha, tipo, id_loja FROM usuario WHERE id = ?"
         cursor.execute(query, (id_,))
         resultado = cursor.fetchone()
         if resultado:
@@ -114,7 +118,7 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia[Usuario]):
 
     def _existe(self, id_: int) -> bool:
         cursor = self.repositorio_db.cursor()
-        query = "SELECT 1 FROM usuarios WHERE id = ?"
+        query = "SELECT 1 FROM usuario WHERE id = ?"
         cursor.execute(query, (id_,))
         return cursor.fetchone() is not None
 
@@ -123,7 +127,7 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia[Usuario]):
         cursor = self.repositorio_db.cursor()
 
         # Construir a query dinamicamente com base nos parâmetros
-        query = "SELECT id, nome, username, email, senha, tipo, id_loja FROM usuarios WHERE 1=1"
+        query = "SELECT id, nome, username, email, senha, tipo, id_loja FROM usuario WHERE 1=1"
         parametros = []
 
         if tipo is not None:
@@ -154,7 +158,7 @@ class GerenciamentoUsuariosDB(GerenciamentoEstrategia[Usuario]):
         # Executa a consulta SQL para verificar o usuário
         cursor.execute("""
             SELECT id, nome, username, email, senha, tipo, id_loja
-            FROM usuarios
+            FROM usuario
             WHERE username = ? AND senha = ?
         """, (username, senha))
 
