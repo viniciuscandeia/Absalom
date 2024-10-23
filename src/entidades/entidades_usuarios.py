@@ -1,10 +1,18 @@
-from uuid import uuid4
+from .entidade import Entidade
 
 
-class Usuario:
-    def __init__(self, id_ = None, nome = "", username = "", email = "", senha = "", tipo = "", id_loja = -1):
-        self.id_: int = id_ if id_ else uuid4().hex
-        self.nome: str = nome
+class Usuario(Entidade):
+    def __init__(
+        self,
+        id_: int,
+        nome: str,
+        username: str,
+        email: str,
+        senha: str,
+        tipo: str,
+        id_loja: int,
+    ):
+        super().__init__(id_, nome)
         self.username: str = username
         self.email: str = email
         self.senha: str = senha
