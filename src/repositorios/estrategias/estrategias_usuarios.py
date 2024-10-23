@@ -64,14 +64,14 @@ class EstrategiaUsuariosRAM(InterfaceEstrategiaUsuarios):
     def verificar_existencia(self, id_: int) -> bool:
         return id_ in self.repositorio
 
-    def listar(self, tipo: str = None, id_loja: int = None) -> list[Usuario]:
-        lista: list[Usuario] = []
+    def listar(self, tipo: str = None, id_loja: int = None) -> dict:
+        informacoes: dict = {}
         for usuario in self.repositorio.values():
             if (tipo is None or usuario.tipo == tipo) and (
                 id_loja is None or usuario.id_loja == id_loja
             ):
-                lista.append(usuario)
-        return lista
+                informacoes[usuario.id_] = usuario
+        return informacoes
 
     def validar(self, username: str, senha: str):
         for usuario in self.repositorio.values():
@@ -156,8 +156,8 @@ class EstrategiaUsuariosDB(InterfaceEstrategiaUsuarios):
         cursor.execute(query, (id_,))
         return cursor.fetchone() is not None
 
-    def listar(self, tipo: str = None, id_loja: int = None) -> list[Usuario]:
-        lista: list[Usuario] = []
+    def listar(self, tipo: str = None, id_loja: int = None) -> dict:
+        informacoes: dict = {}
         cursor = self.repositorio_db.cursor()
 
         # Construir a query dinamicamente com base nos parâmetros
@@ -186,9 +186,9 @@ class EstrategiaUsuariosDB(InterfaceEstrategiaUsuarios):
                 tipo=resultado[5],
                 id_loja=resultado[6],
             )
-            lista.append(usuario)
+            informacoes[usuario.id_] = usuario
 
-        return lista
+        return informacoes
 
     def validar(self, username: str, senha: str):
         cursor = self.repositorio_db.cursor()

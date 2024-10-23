@@ -1,5 +1,5 @@
 from ...entidades.entidades_usuarios import Usuario
-from ..estrategias.interface_estrategia import InterfaceEstrategia
+from ..estrategias.estrategias_usuarios import InterfaceEstrategiaUsuarios
 
 # Esta classe irá receber uma estratégia para lidar com o repositório dos usuários.
 # Pode receber duas estratégias:
@@ -8,7 +8,7 @@ from ..estrategias.interface_estrategia import InterfaceEstrategia
 
 
 class GerenciadorUsuarios:
-    def __init__(self, estrategia: InterfaceEstrategia):
+    def __init__(self, estrategia: InterfaceEstrategiaUsuarios):
         self.estrategia = estrategia
 
     def adicionar(self, entidade: Usuario):
@@ -26,7 +26,7 @@ class GerenciadorUsuarios:
     def verificar_existencia(self, id_: int) -> bool:
         return self.estrategia.verificar_existencia(id_)
 
-    def listar(self, tipo: str = None, id_loja: int = None) -> list[Usuario]:
+    def listar(self, tipo: str = None, id_loja: int = None) -> dict:
         return self.estrategia.listar(tipo, id_loja)
 
     def validar(self, username: str, senha: str) -> Usuario:

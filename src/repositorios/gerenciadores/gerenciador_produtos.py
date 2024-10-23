@@ -18,5 +18,5 @@ class GerenciadorProdutos:
     def buscar(self, id_: int):
         return self.estrategia.buscar(id_)
 
-    def listar(self) -> list[Produto]:
+    def listar(self) -> dict:
         return self.estrategia.listar()
