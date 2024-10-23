@@ -1,10 +1,9 @@
-from uuid import uuid4
+from .entidade import Entidade
 
 
-class Loja:
-    def __init__(self, id_ = None, nome = "", endereco = ""):
-        self.id_ = id_ if id_ else uuid4().hex
-        self.nome = nome
+class Loja(Entidade):
+    def __init__(self, id_: int, nome: str, endereco: str):
+        super().__init__(id_, nome)
         self.endereco = endereco
 
     def __str__(self):

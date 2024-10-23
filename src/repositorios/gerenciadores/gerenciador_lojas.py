@@ -1,9 +1,9 @@
 from src.entidades.entidade_loja import Loja
-from src.repositorios.estrategias.gerenciamento_estrategia import GerenciamentoEstrategia
+from ..estrategias.interface_estrategia import InterfaceEstrategia
 
 
-class GerenciadorRepositorioLoja:
-    def __init__(self, estrategia: GerenciamentoEstrategia[Loja]):
+class GerenciadorLojas:
+    def __init__(self, estrategia: InterfaceEstrategia):
         self.estrategia = estrategia
 
     def adicionar(self, entidade: Loja):
@@ -18,5 +18,5 @@ class GerenciadorRepositorioLoja:
     def buscar(self, id_: int):
         return self.estrategia.buscar(id_)
 
-    def listar(self) -> list[Loja]:
+    def listar(self) -> dict:
         return self.estrategia.listar()

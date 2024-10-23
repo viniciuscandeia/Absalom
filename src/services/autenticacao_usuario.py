@@ -1,13 +1,13 @@
-from ..repositorios.estrategias.gerenciador_repositorio_usuarios import GerenciadorRepositorioUsuarios
+from ..repositorios.gerenciadores.gerenciador_usuarios import GerenciadorUsuarios
 from ..entidades.entidades_usuarios import Usuario
 
 class AutenticacaoUsuario:
     _instancia = None
 
-    def __new__(cls, gerenciador: GerenciadorRepositorioUsuarios):
+    def __new__(cls, gerenciador: GerenciadorUsuarios):
         if cls._instancia is None:
             cls._instancia = super(AutenticacaoUsuario, cls).__new__(cls)
-            cls._instancia._gerenciador: GerenciadorRepositorioUsuarios = gerenciador
+            cls._instancia._gerenciador: GerenciadorUsuarios = gerenciador
             cls._instancia._usuario_autenticado = None
         return cls._instancia
 
