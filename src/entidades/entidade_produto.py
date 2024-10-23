@@ -1,12 +1,14 @@
-class Produto:
-    def __init__(self, id_ = None,
-                nome = "",
-                tipo = "",
-                preco = 0.0,
-                quantidade = 0,
-                id_loja = None):
-        self.id_ = id_
-        self.nome = nome
+from .entidade import Entidade
+
+
+class Produto(Entidade):
+    def __init__(self, id_: int,
+                 nome: str,
+                 tipo: str,
+                 preco: float,
+                 quantidade: int,
+                 id_loja: int):
+        super().__init__(id_, nome)
         self.tipo = tipo
         self.preco = preco
         self.quantidade = quantidade

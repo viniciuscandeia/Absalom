@@ -1,9 +1,9 @@
 from src.entidades.entidade_produto import Produto
-from src.repositorios.estrategias.gerenciamento_estrategia import GerenciamentoEstrategia
+from ..estrategias.interface_estrategia import InterfaceEstrategia
 
 
-class GerenciadorRepositorioProduto:
-    def __init__(self, estrategia: GerenciamentoEstrategia[Produto]):
+class GerenciadorProdutos:
+    def __init__(self, estrategia: InterfaceEstrategia):
         self.estrategia = estrategia
 
     def adicionar(self, entidade: Produto):
