@@ -22,11 +22,11 @@ class EstrategiaLojasRAM(InterfaceEstrategia):
     def verificar_existencia(self, id_: int) -> bool:
         return id_ in self.repositorio
 
-    def listar(self) -> list[Loja]:
-        lista: list[Loja] = []
+    def listar(self) -> dict:
+        informacoes: dict = {}
         for loja in self.repositorio.values():
-            lista.append(loja)
-        return lista
+            informacoes[loja.id_] = loja
+        return informacoes
 
     def gerar_novo_id(self) -> int:
         if len(self.repositorio) == 0:
@@ -89,21 +89,21 @@ class EstrategiaLojaDB(InterfaceEstrategia):
         cursor.execute(query, (id_,))
         return cursor.fetchone() is not None
 
-    def listar(self, tipo: str = None, id_loja: int = None) -> list[Loja]:
-        lista: list[Loja] = []
+    def listar(self, tipo: str = None, id_loja: int = None) -> dict:
+        informacoes: dict = {}
         cursor = self.repositorio_db.cursor()
 
         # Construir a query dinamicamente com base nos parâmetros
         query = "SELECT id, nome, endereco FROM lojas WHERE 1=1"
 
         cursor.execute(query)
-        # Iterar sobre os resultados e criar objetos Usuario
+        # Iterar sobre os resultados e criar objeto Loja
         for resultado in cursor.fetchall():
-            usuario = Loja(
+            loja = Loja(
                 id_=resultado[0], nome=resultado[1], endereco=resultado[2])
-            lista.append(usuario)
+            informacoes[loja.id_] = loja
 
-        return lista
+        return informacoes
 
     def gerar_novo_id(self) -> int:
         cursor = self.repositorio_db.cursor()

@@ -34,11 +34,11 @@ class EstrategiaProdutosRAM(InterfaceEstrategia):
     def verificar_existencia(self, id_: int) -> bool:
         return id_ in self.repositorio
 
-    def listar(self) -> list[Produto]:
-        lista: list[Produto] = []
+    def listar(self) -> dict:
+        informacoes: dict = {}
         for loja in self.repositorio.values():
-            lista.append(loja)
-        return lista
+            informacoes[loja.id_] = loja
+        return informacoes
 
 
     def gerar_novo_id(self) -> int:
@@ -126,14 +126,14 @@ class EstrategiaProdutosDB(InterfaceEstrategia):
         return cursor.fetchone() is not None
 
     def listar(self) -> list[Produto]:
-        lista: list[Produto] = []
+        informacoes: dict = {}
         cursor = self.repositorio_db.cursor()
 
         query = "SELECT id, nome, tipo, preco, quantidade, id_loja FROM produtos"
 
         cursor.execute(query)
         for resultado in cursor.fetchall():
-            usuario = Produto(
+            produto = Produto(
                 id_=resultado[0],
                 nome=resultado[1],
                 tipo=resultado[2],
@@ -141,9 +141,9 @@ class EstrategiaProdutosDB(InterfaceEstrategia):
                 quantidade=resultado[4],
                 id_loja=resultado[5]
             )
-            lista.append(usuario)
+            informacoes[produto.id_] = produto
 
-        return lista
+        return informacoes
 
     def gerar_novo_id(self) -> int:
         cursor = self.repositorio_db.cursor()

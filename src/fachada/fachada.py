@@ -1,23 +1,68 @@
-from ..entidades.entidades_usuarios import Usuario
-from ..fabricas.fabrica_repositorios_usuarios import (
-    FabricaGerenciadorRepositorioUsuarios,
-)
+from ..fabricas.fabrica_entidades_usuarios import FabricaEntidadesUsuarios
+from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
 from ..services.autenticacao_usuario import AutenticacaoUsuario
-from ..views.estados.gerenciador_telas import GerenciadorTelas
-from ..views.estados.view_login import TelaLogin
-import os
+from ..telas.gerenciador_telas import GerenciadorTelas
+
+# * Próximos passos:
+#   1 - Realizar validação das entradas (username, email, senha)
+#   2 - Considerar se quem está adicionando é um administrador ou um gerente
+#       (lógicas diferentes)
+#       Adicionando como administrador:
+#           Necessário usar uma tela para perguntar se vai querer associar o novo
+#           usuário a alguma loja (gerente, vendedor) ou se vai desejar criar uma nova
+#           (gerente)
+#       Adicionando como gerente:
+#       O novo usuário terá o id_loja como o do gerente que está adicionando
 
 class Fachada:
-    def __init__(self, tipo: str):
-        self.repositorio = FabricaGerenciadorRepositorioUsuarios.criar_gerenciador(
-            tipo)
-        self.telas = GerenciadorTelas(TelaLogin())
-        self.autenticador = AutenticacaoUsuario(self.repositorio)
+
+    def __init__(self, tipo_persistencia: str):
+        self.gerenciador_usuarios = FabricaGerenciadorUsuarios.criar_gerenciador(
+            tipo_persistencia
+        )
+        self.autenticador = AutenticacaoUsuario(self.gerenciador_usuarios)
         self.usuario_autenticado = None
+
+        # Ao usar a RAM, não terá nenhum usuário cadastrado.
+        # Dessa forma, é necessário adicionar, ao menos, um administrador manualmente,
+        # para que seja possível utilizar o sistema.
+
+        if tipo_persistencia == "ram":
+            dados: dict = {
+                "id": self.gerenciador_usuarios.gerar_novo_id(),
+                "nome": "admin",
+                "username": "admin",
+                "email": "admin",
+                "senha": "admin",
+            }
+            usuario = FabricaEntidadesUsuarios.criar_entidade("administrador", dados)
+            self.gerenciador_usuarios.adicionar(usuario)
+
+            dados: dict = {
+                "id": self.gerenciador_usuarios.gerar_novo_id(),
+                "nome": "gerente",
+                "username": "gerente",
+                "email": "gerente",
+                "senha": "gerente",
+                "id_loja": 1,
+            }
+            usuario = FabricaEntidadesUsuarios.criar_entidade("gerente", dados)
+            self.gerenciador_usuarios.adicionar(usuario)
+
+            dados: dict = {
+                "id": self.gerenciador_usuarios.gerar_novo_id(),
+                "nome": "vendedor",
+                "username": "vendedor",
+                "email": "vendedor",
+                "senha": "vendedor",
+                "id_loja": 1,
+            }
+            usuario = FabricaEntidadesUsuarios.criar_entidade("vendedor", dados)
+            self.gerenciador_usuarios.adicionar(usuario)
 
     def login(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_login()
 
             # Autentica o usuário
             self.autenticador.autenticar(
@@ -27,216 +72,170 @@ class Fachada:
 
             # Usuário autenticado
             if self.usuario_autenticado:
-                self.telas.proxima_tela(self.usuario_autenticado.tipo)
-                self.tela_inicial()
-                break  # Sai do loop quando login for bem-sucedido
+                # Direcionar para a tela certa
+                match self.usuario_autenticado.tipo:
+                    case "administrador":
+                        self.inicial_administrador()
+                    case "gerente":
+                        self.inicial_gerente()
+                    case "vendedor":
+                        self.inicial_vendedor()
 
             # Erro ao logar: exibe tela de erro e volta para a tela de login
             else:
-                self.telas.proxima_tela("erro")
-                self.telas.exibir_tela()  # Exibe mensagem de erro e tenta novamente
-                self.telas.proxima_tela("login")
+                GerenciadorTelas.tela_login_erro()
 
-    def tela_inicial(self):
+    def inicial_administrador(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_inicial_administrador()
 
-            if self.usuario_autenticado.tipo == "administrador":
-                match retorno:
-                    case "1":
-                        self.telas.proxima_tela("gerenciar_usuarios")
-                        self.gerenciar_usuarios()
-                    case "2":
-                        self.telas.tela_anterior("logout")
-                        self.usuario_autenticado = None
-                        return  # Sai do método e volta ao login
+            match retorno["opcao"]:
+                case "1":  # Gerenciar Usuários
+                    self.gerenciar_usuarios()
+                case "2":  # Logout
+                    self.usuario_autenticado = None
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
 
-            elif self.usuario_autenticado.tipo == "gerente":
-                match retorno:
-                    case "1":
-                        self.telas.proxima_tela("gerenciar_usuarios")
-                        self.gerenciar_usuarios()
-                    case "2":
-                        self.telas.proxima_tela("gerenciar_produtos")
-                    case "3":
-                        self.telas.proxima_tela("realizar_venda")
-                    case "4":
-                        self.telas.tela_anterior("logout")
-                        self.usuario_autenticado = None
-                        return  # Sai do método e volta ao login
+    def inicial_gerente(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_inicial_gerente()
 
-            elif self.usuario_autenticado.tipo == "vendedor":
-                match retorno:
-                    case "1":
-                        self.telas.proxima_tela("realizar_venda")
-                    case "2":
-                        self.telas.tela_anterior("logout")
-                        self.usuario_autenticado = None
-                        return  # Sai do método e volta ao login
+            match retorno["opcao"]:
+                case "1":  # Gerenciar Usuários
+                    self.gerenciar_usuarios()
+                case "2":  # Gerenciar Produtos
+                    pass
+                case "3":  # Realizar Venda
+                    pass
+                case "4":  # Logout
+                    self.usuario_autenticado = None
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def inicial_vendedor(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_inicial_vendedor()
+
+            match retorno["opcao"]:
+                case "1":  # Realizar Venda
+                    pass
+                case "2":  # Logout
+                    self.usuario_autenticado = None
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
 
     def gerenciar_usuarios(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_gerenciar_usuarios()
 
-            if self.usuario_autenticado.tipo == "administrador":
-                match retorno:
-
-                    case "1":
-                        self.telas.proxima_tela(
-                            "adicionar_usuario_tela_administrador")
-                        self.adicionar_usuario_tela_administrador()
-                    case "2":
-                        self.telas.proxima_tela()
-                    case "3":
-                        self.telas.proxima_tela(
-                            "listar_usuarios_tela_administrador")
-                        self.listar_usuarios_tela_administrador()
-                    case "4":
-                        self.telas.tela_anterior("administrador")
-                        return
-
-            elif self.usuario_autenticado.tipo == "gerente":
-                match retorno:
-
-                    case "1":
-                        self.telas.proxima_tela(
-                            "adicionar_usuario_tela_gerente")
-                        self.adicionar_usuario_tela_gerente()
-                    case "2":
-                        self.telas.proxima_tela()
-                    case "3":
-                        self.telas.proxima_tela(
-                            "listar_usuarios_tela_gerente")
-                        self.listar_usuarios_tela_gerente()
-                    case "4":
-                        self.telas.tela_anterior("voltar_gerente")
-                        return
+            match retorno["opcao"]:
+                case "1":  # Adicionar Usuário
+                    pass
+                case "2":  # Administrar Usuário
+                    pass
+                case "3":  # Listar Usuários
+                    pass
+                case "4":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
 
     def adicionar_usuario_tela_administrador(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
-            print('aqui 1')
+            retorno: dict = GerenciadorTelas.tela_adicionar_usuario_tela_administrador()
 
-            tipo: str = ''
+            match retorno["opcao"]:
+                case "1":  # Adicionar Administrador
+                    self.adicionar_administrador()
+                case "2":  # Adicionar Gerente
+                    self.adicionar_gerente()
+                case "3":  # Adicionar Vendedor
+                    self.adicionar_vendedor()
+                case "4":  # Voltar
+                    pass
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
 
-            match retorno:
-                case "1":
-                    tipo = 'administrador'
-                case "2":
-                    tipo = 'gerente'
-                case "3":
-                    tipo = 'vendedor'
-                case "4":
-                    self.telas.tela_anterior("voltar")
-                    return
-
-            if retorno in ['1', '2', '3']:
-                self.telas.proxima_tela(tipo)
-                self.adicionar_usuario(tipo)
-
-    def adicionar_usuario_tela_gerente(self, tipo: str):
+    def adicionar_usuario_tela_gerente(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_adicionar_usuario_tela_gerente()
 
-            if retorno in ["1", "2"]:
-                self.telas.proxima_tela(tipo)
-                self.adicionar_usuario(tipo)
-            elif retorno == "3":
-                self.telas.tela_anterior("voltar")
-                return
+            match retorno["opcao"]:
+                case "1":  # Adicionar Gerente
+                    self.adicionar_gerente()
+                case "2":  # Adicionar Vendedor
+                    self.adicionar_vendedor()
+                case "3":  # Voltar
+                    pass
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
 
-    def adicionar_usuario(self, tipo: str):
+    def adicionar_administrador(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_adicionar_administrador()
 
-            # Validar entradas
-            if True:  # Simulando que as entradas são válidas
-                self.adicionar_usuario_sucesso(tipo)
-                return
-            else:
-                if False:  # Erro username
-                    self.telas.proxima_tela("erro_username")
-                    self.adicionar_usuario_erro(tipo)
-                if False:
-                    self.telas.proxima_tela("erro_email")
-                    self.adicionar_usuario_erro(tipo)
-                if True:  # Erro senha
-                    self.telas.proxima_tela("erro_senha")
-                    self.adicionar_usuario_erro(tipo)
+            # Realizar validação dos dados
+            if True:  # Erro por causa do username
+                GerenciadorTelas.tela_adicionar_usuario_erro_username()
+            elif True:  # Erro por causa do email
+                GerenciadorTelas.tela_adicionar_usuario_erro_email()
+            elif True:  # Erro por causa da senha
+                GerenciadorTelas.tela_adicionar_usuario_erro_senha()
+            else:  # Dados válidos
+                id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
+                retorno["id"] = id_novo_usuario
+                usuario = FabricaEntidadesUsuarios.criar_entidade(
+                    "administrador", retorno
+                )
+                self.gerenciador_usuarios.adicionar(usuario)
+                GerenciadorTelas.tela_adicionar_usuario_sucesso()
 
-    def adicionar_usuario_sucesso(self, tipo: str):
-        self.telas.proxima_tela("sucesso")
-        self.telas.exibir_tela()
-
-        self.telas.proxima_tela(tipo)
-        return
-
-    def adicionar_usuario_erro(self, tipo: str):
-        self.telas.exibir_tela()
-
-        self.telas.proxima_tela(tipo)
-        self.adicionar_usuario(tipo)
-
-    def listar_usuarios_tela_administrador(self):
+    def adicionar_gerente(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
 
-            match retorno:
-                case "1":
-                    self.telas.proxima_tela("listar")
-                    dados: list[Usuario] = self.repositorio.listar(
-                        tipo="administrador")
-                    self.telas.enviar_conteudo(dados)
-                    self.listar_administradores()
-                case "2":
-                    self.telas.proxima_tela("filtrar")
-                case "3":
-                    self.telas.tela_anterior("voltar")
-                    return
+            # Duas situações:
+            # Se for um gerente adicionando outro gerente
+            # Se for um administrador adicionando
+            #   Tela perguntando a qual loja ele será associado (ou se vai criar uma)
 
-    def listar_usuarios_tela_gerente(self):
+            # Realizar validação dos dados
+            if True:  # Erro por causa do username
+                GerenciadorTelas.tela_adicionar_usuario_erro_username()
+            elif True:  # Erro por causa do email
+                GerenciadorTelas.tela_adicionar_usuario_erro_email()
+            elif True:  # Erro por causa da senha
+                GerenciadorTelas.tela_adicionar_usuario_erro_senha()
+            else:  # Dados válidos
+                id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
+                retorno["id"] = id_novo_usuario
+                usuario = FabricaEntidadesUsuarios.criar_entidade("gerente", retorno)
+                self.gerenciador_usuarios.adicionar(usuario)
+                GerenciadorTelas.tela_adicionar_usuario_sucesso()
+
+    def adicionar_vendedor(self):
         while True:
-            retorno: dict = self.telas.exibir_tela()
+            retorno: dict = GerenciadorTelas.tela_adicionar_vendedor()
 
-            match retorno:
-                case "1":
-                    self.telas.proxima_tela("listar")
-                    dados: list[Usuario] = self.repositorio.listar(
-                        id_loja=self.usuario_autenticado.id_loja)
-                    self.telas.enviar_conteudo(dados)
-                    self.listar_administradores()
-                case "2":
-                    self.telas.proxima_tela("filtrar")
-                case "3":
-                    self.telas.tela_anterior("voltar")
-                    return
+            # Duas situações:
+            # Se for um gerente adicionando um vendedor
+            # Se for um administrador adicionando
+            #   Tela perguntando a qual loja ele será associado
 
-    def listar_administradores(self):
-        while True:
-            retorno: dict = self.telas.exibir_tela()
-
-            match retorno:
-                case '1':
-                    self.telas.proxima_tela('visualizar')
-                    # * Levar para o método
-                case '2':
-                    self.telas.tela_anterior('voltar')
-                    return
-
-    def listar_usuarios(self):
-        while True:
-            retorno: dict = self.telas.exibir_tela()
-
-            match retorno:
-                case '1':
-                    self.telas.proxima_tela('visualizar')
-                    # * Levar para o método
-                case '2':
-                    self.telas.tela_anterior('voltar')
-                    return
-
-    def filtrar_por_loja(self):
-        pass
-
-    def listar_lojas(self):
-        pass
+            # Realizar validação dos dados
+            if True:  # Erro por causa do username
+                GerenciadorTelas.tela_adicionar_usuario_erro_username()
+            elif True:  # Erro por causa do email
+                GerenciadorTelas.tela_adicionar_usuario_erro_email()
+            elif True:  # Erro por causa da senha
+                GerenciadorTelas.tela_adicionar_usuario_erro_senha()
+            else:  # Dados válidos
+                id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
+                retorno["id"] = id_novo_usuario
+                usuario = FabricaEntidadesUsuarios.criar_entidade("vendedor", retorno)
+                self.gerenciador_usuarios.adicionar(usuario)
+                GerenciadorTelas.tela_adicionar_usuario_sucesso()
