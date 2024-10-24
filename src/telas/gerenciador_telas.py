@@ -1,5 +1,11 @@
 from .tela_escolha_persistencia import TelaEscolhaPersistencia
 from .tela_gerenciar_usuarios import TelaGerenciarUsuarios
+from .tela_opcao_invalida import TelaOpcaoInvalida
+from .telas_adicionar_loja import (
+    TelaAdicionarLoja,
+    TelaAssociarLoja,
+    TelaAssociarLojaInicial,
+)
 from .telas_adicionar_usuario import (
     TelaAdicionarAdministrador,
     TelaAdicionarErroEmail,
@@ -25,7 +31,7 @@ from .telas_listar_usuarios import (
     TelaListarUsuarios,
 )
 from .telas_login import TelaLogin, TelaLoginErro
-from .tela_opcao_invalida import TelaOpcaoInvalida
+
 
 class GerenciadorTelas:
 
@@ -96,3 +102,15 @@ class GerenciadorTelas:
     @classmethod
     def tela_adicionar_usuario_erro_senha(cls) -> None:
         TelaAdicionarErroSenha.tela()
+
+    @classmethod
+    def tela_associar_loja_inicial(cls) -> dict:
+        return TelaAssociarLojaInicial.tela()
+
+    @classmethod
+    def tela_adicionar_loja(cls) -> dict:
+        return TelaAdicionarLoja.tela()
+
+    @classmethod
+    def tela_associar_loja(cls) -> dict:
+        return TelaAssociarLoja.tela()
