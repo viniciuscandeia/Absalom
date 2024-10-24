@@ -18,5 +18,11 @@ class GerenciadorLojas:
     def buscar(self, id_: int):
         return self.estrategia.buscar(id_)
 
+    def verificar_existencia(self, id_: int) -> bool:
+        return self.estrategia.verificar_existencia(id_)
+
     def listar(self) -> dict:
         return self.estrategia.listar()
+
+    def gerar_novo_id(self) -> int:
+        return self.estrategia.gerar_novo_id()
