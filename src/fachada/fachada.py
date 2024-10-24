@@ -134,7 +134,10 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Adicionar Usuário
-                    pass
+                    if self.usuario_autenticado.tipo == 'administrador':
+                        self.adicionar_usuario_tela_administrador()
+                    else:
+                        self.adicionar_usuario_tela_gerente()
                 case "2":  # Administrar Usuário
                     pass
                 case "3":  # Listar Usuários
@@ -156,7 +159,7 @@ class Fachada:
                 case "3":  # Adicionar Vendedor
                     self.adicionar_vendedor()
                 case "4":  # Voltar
-                    pass
+                    return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
@@ -170,7 +173,7 @@ class Fachada:
                 case "2":  # Adicionar Vendedor
                     self.adicionar_vendedor()
                 case "3":  # Voltar
-                    pass
+                    return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
@@ -194,14 +197,9 @@ class Fachada:
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
 
-    def adicionar_gerente(self):
+    def adicionar_gerente_como_administrador(self):
         while True:
             retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
-
-            # Duas situações:
-            # Se for um gerente adicionando outro gerente
-            # Se for um administrador adicionando
-            #   Tela perguntando a qual loja ele será associado (ou se vai criar uma)
 
             # Realizar validação dos dados
             if True:  # Erro por causa do username
@@ -216,6 +214,48 @@ class Fachada:
                 usuario = FabricaEntidadesUsuarios.criar_entidade("gerente", retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
+
+    def adicionar_gerente_como_gerente(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
+
+            # Realizar validação dos dados
+            if True:  # Erro por causa do username
+                GerenciadorTelas.tela_adicionar_usuario_erro_username()
+            elif True:  # Erro por causa do email
+                GerenciadorTelas.tela_adicionar_usuario_erro_email()
+            elif True:  # Erro por causa da senha
+                GerenciadorTelas.tela_adicionar_usuario_erro_senha()
+            else:  # Dados válidos
+                id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
+                retorno["id"] = id_novo_usuario
+                retorno['id_loja'] = self.usuario_autenticado.id_loja
+                usuario = FabricaEntidadesUsuarios.criar_entidade(
+                    "gerente", retorno)
+                self.gerenciador_usuarios.adicionar(usuario)
+                GerenciadorTelas.tela_adicionar_usuario_sucesso()
+
+    def associar_loja_tela_inicial(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_associar_loja_inicial()
+
+            match retorno['opcao']:
+                case '1': # Adicionar nova loja
+                    pass
+                case '2': # Associar com loja existente
+                    pass
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def associar_loja(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_associar_loja()
+
+    def adicionar_loja(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_adicionar_loja()
+
+            # Validar dados
 
     def adicionar_vendedor(self):
         while True:
