@@ -1,16 +1,8 @@
 Para terminar o CRUD das entidades:
 
-2. Terminar o fluxo de adicionar usuários
-    - Ao adicionar gerentes e vendedores, deve ser considerando quem está adicionando:
-        - Administrador:
-            - Perguntar se deseja criar uma loja (gerente) ou associar a alguma existente (gerente, vendedor)
-        - Gerente:
-            - Associar o novo usuário a loja do gerente
-3. Criar fluxo de listar usuários
 4. Criar fluxo de editar usuário
 5. Criar fluxo de remover usuário
 6. Criar fluxo de adicionar loja
-7. Criar fluxo de listar lojas
 8. Criar fluxo de editar loja
 9. Criar fluxo de remover loja
 10. Criar fluxo de adicionar produto

@@ -3,11 +3,11 @@ from .tela_gerenciar_usuarios import TelaGerenciarUsuarios
 from .tela_opcao_invalida import TelaOpcaoInvalida
 from .telas_adicionar_loja import (
     TelaAdicionarLoja,
+    TelaAdicionarLojaErroEndereco,
+    TelaAdicionarLojaErroNome,
+    TelaAdicionarLojaSucesso,
     TelaAssociarLoja,
     TelaAssociarLojaInicial,
-    TelaAdicionarLojaSucesso,
-    TelaAdicionarLojaErroNome,
-    TelaAdicionarLojaErroEndereco,
 )
 from .telas_adicionar_usuario import (
     TelaAdicionarAdministrador,
@@ -25,13 +25,14 @@ from .telas_iniciais import (
     TelaInicialGerente,
     TelaInicialVendedor,
 )
+from .telas_listar_lojas import TelaFiltrarLoja, TelaListarLojas, TelaPesquisarLoja, TelaVisualizarLoja
 from .telas_listar_usuarios import (
-    TelaFiltrarLoja,
     TelaListar_Administrador,
     TelaListar_Gerente,
     TelaListarAdministradores,
-    TelaListarLojas,
     TelaListarUsuarios,
+    TelaPesquisarUsuario,
+    TelaVisualizarUsuario,
 )
 from .telas_login import TelaLogin, TelaLoginErro
 
@@ -119,13 +120,53 @@ class GerenciadorTelas:
         return TelaAssociarLoja.tela(informacoes)
 
     @classmethod
-    def tela_adicionar_loja_sucesso(cls) -> dict:
+    def tela_adicionar_loja_sucesso(cls) -> None:
         return TelaAdicionarLojaSucesso.tela()
 
     @classmethod
-    def tela_adicionar_loja_erro_nome(cls) -> dict:
+    def tela_adicionar_loja_erro_nome(cls) -> None:
         return TelaAdicionarLojaErroNome.tela()
 
     @classmethod
-    def tela_adicionar_loja_erro_endereco(cls) -> dict:
+    def tela_adicionar_loja_erro_endereco(cls) -> None:
         return TelaAdicionarLojaErroEndereco.tela()
+
+    @classmethod
+    def tela_listar_tela_administrador(cls) -> dict:
+        return TelaListar_Administrador.tela()
+
+    @classmethod
+    def tela_listar_tela_gerente(cls) -> dict:
+        return TelaListar_Gerente.tela()
+
+    @classmethod
+    def tela_listar_administradores(cls, informacoes: dict) -> dict:
+        return TelaListarAdministradores.tela(informacoes)
+
+    @classmethod
+    def tela_listar_usuarios(cls, informacoes: dict) -> dict:
+        return TelaListarUsuarios.tela(informacoes)
+
+    @classmethod
+    def tela_filtrar_por_loja(cls) -> dict:
+        return TelaFiltrarLoja.tela()
+
+    @classmethod
+    def tela_listar_lojas(cls, informacoes: dict) -> dict:
+        return TelaListarLojas.tela(informacoes)
+
+    @classmethod
+    def tela_pesquisar_usuario(cls) -> dict:
+        return TelaPesquisarUsuario.tela()
+
+    @classmethod
+    def tela_visualizar_usuario(cls, usuario) -> dict:
+        return TelaVisualizarUsuario.tela(usuario)
+
+    @classmethod
+    def tela_pesquisar_tela(cls) -> dict:
+        return TelaPesquisarLoja.tela()
+
+    @classmethod
+    def tela_visualizar_loja(cls, loja) -> dict:
+        return TelaVisualizarLoja.tela(loja)
