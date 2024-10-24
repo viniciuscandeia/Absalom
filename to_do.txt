@@ -1,0 +1,31 @@
+Para terminar o CRUD das entidades:
+
+1. Criar validações das informações:
+    - De usuários (username, email, senha)
+    - De lojas (nome, endereço?)
+    - De produtos (se os campos são válidos, se digitou uma palavra no campo de preço, ...)
+2. Terminar o fluxo de adicionar usuários
+    - Ao adicionar gerentes e vendedores, deve ser considerando quem está adicionando:
+        - Administrador:
+            - Perguntar se deseja criar uma loja (gerente) ou associar a alguma existente (gerente, vendedor)
+        - Gerente:
+            - Associar o novo usuário a loja do gerente
+3. Criar fluxo de listar usuários
+4. Criar fluxo de editar usuário
+5. Criar fluxo de remover usuário
+6. Criar fluxo de adicionar loja
+7. Criar fluxo de listar lojas
+8. Criar fluxo de editar loja
+9. Criar fluxo de remover loja
+10. Criar fluxo de adicionar produto
+11. Criar fluxo de listar produtos (por loja)
+12. Criar fluxo de editar produto
+13. Criar fluxo de remover produto
+
+14. Criar fluxo de realizar venda
+15. De acordo com o padrão Adapter, identifique e implemente um cenário de uso no seu projeto
+16. Na camada business implemente, utilizando Template Method, a geração de mais um tipo de relatórios (por exemplo, HTML e PDF). Os relatórios devem gerar estatísticas de acesso dos usuários no sistema.
+17. Alterar a fachada da camada de negócio do projeto para Utilizar o padrão Command
+18. Utilizar o padrão Memento para desfazer uma ação de atualização (precisa desfazer apenas a última atualização dessa nova entidade)
+19. Implementar mais 2 (dois) padrões de projeto que ainda não foi pedido e acordo com o documento de requisitos
+
