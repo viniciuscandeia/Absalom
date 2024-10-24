@@ -1,9 +1,5 @@
 Para terminar o CRUD das entidades:
 
-1. Criar validações das informações:
-    - De usuários (username, email, senha)
-    - De lojas (nome, endereço?)
-    - De produtos (se os campos são válidos, se digitou uma palavra no campo de preço, ...)
 2. Terminar o fluxo de adicionar usuários
     - Ao adicionar gerentes e vendedores, deve ser considerando quem está adicionando:
         - Administrador:
