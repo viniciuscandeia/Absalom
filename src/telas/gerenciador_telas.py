@@ -5,6 +5,9 @@ from .telas_adicionar_loja import (
     TelaAdicionarLoja,
     TelaAssociarLoja,
     TelaAssociarLojaInicial,
+    TelaAdicionarLojaSucesso,
+    TelaAdicionarLojaErroNome,
+    TelaAdicionarLojaErroEndereco,
 )
 from .telas_adicionar_usuario import (
     TelaAdicionarAdministrador,
@@ -112,5 +115,17 @@ class GerenciadorTelas:
         return TelaAdicionarLoja.tela()
 
     @classmethod
-    def tela_associar_loja(cls) -> dict:
-        return TelaAssociarLoja.tela()
+    def tela_associar_loja(cls, informacoes: dict) -> dict:
+        return TelaAssociarLoja.tela(informacoes)
+
+    @classmethod
+    def tela_adicionar_loja_sucesso(cls) -> dict:
+        return TelaAdicionarLojaSucesso.tela()
+
+    @classmethod
+    def tela_adicionar_loja_erro_nome(cls) -> dict:
+        return TelaAdicionarLojaErroNome.tela()
+
+    @classmethod
+    def tela_adicionar_loja_erro_endereco(cls) -> dict:
+        return TelaAdicionarLojaErroEndereco.tela()

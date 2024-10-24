@@ -23,7 +23,7 @@ class FabricaRepositorioProduto(FabricaRepositorio):
     def __str__(self):
         return "Fábrica dos Repositórios de Produto"
 
-class FabricaGerenciadorRepositorioProduto:
+class FabricaGerenciadorProdutos:
     _repositorios = {
         'ram': GerenciadorRepositorioProduto(GerenciamentoProdutoRAM(RepositorioProdutoRAM().pegar_repositorio())),
         'db': GerenciadorRepositorioProduto(GerenciamentoProdutoDB(RepositorioProdutoDB().pegar_repositorio()))
@@ -31,7 +31,7 @@ class FabricaGerenciadorRepositorioProduto:
 
     @staticmethod
     def criar_gerenciador(tipo: str):
-        gerenciador = FabricaGerenciadorRepositorioProduto._repositorios.get(
+        gerenciador = FabricaGerenciadorProdutos._repositorios.get(
             tipo)
         if gerenciador:
             return gerenciador
