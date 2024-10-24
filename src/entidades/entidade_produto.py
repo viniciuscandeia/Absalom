@@ -8,7 +8,8 @@ class Produto(Entidade):
                  preco: float,
                  quantidade: int,
                  id_loja: int):
-        super().__init__(id_, nome)
+        super().__init__(id_)
+        self.nome: str = nome
         self.descricao = descricao
         self.preco = preco
         self.quantidade = quantidade

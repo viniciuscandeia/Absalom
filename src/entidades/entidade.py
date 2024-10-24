@@ -1,4 +1,3 @@
 class Entidade:
-    def __init__(self, id_: int, nome: str):
+    def __init__(self, id_: int):
         self.id_: int = id_
-        self.nome: str = nome
