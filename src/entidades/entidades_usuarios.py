@@ -12,7 +12,8 @@ class Usuario(Entidade):
         tipo: str,
         id_loja: int,
     ):
-        super().__init__(id_, nome)
+        super().__init__(id_)
+        self.nome: str = nome
         self.username: str = username
         self.email: str = email
         self.senha: str = senha

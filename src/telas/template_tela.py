@@ -1,7 +1,7 @@
 class TemplateTela:
 
     @classmethod
-    def tela(cls, informacoes: dict = None) -> dict:
+    def tela(cls, informacoes = None) -> dict:
         cls._titulo()
         cls._listar_informacoes(informacoes)
         cls._menu()
