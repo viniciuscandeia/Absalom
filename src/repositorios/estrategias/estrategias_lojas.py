@@ -1,4 +1,4 @@
-from src.repositorios.estrategias.gerenciamento_estrategia import InterfaceEstrategia
+from src.repositorios.estrategias.interface_estrategia import InterfaceEstrategia
 from src.entidades.entidade_loja import Loja
 from sqlite3 import Connection
 

@@ -1,6 +1,8 @@
-from ..fabricas.fabrica_entidades_usuarios import FabricaEntidadesUsuarios
+from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
+from ..fabricas.fabrica_repositorio_loja import FabricaGerenciadorLojas
 from ..services.autenticacao_usuario import AutenticacaoUsuario
+from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 
 # * Próximos passos:
@@ -14,12 +16,17 @@ from ..telas.gerenciador_telas import GerenciadorTelas
 #       Adicionando como gerente:
 #       O novo usuário terá o id_loja como o do gerente que está adicionando
 
+
 class Fachada:
 
     def __init__(self, tipo_persistencia: str):
         self.gerenciador_usuarios = FabricaGerenciadorUsuarios.criar_gerenciador(
             tipo_persistencia
         )
+        self.gerenciador_lojas = FabricaGerenciadorLojas.criar_gerenciador(
+            tipo_persistencia
+        )
+
         self.autenticador = AutenticacaoUsuario(self.gerenciador_usuarios)
         self.usuario_autenticado = None
 
@@ -35,7 +42,7 @@ class Fachada:
                 "email": "admin",
                 "senha": "admin",
             }
-            usuario = FabricaEntidadesUsuarios.criar_entidade("administrador", dados)
+            usuario = FabricaEntidades.criar_entidade("administrador", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
             dados: dict = {
@@ -46,7 +53,7 @@ class Fachada:
                 "senha": "gerente",
                 "id_loja": 1,
             }
-            usuario = FabricaEntidadesUsuarios.criar_entidade("gerente", dados)
+            usuario = FabricaEntidades.criar_entidade("gerente", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
             dados: dict = {
@@ -57,7 +64,7 @@ class Fachada:
                 "senha": "vendedor",
                 "id_loja": 1,
             }
-            usuario = FabricaEntidadesUsuarios.criar_entidade("vendedor", dados)
+            usuario = FabricaEntidades.criar_entidade("vendedor", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
     def login(self):
@@ -134,7 +141,7 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Adicionar Usuário
-                    if self.usuario_autenticado.tipo == 'administrador':
+                    if self.usuario_autenticado.tipo == "administrador":
                         self.adicionar_usuario_tela_administrador()
                     else:
                         self.adicionar_usuario_tela_gerente()
@@ -155,9 +162,9 @@ class Fachada:
                 case "1":  # Adicionar Administrador
                     self.adicionar_administrador()
                 case "2":  # Adicionar Gerente
-                    self.adicionar_gerente()
+                    self.adicionar_usuario_como_administrador("gerente")
                 case "3":  # Adicionar Vendedor
-                    self.adicionar_vendedor()
+                    self.adicionar_usuario_como_administrador("vendedor")
                 case "4":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -169,9 +176,9 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Adicionar Gerente
-                    self.adicionar_gerente()
+                    self.adicionar_usuario_como_gerente("gerente")
                 case "2":  # Adicionar Vendedor
-                    self.adicionar_vendedor()
+                    self.adicionar_usuario_como_gerente("vendedor")
                 case "3":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -181,101 +188,138 @@ class Fachada:
         while True:
             retorno: dict = GerenciadorTelas.tela_adicionar_administrador()
 
+            repositorio: dict = self.gerenciador_usuarios.listar()
+
             # Realizar validação dos dados
-            if True:  # Erro por causa do username
+            if not ValidadorInformacoes.validacao_username(
+                repositorio, retorno["username"]
+            ):
+                # Erro por causa do username
                 GerenciadorTelas.tela_adicionar_usuario_erro_username()
-            elif True:  # Erro por causa do email
+            elif not ValidadorInformacoes.validacao_email(
+                repositorio, retorno["email"]
+            ):
+                # Erro por causa do email
                 GerenciadorTelas.tela_adicionar_usuario_erro_email()
-            elif True:  # Erro por causa da senha
+            elif not ValidadorInformacoes.validacao_senha(retorno["senha"]):
+                # Erro por causa da senha
                 GerenciadorTelas.tela_adicionar_usuario_erro_senha()
-            else:  # Dados válidos
+            else:
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
-                usuario = FabricaEntidadesUsuarios.criar_entidade(
-                    "administrador", retorno
-                )
+                usuario = FabricaEntidades.criar_entidade("administrador", retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
+                return
 
-    def adicionar_gerente_como_administrador(self):
+    def adicionar_usuario_como_administrador(self, tipo_usuario: str):
         while True:
-            retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
+            retorno: dict = {}
+            if tipo_usuario == "gerente":
+                retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
+            elif tipo_usuario == "vendedor":
+                retorno: dict = GerenciadorTelas.tela_adicionar_vendedor()
+
+            repositorio: dict = self.gerenciador_usuarios.listar()
 
             # Realizar validação dos dados
-            if True:  # Erro por causa do username
+            if not ValidadorInformacoes.validacao_username(
+                repositorio, retorno["username"]
+            ):
+                # Erro por causa do username
                 GerenciadorTelas.tela_adicionar_usuario_erro_username()
-            elif True:  # Erro por causa do email
+            elif not ValidadorInformacoes.validacao_email(
+                repositorio, retorno["email"]
+            ):
+                # Erro por causa do email
                 GerenciadorTelas.tela_adicionar_usuario_erro_email()
-            elif True:  # Erro por causa da senha
+            elif not ValidadorInformacoes.validacao_senha(retorno["senha"]):
+                # Erro por causa da senha
                 GerenciadorTelas.tela_adicionar_usuario_erro_senha()
             else:  # Dados válidos
+                id_loja: int = self.associar_loja_tela_inicial()
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
-                usuario = FabricaEntidadesUsuarios.criar_entidade("gerente", retorno)
+                retorno["id_loja"] = id_loja
+                usuario = FabricaEntidades.criar_entidade(tipo_usuario, retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
+                return
 
-    def adicionar_gerente_como_gerente(self):
+    def adicionar_usuario_como_gerente(self, tipo_usuario: str):
         while True:
-            retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
+            retorno: dict = {}
+            if tipo_usuario == "gerente":
+                retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
+            elif tipo_usuario == "vendedor":
+                retorno: dict = GerenciadorTelas.tela_adicionar_vendedor()
+
+            repositorio: dict = self.gerenciador_usuarios.listar()
 
             # Realizar validação dos dados
-            if True:  # Erro por causa do username
+            if not ValidadorInformacoes.validacao_username(
+                repositorio, retorno["username"]
+            ):
+                # Erro por causa do username
                 GerenciadorTelas.tela_adicionar_usuario_erro_username()
-            elif True:  # Erro por causa do email
+            elif not ValidadorInformacoes.validacao_email(
+                repositorio, retorno["email"]
+            ):
+                # Erro por causa do email
                 GerenciadorTelas.tela_adicionar_usuario_erro_email()
-            elif True:  # Erro por causa da senha
+            elif not ValidadorInformacoes.validacao_senha(retorno["senha"]):
+                # Erro por causa da senha
                 GerenciadorTelas.tela_adicionar_usuario_erro_senha()
             else:  # Dados válidos
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
-                retorno['id_loja'] = self.usuario_autenticado.id_loja
-                usuario = FabricaEntidadesUsuarios.criar_entidade(
-                    "gerente", retorno)
+                retorno["id_loja"] = self.usuario_autenticado.id_loja
+                usuario = FabricaEntidades.criar_entidade(tipo_usuario, retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
+                return
 
-    def associar_loja_tela_inicial(self):
+    def associar_loja_tela_inicial(self) -> int:
         while True:
             retorno: dict = GerenciadorTelas.tela_associar_loja_inicial()
 
-            match retorno['opcao']:
-                case '1': # Adicionar nova loja
-                    pass
-                case '2': # Associar com loja existente
-                    pass
+            match retorno["opcao"]:
+                case "1":  # Adicionar nova loja
+                    return self.adicionar_loja()
+                case "2":  # Associar com loja existente
+                    return self.associar_loja()
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def associar_loja(self):
+    def associar_loja(self) -> int:
+        repositorio: dict = self.gerenciador_lojas.listar()
+        print(repositorio)
+        print(repositorio.keys())
         while True:
-            retorno: dict = GerenciadorTelas.tela_associar_loja()
+            retorno: dict = GerenciadorTelas.tela_associar_loja(repositorio)
+            print(retorno)
+            if int(retorno["opcao"]) in repositorio.keys():
+                return retorno["opcao"]
+            else:
+                GerenciadorTelas.tela_opcao_invalida()
 
-    def adicionar_loja(self):
+    def adicionar_loja(self) -> int:
+        repositorio: dict = self.gerenciador_lojas.listar()
         while True:
             retorno: dict = GerenciadorTelas.tela_adicionar_loja()
 
-            # Validar dados
-
-    def adicionar_vendedor(self):
-        while True:
-            retorno: dict = GerenciadorTelas.tela_adicionar_vendedor()
-
-            # Duas situações:
-            # Se for um gerente adicionando um vendedor
-            # Se for um administrador adicionando
-            #   Tela perguntando a qual loja ele será associado
-
-            # Realizar validação dos dados
-            if True:  # Erro por causa do username
-                GerenciadorTelas.tela_adicionar_usuario_erro_username()
-            elif True:  # Erro por causa do email
-                GerenciadorTelas.tela_adicionar_usuario_erro_email()
-            elif True:  # Erro por causa da senha
-                GerenciadorTelas.tela_adicionar_usuario_erro_senha()
-            else:  # Dados válidos
-                id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
-                retorno["id"] = id_novo_usuario
-                usuario = FabricaEntidadesUsuarios.criar_entidade("vendedor", retorno)
-                self.gerenciador_usuarios.adicionar(usuario)
-                GerenciadorTelas.tela_adicionar_usuario_sucesso()
+            if not ValidadorInformacoes.validacao_nome_loja(
+                repositorio, retorno["nome"]
+            ):
+                GerenciadorTelas.tela_adicionar_loja_erro_nome()
+            elif not ValidadorInformacoes.validacao_endereco(
+                repositorio, retorno["endereco"]
+            ):
+                GerenciadorTelas.tela_adicionar_loja_erro_endereco()
+            else:
+                id_nova_loja: int = self.gerenciador_lojas.gerar_novo_id()
+                retorno['id'] = id_nova_loja
+                loja = FabricaEntidades.criar_entidade("loja", retorno)
+                self.gerenciador_lojas.adicionar(loja)
+                GerenciadorTelas.tela_adicionar_loja_sucesso()
+                return id_nova_loja

@@ -29,7 +29,7 @@ class TelaAdicionarLoja(TemplateTela):
 
     @classmethod
     def _titulo(cls):
-        print("--- Associar com Loja Existente ---")
+        print("--- Adicionar Loja ---")
 
     @classmethod
     def _coletar_informacoes(cls):
@@ -37,3 +37,38 @@ class TelaAdicionarLoja(TemplateTela):
             "nome": cls._coletar_entrada("Nome: "),
             "endereco": cls._coletar_entrada("Endereço: "),
         }
+
+
+class TelaAdicionarLojaSucesso(TemplateTela):
+
+    @classmethod
+    def _titulo(cls):
+        print("--- Loja adicionada com sucesso! --- \n")
+
+    @classmethod
+    def _coletar_informacoes(cls, informacoes: dict = None) -> dict:
+        pass
+
+
+class TelaAdicionarLojaErroNome(TemplateTela):
+
+    @classmethod
+    def _titulo(cls):
+        print("--- Erro ao adicionar loja! O 'nome' digitado já foi cadastrado no sistema. --- \n"
+              )
+
+    @classmethod
+    def _coletar_informacoes(cls, informacoes: dict = None) -> dict:
+        pass
+
+
+class TelaAdicionarLojaErroEndereco(TemplateTela):
+
+    @classmethod
+    def _titulo(cls):
+        print("--- Erro ao adicionar loja! O 'endereço' digitado já foi cadastrado no sistema. --- \n"
+              )
+
+    @classmethod
+    def _coletar_informacoes(cls, informacoes: dict = None) -> dict:
+        pass
