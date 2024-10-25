@@ -508,7 +508,8 @@ class Fachada:
                     GerenciadorTelas.tela_editar_usuario_erro_username()
                 else:
                     return retorno["username"]
-            return username
+            else:
+                return username
 
     def editar_usuario_email(self, email: str) -> str:
         repositorio: dict = self.gerenciador_usuarios.listar()
@@ -521,7 +522,8 @@ class Fachada:
                     GerenciadorTelas.tela_editar_usuario_erro_email()
                 else:
                     return retorno["email"]
-            return email
+            else:
+                return email
 
     def editar_usuario_confirmacao(self, informacoes: dict) -> bool:
         while True:
