@@ -125,7 +125,7 @@ class EstrategiaProdutosDB(InterfaceEstrategia):
         cursor.execute(query, (id_,))
         return cursor.fetchone() is not None
 
-    def listar(self) -> list[Produto]:
+    def listar(self) -> dict:
         informacoes: dict = {}
         cursor = self.repositorio_db.cursor()
 

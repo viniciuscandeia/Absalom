@@ -5,16 +5,7 @@ from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 
-# * Próximos passos:
-#   1 - Realizar validação das entradas (username, email, senha)
-#   2 - Considerar se quem está adicionando é um administrador ou um gerente
-#       (lógicas diferentes)
-#       Adicionando como administrador:
-#           Necessário usar uma tela para perguntar se vai querer associar o novo
-#           usuário a alguma loja (gerente, vendedor) ou se vai desejar criar uma nova
-#           (gerente)
-#       Adicionando como gerente:
-#       O novo usuário terá o id_loja como o do gerente que está adicionando
+# * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
 
 
 class Fachada:
@@ -146,7 +137,14 @@ class Fachada:
                     else:
                         self.adicionar_usuario_tela_gerente()
                 case "2":  # Administrar Usuário
-                    pass
+                    repositorio: dict = {}
+                    if self.usuario_autenticado.tipo == "administrador":
+                        repositorio: dict = self.gerenciador_usuarios.listar()
+                    else:
+                        repositorio: dict = self.gerenciador_usuarios.listar(
+                            id_loja=self.usuario_autenticado.id_loja
+                        )
+                    self.pesquisar_entidade(repositorio, "usuario")
                 case "3":  # Listar Usuários
                     if self.usuario_autenticado.tipo == "administrador":
                         self.listar_tela_administrador()
@@ -360,6 +358,9 @@ class Fachada:
             match retorno["opcao"]:
                 case "1":  # Visualizar Administrador
                     self.pesquisar_entidade(repositorio, "usuario")
+                    repositorio: dict = self.gerenciador_usuarios.listar(
+                        tipo="administrador"
+                    )
                 case "2":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -373,6 +374,9 @@ class Fachada:
             match retorno["opcao"]:
                 case "1":  # Visualizar Usuário
                     self.pesquisar_entidade(repositorio, "usuario")
+                    repositorio: dict = self.gerenciador_usuarios.listar(
+                        id_loja=id_loja
+                    )
                 case "2":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -436,10 +440,116 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Editar Usuário / Loja
-                    pass
+                    if tipo_entidade == "usuario":
+                        informacoes: dict = {}
+                        informacoes["id"] = entidade.id_
+                        informacoes["nome"] = entidade.nome
+                        informacoes["username"] = entidade.username
+                        informacoes["email"] = entidade.email
+                        informacoes["senha"] = entidade.senha
+                        informacoes["tipo"] = entidade.tipo
+                        informacoes["id_loja"] = entidade.id_loja
+                        self.editar_usuario(informacoes)
+                        entidade = self.gerenciador_usuarios.buscar(id_)
                 case "2":  # Excluir Usuário / Loja
                     pass
                 case "3":  # Voltar
                     return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_usuario(self, informacoes: dict):
+
+        novas_informacoes: dict = informacoes.copy()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_usuario(novas_informacoes)
+
+            match retorno["opcao"]:
+                case "1":  # Editar Nome
+                    novo_nome: str = self.editar_usuario_nome(novas_informacoes["nome"])
+                    novas_informacoes["nome"] = novo_nome
+                case "2":  # Editar Username
+                    novo_username: str = self.editar_usuario_username(
+                        novas_informacoes["username"]
+                    )
+                    novas_informacoes["username"] = novo_username
+                case "3":  # Editar Email
+                    novo_email: str = self.editar_usuario_email(
+                        novas_informacoes["email"]
+                    )
+                    novas_informacoes["email"] = novo_email
+                case "4":  # Confirmar edição
+                    resultado: bool = self.editar_usuario_confirmacao(novas_informacoes)
+                    if resultado:
+                        return
+                case "5":  # Descartar edição
+                    resultado: bool = self.editar_usuario_descartar()
+                    if resultado:
+                        return
+                case "6":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_usuario_nome(self, nome: str) -> str:
+        retorno: dict = GerenciadorTelas.tela_editar_usuario_nome(nome)
+        if retorno["nome"] != "":
+            return retorno["nome"]
+        return nome
+
+    def editar_usuario_username(self, username: str) -> str:
+        repositorio: dict = self.gerenciador_usuarios.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_usuario_username(username)
+            if retorno["username"] != "":
+                if not ValidadorInformacoes.validacao_username(
+                    repositorio, retorno["username"]
+                ):
+                    GerenciadorTelas.tela_editar_usuario_erro_username()
+                else:
+                    return retorno["username"]
+            else:
+                return username
+
+    def editar_usuario_email(self, email: str) -> str:
+        repositorio: dict = self.gerenciador_usuarios.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_usuario_email(email)
+            if retorno["email"] != "":
+                if not ValidadorInformacoes.validacao_email(
+                    repositorio, retorno["email"]
+                ):
+                    GerenciadorTelas.tela_editar_usuario_erro_email()
+                else:
+                    return retorno["email"]
+            else:
+                return email
+
+    def editar_usuario_confirmacao(self, informacoes: dict) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_usuario_confirmacao()
+
+            match retorno["opcao"]:
+                case "1":  # Confirmar
+                    usuario = FabricaEntidades.criar_entidade(
+                        informacoes["tipo"], informacoes
+                    )
+                    self.gerenciador_usuarios.editar(informacoes["id"], usuario)
+                    GerenciadorTelas.tela_editar_usuario_sucesso()
+                    return True
+                case "2":  # Voltar
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_usuario_descartar(self) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_usuario_descartar()
+
+            match retorno["opcao"]:
+                case "1":  # Descartar
+                    return True
+                case "2":  # Voltar
+                    return False
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
