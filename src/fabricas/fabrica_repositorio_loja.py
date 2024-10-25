@@ -1,5 +1,5 @@
 from src.fabricas.fabrica_repositorio import FabricaRepositorio
-from src.repositorios.estrategias.estrategias_lojas import EstrategiaLojasRAM, EstrategiaLojaDB
+from src.repositorios.estrategias.estrategias_lojas import EstrategiaLojasRAM, EstrategiaLojasDB
 from src.repositorios.gerenciadores.gerenciador_lojas import GerenciadorLojas
 from src.repositorios.repositorios_lojas import RepositorioLojasRAM, RepositorioLojasDB
 
@@ -27,7 +27,7 @@ class FabricaRepositoriosLojas(FabricaRepositorio):
 class FabricaGerenciadorLojas:
     _repositorios = {
         'ram': GerenciadorLojas(EstrategiaLojasRAM(RepositorioLojasRAM().pegar_repositorio())),
-        'db': GerenciadorLojas(EstrategiaLojaDB(RepositorioLojasDB().pegar_repositorio()))
+        'db': GerenciadorLojas(EstrategiaLojasDB(RepositorioLojasDB().pegar_repositorio()))
     }
 
     @staticmethod

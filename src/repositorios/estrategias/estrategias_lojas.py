@@ -36,7 +36,7 @@ class EstrategiaLojasRAM(InterfaceEstrategia):
 
 
 
-class EstrategiaLojaDB(InterfaceEstrategia):
+class EstrategiaLojasDB(InterfaceEstrategia):
     def __init__(self, repositorio_db: Connection):
         self.repositorio_db = repositorio_db
 

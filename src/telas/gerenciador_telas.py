@@ -20,12 +20,28 @@ from .telas_adicionar_usuario import (
     TelaAdicionarUsuarios_Gerente,
     TelaAdicionarVendedor,
 )
+from .telas_editar_usuarios import (
+    TelaEditarUsuario,
+    TelaEditarUsuarioConfirmacao,
+    TelaEditarUsuarioDescartar,
+    TelaEditarUsuarioEmail,
+    TelaEditarUsuarioErroEmail,
+    TelaEditarUsuarioErroUsername,
+    TelaEditarUsuarioNome,
+    TelaEditarUsuarioSucesso,
+    TelaEditarUsuarioUsername,
+)
 from .telas_iniciais import (
     TelaInicialAdministrador,
     TelaInicialGerente,
     TelaInicialVendedor,
 )
-from .telas_listar_lojas import TelaFiltrarLoja, TelaListarLojas, TelaPesquisarLoja, TelaVisualizarLoja
+from .telas_listar_lojas import (
+    TelaFiltrarLoja,
+    TelaListarLojas,
+    TelaPesquisarLoja,
+    TelaVisualizarLoja,
+)
 from .telas_listar_usuarios import (
     TelaListar_Administrador,
     TelaListar_Gerente,
@@ -170,3 +186,39 @@ class GerenciadorTelas:
     @classmethod
     def tela_visualizar_loja(cls, loja) -> dict:
         return TelaVisualizarLoja.tela(loja)
+
+    @classmethod
+    def tela_editar_usuario(cls, informacoes: dict) -> dict:
+        return TelaEditarUsuario.tela(informacoes)
+
+    @classmethod
+    def tela_editar_usuario_nome(cls, nome: str) -> dict:
+        return TelaEditarUsuarioNome.tela(nome)
+
+    @classmethod
+    def tela_editar_usuario_username(cls, username: str) -> dict:
+        return TelaEditarUsuarioUsername.tela(username)
+
+    @classmethod
+    def tela_editar_usuario_email(cls, email: str) -> dict:
+        return TelaEditarUsuarioEmail.tela(email)
+
+    @classmethod
+    def tela_editar_usuario_confirmacao(cls) -> dict:
+        return TelaEditarUsuarioConfirmacao.tela()
+
+    @classmethod
+    def tela_editar_usuario_descartar(cls) -> dict:
+        return TelaEditarUsuarioDescartar.tela()
+
+    @classmethod
+    def tela_editar_usuario_erro_username(cls) -> None:
+        TelaEditarUsuarioErroUsername.tela()
+
+    @classmethod
+    def tela_editar_usuario_erro_email(cls) -> None:
+        TelaEditarUsuarioErroEmail.tela()
+
+    @classmethod
+    def tela_editar_usuario_sucesso(cls) -> None:
+        TelaEditarUsuarioSucesso.tela()
