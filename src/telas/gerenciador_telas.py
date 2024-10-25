@@ -50,6 +50,7 @@ from .telas_iniciais import (
 from .telas_listar_lojas import (
     TelaFiltrarLoja,
     TelaListarLojas,
+    TelaListarLojasFluxoFiltro,
     TelaPesquisarLoja,
     TelaVisualizarLoja,
 )
@@ -181,6 +182,10 @@ class GerenciadorTelas:
     @classmethod
     def tela_listar_lojas(cls, informacoes: dict) -> dict:
         return TelaListarLojas.tela(informacoes)
+
+    @classmethod
+    def tela_listar_lojas_fluxo_filtro(cls, informacoes: dict) -> dict:
+        return TelaListarLojasFluxoFiltro.tela(informacoes)
 
     @classmethod
     def tela_pesquisar_usuario(cls) -> dict:
