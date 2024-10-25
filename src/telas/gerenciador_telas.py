@@ -42,6 +42,7 @@ from .telas_editar_usuarios import (
     TelaEditarUsuarioUsername,
 )
 from .telas_excluir_usuario import TelaExcluirUsuario, TelaExcluirUsuarioSucesso
+
 from .telas_iniciais import (
     TelaInicialAdministrador,
     TelaInicialGerente,
@@ -63,6 +64,8 @@ from .telas_listar_usuarios import (
     TelaVisualizarUsuario,
 )
 from .telas_login import TelaLogin, TelaLoginErro
+
+from.telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
 
 
 class GerenciadorTelas:
@@ -278,3 +281,11 @@ class GerenciadorTelas:
     @classmethod
     def tela_editar_loja_sucesso(cls) -> None:
         TelaEditarLojaSucesso.tela()
+
+    @classmethod
+    def tela_excluir_loja(cls) -> dict:
+        return TelaExcluirLoja.tela()
+
+    @classmethod
+    def tela_excluir_loja_sucesso(cls) -> None:
+        TelaExcluirLojaSucesso.tela()
