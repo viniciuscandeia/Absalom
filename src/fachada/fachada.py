@@ -6,6 +6,7 @@ from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
+# ! Ver questão do filtrar por loja
 
 
 class Fachada:
@@ -452,7 +453,12 @@ class Fachada:
                         self.editar_usuario(informacoes)
                         entidade = self.gerenciador_usuarios.buscar(id_)
                 case "2":  # Excluir Usuário / Loja
-                    pass
+                    if tipo_entidade == "usuario":
+                        resultado: bool = self.excluir_usuario()
+                        if resultado:
+                            self.gerenciador_usuarios.remover(entidade.id_)
+                            GerenciadorTelas.tela_excluir_usuario_sucesso()
+                            return
                 case "3":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -550,6 +556,18 @@ class Fachada:
                 case "1":  # Descartar
                     return True
                 case "2":  # Voltar
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def excluir_usuario(self) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_excluir_usuario()
+
+            match retorno["opcao"]:
+                case "1":
+                    return True
+                case "2":
                     return False
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
