@@ -20,6 +20,16 @@ from .telas_adicionar_usuario import (
     TelaAdicionarUsuarios_Gerente,
     TelaAdicionarVendedor,
 )
+from .telas_editar_loja import (
+    TelaEditarLoja,
+    TelaEditarLojaConfirmacao,
+    TelaEditarLojaDescartar,
+    TelaEditarLojaEndereco,
+    TelaEditarLojaErroEndereco,
+    TelaEditarLojaErroNome,
+    TelaEditarLojaNome,
+    TelaEditarLojaSucesso,
+)
 from .telas_editar_usuarios import (
     TelaEditarUsuario,
     TelaEditarUsuarioConfirmacao,
@@ -231,3 +241,35 @@ class GerenciadorTelas:
     @classmethod
     def tela_excluir_usuario_sucesso(cls) -> None:
         TelaExcluirUsuarioSucesso.tela()
+
+    @classmethod
+    def tela_editar_loja(cls, informacoes: dict) -> dict:
+        return TelaEditarLoja.tela(informacoes)
+
+    @classmethod
+    def tela_editar_loja_nome(cls, nome: str) -> dict:
+        return TelaEditarLojaNome.tela(nome)
+
+    @classmethod
+    def tela_editar_loja_endereco(cls, endereco: str) -> dict:
+        return TelaEditarLojaEndereco.tela(endereco)
+
+    @classmethod
+    def tela_editar_loja_confirmacao(cls) -> dict:
+        return TelaEditarLojaConfirmacao.tela()
+
+    @classmethod
+    def tela_editar_loja_descartar(cls) -> dict:
+        return TelaEditarLojaDescartar.tela()
+
+    @classmethod
+    def tela_editar_loja_erro_nome(cls) -> None:
+        TelaEditarLojaErroNome.tela()
+
+    @classmethod
+    def tela_editar_loja_erro_endereco(cls) -> None:
+        TelaEditarLojaErroEndereco.tela()
+
+    @classmethod
+    def tela_editar_loja_sucesso(cls) -> None:
+        TelaEditarLojaSucesso.tela()

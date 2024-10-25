@@ -406,6 +406,7 @@ class Fachada:
             match retorno["opcao"]:
                 case "1":  # Visualizar Loja
                     self.pesquisar_entidade(repositorio, "loja")
+                    repositorio: dict = self.gerenciador_lojas.listar()
                 case "2":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -452,6 +453,13 @@ class Fachada:
                         informacoes["id_loja"] = entidade.id_loja
                         self.editar_usuario(informacoes)
                         entidade = self.gerenciador_usuarios.buscar(id_)
+                    elif tipo_entidade == "loja":
+                        informacoes: dict = {}
+                        informacoes["id"] = entidade.id_
+                        informacoes["nome"] = entidade.nome
+                        informacoes["endereco"] = entidade.endereco
+                        self.editar_loja(informacoes)
+                        entidade = self.gerenciador_lojas.buscar(id_)
                 case "2":  # Excluir Usuário / Loja
                     if tipo_entidade == "usuario":
                         resultado: bool = self.excluir_usuario()
@@ -568,6 +576,89 @@ class Fachada:
                 case "1":
                     return True
                 case "2":
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_loja(self, informacoes: dict):
+
+        novas_informacoes: dict = informacoes.copy()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_loja(novas_informacoes)
+
+            match retorno["opcao"]:
+                case "1":  # Editar Nome
+                    novo_nome: str = self.editar_loja_nome(novas_informacoes["nome"])
+                    novas_informacoes["nome"] = novo_nome
+                case "2":  # Editar Endereço
+                    novo_endereco: str = self.editar_loja_endereco(
+                        novas_informacoes["endereco"]
+                    )
+                    novas_informacoes["endereco"] = novo_endereco
+                case "3":  # Confirmar edição
+                    resultado: bool = self.editar_loja_confirmacao(novas_informacoes)
+                    if resultado:
+                        return
+                case "4":  # Descartar edição
+                    resultado: bool = self.editar_loja_descartar()
+                    if resultado:
+                        return
+                case "5":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_loja_nome(self, nome: str) -> str:
+        repositorio: dict = self.gerenciador_lojas.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_loja_nome(nome)
+            if retorno["nome"] != "":
+                if not ValidadorInformacoes.validacao_nome_loja(
+                    repositorio, retorno["nome"]
+                ):
+                    GerenciadorTelas.tela_editar_loja_erro_nome()
+                else:
+                    return retorno["nome"]
+            else:
+                return nome
+
+    def editar_loja_endereco(self, endereco: str) -> str:
+        repositorio: dict = self.gerenciador_lojas.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_loja_endereco(endereco)
+            if retorno["endereco"] != "":
+                if not ValidadorInformacoes.validacao_endereco(
+                    repositorio, retorno["endereco"]
+                ):
+                    GerenciadorTelas.tela_editar_loja_erro_endereco()
+                else:
+                    return retorno["endereco"]
+            else:
+                return endereco
+
+    def editar_loja_confirmacao(self, informacoes: dict) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_loja_confirmacao()
+
+            match retorno["opcao"]:
+                case "1":  # Confirmar
+                    loja = FabricaEntidades.criar_entidade("loja", informacoes)
+                    self.gerenciador_lojas.editar(informacoes["id"], loja)
+                    GerenciadorTelas.tela_editar_loja_sucesso()
+                    return True
+                case "2":  # Voltar
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_loja_descartar(self) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_loja_descartar()
+
+            match retorno["opcao"]:
+                case "1":  # Descartar
+                    return True
+                case "2":  # Voltar
                     return False
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
