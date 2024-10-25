@@ -1,5 +1,6 @@
 from ..entidades.entidades_usuarios import Usuario
 from .template_tela import TemplateTela
+from ..entidades.entidades_usuarios import Usuario
 
 # O "_Administrador" indica que é uma tela para o Administrador
 
@@ -51,10 +52,14 @@ class TelaListarUsuarios(TemplateTela):
 
     @classmethod
     def _titulo(cls):
-        print("--- Listar Usuários --- \n")
+        pass
 
     @classmethod
     def _listar_informacoes(cls, informacoes: dict = None):
+        chaves: list = list(informacoes.keys())
+        id_loja: int = informacoes[chaves[0]].id_loja
+        print(f"--- Usuários da Loja {id_loja} --- \n")
+
         for item in informacoes:
             print(informacoes[item])
 
