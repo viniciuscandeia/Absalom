@@ -63,7 +63,7 @@ class TelaVisualizarLoja(TemplateTela):
 
     @classmethod
     def _titulo(cls):
-        print("--- Informações da Loja --- \n")
+        print("--- Visualizar Loja --- \n")
 
     @classmethod
     def _listar_informacoes(cls, loja: Loja):
@@ -74,5 +74,5 @@ class TelaVisualizarLoja(TemplateTela):
 
     @classmethod
     def _menu(cls):
-        mensagem: str = "1 - Editar Loja \n2 - Excluir Loja \n3 - Voltar"
+        mensagem: str = "1 - Gerenciar Funcionários \n2 - Gerenciar Produtos \n3 - Editar Loja  \n4 - Remover Loja \n5 - Voltar"
         print(mensagem)

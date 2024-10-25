@@ -133,12 +133,13 @@ class Fachada:
             retorno: dict = GerenciadorTelas.tela_gerenciar_usuarios()
 
             match retorno["opcao"]:
-                case "1":  # Adicionar Usuário
+                case "1":  # Listar Usuários
                     if self.usuario_autenticado.tipo == "administrador":
-                        self.adicionar_usuario_tela_administrador()
+                        self.listar_tela_administrador()
                     else:
-                        self.adicionar_usuario_tela_gerente()
-                case "2":  # Administrar Usuário
+                        self.listar_tela_gerente()
+                        
+                case "2":  # Pesquisar Usuário
                     repositorio: dict = {}
                     if self.usuario_autenticado.tipo == "administrador":
                         repositorio: dict = self.gerenciador_usuarios.listar()
@@ -147,11 +148,13 @@ class Fachada:
                             id_loja=self.usuario_autenticado.id_loja
                         )
                     self.pesquisar_entidade(repositorio, "usuario")
-                case "3":  # Listar Usuários
+
+                case "3":  # Adicionar Usuário
                     if self.usuario_autenticado.tipo == "administrador":
-                        self.listar_tela_administrador()
+                        self.adicionar_usuario_tela_administrador()
                     else:
-                        self.listar_tela_gerente()
+                        self.adicionar_usuario_tela_gerente()
+
                 case "4":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -524,38 +527,24 @@ class Fachada:
 
     def visualizar_produto(self, tipo_entidade: str, id_: int):
 
-        entidade = None
-        if tipo_entidade == "usuario":
-            entidade = self.gerenciador_usuarios.buscar(id_)
-        elif tipo_entidade == "loja":
-            entidade = self.gerenciador_lojas.buscar(id_)
+        entidade = self.gerenciador_produto.buscar(id_)
 
         while True:
-            if tipo_entidade == "usuario":
-                retorno: dict = GerenciadorTelas.tela_visualizar_usuario(entidade)
-            elif tipo_entidade == "loja":
-                retorno: dict = GerenciadorTelas.tela_visualizar_loja(entidade)
+
+            retorno: dict = GerenciadorTelas.tela_visualizar_produto(entidade)
 
             match retorno["opcao"]:
                 case "1":  # Editar Usuário / Loja
-                    if tipo_entidade == "usuario":
                         informacoes: dict = {}
                         informacoes["id"] = entidade.id_
                         informacoes["nome"] = entidade.nome
-                        informacoes["username"] = entidade.username
-                        informacoes["email"] = entidade.email
-                        informacoes["senha"] = entidade.senha
-                        informacoes["tipo"] = entidade.tipo
+                        informacoes["descricao"] = entidade.descricao
+                        informacoes["preco"] = entidade.preco
+                        informacoes["quantidade"] = entidade.quantidade
                         informacoes["id_loja"] = entidade.id_loja
                         self.editar_usuario(informacoes)
                         entidade = self.gerenciador_usuarios.buscar(id_)
-                    elif tipo_entidade == "loja":
-                        informacoes: dict = {}
-                        informacoes["id"] = entidade.id_
-                        informacoes["nome"] = entidade.nome
-                        informacoes["endereco"] = entidade.endereco
-                        self.editar_loja(informacoes)
-                        entidade = self.gerenciador_lojas.buscar(id_)
+
                 case "2":  # Excluir Usuário / Loja
                     if tipo_entidade == "usuario":
                         resultado: bool = self.excluir_usuario()

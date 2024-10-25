@@ -10,6 +10,6 @@ class TelaGerenciarUsuarios(TemplateTela):
     @classmethod
     def _menu(cls):
         mensagem: str = (
-            "1 - Adicionar Usuário \n2 - Administrar Usuário \n3 - Listar Usuários \n4 - Voltar \n"
+            "1 - Listar Usuários \n2 - Pesquisar Usuário \n3 - Adicionar Usuário \n4 - Voltar \n"
         )
         print(mensagem)
