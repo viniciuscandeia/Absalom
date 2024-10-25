@@ -6,7 +6,6 @@ from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
-# ! Ver questão do filtrar por loja
 
 
 class Fachada:
@@ -417,7 +416,7 @@ class Fachada:
     def listar_lojas_fluxo_filtro(self):
         repositorio: dict = self.gerenciador_lojas.listar()
         while True:
-            retorno: dict = GerenciadorTelas.tela_listar_lojas(repositorio)
+            retorno: dict = GerenciadorTelas.tela_listar_lojas_fluxo_filtro(repositorio)
 
             match retorno["opcao"]:
                 case "1":  # Visualizar Loja

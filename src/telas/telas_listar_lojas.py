@@ -27,7 +27,24 @@ class TelaListarLojas(TemplateTela):
 
     @classmethod
     def _menu(cls):
-        mensagem: str = "1 - Visualizar Loja \n2 - Voltar \n"
+        mensagem: str = "1 - Escolher Loja \n2 - Voltar \n"
+        print(mensagem)
+
+
+class TelaListarLojasFluxoFiltro(TemplateTela):
+
+    @classmethod
+    def _titulo(cls):
+        print("--- Listar Lojas --- \n")
+
+    @classmethod
+    def _listar_informacoes(cls, informacoes: dict = None):
+        for item in informacoes:
+            print(informacoes[item])
+
+    @classmethod
+    def _menu(cls):
+        mensagem: str = "1 - Mostrar usuários de uma loja \n2 - Voltar \n"
         print(mensagem)
 
 
@@ -46,11 +63,13 @@ class TelaVisualizarLoja(TemplateTela):
 
     @classmethod
     def _titulo(cls):
-        print("--- Visualizar Loja --- \n")
+        print("--- Informações da Loja --- \n")
 
     @classmethod
     def _listar_informacoes(cls, loja: Loja):
-        mensagem: str = (f"ID: {loja.id_} \nNome: {loja.nome} \nEndereco: {loja.endereco} \n")
+        mensagem: str = (
+            f"ID: {loja.id_} \nNome: {loja.nome} \nEndereco: {loja.endereco} \n"
+        )
         print(mensagem)
 
     @classmethod
