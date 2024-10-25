@@ -31,6 +31,7 @@ from .telas_editar_usuarios import (
     TelaEditarUsuarioSucesso,
     TelaEditarUsuarioUsername,
 )
+from .telas_excluir_usuario import TelaExcluirUsuario, TelaExcluirUsuarioSucesso
 from .telas_iniciais import (
     TelaInicialAdministrador,
     TelaInicialGerente,
@@ -222,3 +223,11 @@ class GerenciadorTelas:
     @classmethod
     def tela_editar_usuario_sucesso(cls) -> None:
         TelaEditarUsuarioSucesso.tela()
+
+    @classmethod
+    def tela_excluir_usuario(cls) -> dict:
+        return TelaExcluirUsuario.tela()
+
+    @classmethod
+    def tela_excluir_usuario_sucesso(cls) -> None:
+        TelaExcluirUsuarioSucesso.tela()
