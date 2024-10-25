@@ -1,8 +1,5 @@
 Para terminar o CRUD das entidades:
 
-4. Criar fluxo de editar usuário
-5. Criar fluxo de remover usuário
-6. Criar fluxo de adicionar loja
 8. Criar fluxo de editar loja
 9. Criar fluxo de remover loja
 10. Criar fluxo de adicionar produto
