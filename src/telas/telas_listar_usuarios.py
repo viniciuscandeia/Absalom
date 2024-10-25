@@ -1,6 +1,5 @@
 from ..entidades.entidades_usuarios import Usuario
 from .template_tela import TemplateTela
-from ..entidades.entidades_usuarios import Usuario
 
 # O "_Administrador" indica que é uma tela para o Administrador
 
