@@ -91,7 +91,9 @@ class Fachada:
             match retorno["opcao"]:
                 case "1":  # Gerenciar Usuários
                     self.gerenciar_usuarios()
-                case "2":  # Logout
+                case "2":  # Gerenciar Lojas
+                    self.listar_lojas("loja")
+                case "3":  # Logout
                     self.usuario_autenticado = None
                     return
                 case _:  # Opção inválida
@@ -374,7 +376,7 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Visualizar Usuário
-                    self.pesquisar_entidade(repositorio, "usuario")
+                    self.pesquisar_entidade(repositorio, "usuario", "loja")
                     repositorio: dict = self.gerenciador_usuarios.listar(
                         id_loja=id_loja
                     )
@@ -389,7 +391,7 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Listar Lojas
-                    self.listar_lojas()
+                    self.listar_lojas("usuario")
                 case "2":  # Pesquisar Loja
                     repositorio: dict = self.gerenciador_lojas.listar()
                     self.pesquisar_entidade(repositorio, "loja")
@@ -398,31 +400,35 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def listar_lojas(self):
+    def listar_lojas(self, origem: str):
         repositorio: dict = self.gerenciador_lojas.listar()
         while True:
             retorno: dict = GerenciadorTelas.tela_listar_lojas(repositorio)
 
             match retorno["opcao"]:
                 case "1":  # Visualizar Loja
-                    self.pesquisar_entidade(repositorio, "loja")
+                    self.pesquisar_entidade(repositorio, "loja", origem)
                     repositorio: dict = self.gerenciador_lojas.listar()
                 case "2":  # Voltar
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def pesquisar_entidade(self, dados: dict, tipo_entidade: str):
+    def pesquisar_entidade(self, dados: dict, tipo_entidade: str, origem: str):
         retorno: dict = {}
         while True:
             if tipo_entidade == "usuario":
                 retorno: dict = GerenciadorTelas.tela_pesquisar_usuario()
             elif tipo_entidade == "loja":
-                retorno: dict = GerenciadorTelas.tela_pesquisar_tela()
+                retorno: dict = GerenciadorTelas.tela_pesquisar_loja()
 
-            if int(retorno["id"]) in dados.keys():
-                self.visualizar_entidade(tipo_entidade, int(retorno["id"]))
-                return
+            if str(retorno['id']).isdigit():
+                if int(retorno["id"]) in dados.keys():
+                    if origem == "usuario":
+                        self.listar_usuarios(int(retorno["id"]))
+                    else:
+                        self.visualizar_entidade(tipo_entidade, int(retorno["id"]))
+                    return
             else:  # Opção inválida
                 GerenciadorTelas.tela_opcao_invalida()
 
