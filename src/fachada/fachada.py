@@ -6,7 +6,7 @@ from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
-
+# Garantir que exista sempre ao menos 1 gerente por loja (a restrição não se aplica a vendedor)
 
 class Fachada:
 
@@ -437,7 +437,15 @@ class Fachada:
 
             if str(retorno["id"]).isdigit():
                 if int(retorno["id"]) in dados.keys():
-                    self.visualizar_entidade(tipo_entidade, int(retorno["id"]))
+                    if tipo_entidade == "usuario":
+                        self.visualizar_usuario(int(retorno["id"]))
+                    if tipo_entidade == "loja":
+                        self.visualizar_loja(int(retorno["id"]))
+                    if tipo_entidade == "produto":
+                        self.visualizar_produto(int(retorno["id"]))                        
+
+                    
+
                     return
             else:  # Opção inválida
                 GerenciadorTelas.tela_opcao_invalida()
@@ -454,7 +462,67 @@ class Fachada:
             else:  # Opção inválida
                 GerenciadorTelas.tela_opcao_invalida()
 
-    def visualizar_entidade(self, tipo_entidade: str, id_: int):
+    def visualizar_usuario(self, id_: int):
+
+        entidade = self.gerenciador_usuarios.buscar(id_)
+
+        while True:
+            retorno: dict = GerenciadorTelas.tela_visualizar_usuario(entidade)
+
+            match retorno["opcao"]:
+                case "1":  # Editar Usuário
+                    informacoes: dict = {}
+                    informacoes["id"] = entidade.id_
+                    informacoes["nome"] = entidade.nome
+                    informacoes["username"] = entidade.username
+                    informacoes["email"] = entidade.email
+                    informacoes["senha"] = entidade.senha
+                    informacoes["tipo"] = entidade.tipo
+                    informacoes["id_loja"] = entidade.id_loja
+                    self.editar_usuario(informacoes)
+                    entidade = self.gerenciador_usuarios.buscar(id_)
+
+                case "2":  # Excluir Usuário
+                    resultado: bool = self.excluir_usuario()
+                    if resultado:
+                        self.gerenciador_usuarios.remover(entidade.id_)
+                        GerenciadorTelas.tela_excluir_usuario_sucesso()
+                        return
+
+                case "3":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def visualizar_loja(self, id_: int):
+
+            entidade = self.gerenciador_lojas.buscar(id_)
+
+            while True:
+                retorno: dict = GerenciadorTelas.tela_visualizar_loja(entidade)
+
+                match retorno["opcao"]:
+                    case "1":  # Editar Usuário / Loja
+                        informacoes: dict = {}
+                        informacoes["id"] = entidade.id_
+                        informacoes["nome"] = entidade.nome
+                        informacoes["endereco"] = entidade.endereco
+                        self.editar_loja(informacoes)
+                        entidade = self.gerenciador_lojas.buscar(id_)
+
+                    case "2":  # Excluir Usuário / Loja
+                        resultado: bool = self.excluir_loja()
+                        if resultado:
+                            self.gerenciador_lojas.remover(entidade.id_)
+                            GerenciadorTelas.tela_excluir_loja_sucesso()
+                            return
+                        
+                    case "3":  # Voltar
+                        return
+                    case _:  # Opção inválida
+                        GerenciadorTelas.tela_opcao_invalida()
+
+    def visualizar_produto(self, tipo_entidade: str, id_: int):
 
         entidade = None
         if tipo_entidade == "usuario":
@@ -491,6 +559,12 @@ class Fachada:
                 case "2":  # Excluir Usuário / Loja
                     if tipo_entidade == "usuario":
                         resultado: bool = self.excluir_usuario()
+                        if resultado:
+                            self.gerenciador_usuarios.remover(entidade.id_)
+                            GerenciadorTelas.tela_excluir_usuario_sucesso()
+                            return
+                    if tipo_entidade == "loja":
+                        resultado: bool = self.excluir_loja()
                         if resultado:
                             self.gerenciador_usuarios.remover(entidade.id_)
                             GerenciadorTelas.tela_excluir_usuario_sucesso()
@@ -687,6 +761,18 @@ class Fachada:
                 case "1":  # Descartar
                     return True
                 case "2":  # Voltar
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def excluir_loja(self) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_excluir_loja()
+
+            match retorno["opcao"]:
+                case "1":
+                    return True
+                case "2":
                     return False
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
