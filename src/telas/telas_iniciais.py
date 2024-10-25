@@ -9,7 +9,7 @@ class TelaInicialAdministrador(TemplateTela):
 
     @classmethod
     def _menu(cls):
-        mensagem: str = "1 - Gerenciar Usuários \n2 - Logout \n"
+        mensagem: str = "1 - Gerenciar Usuários \n2 - Gerenciar Lojas \n3 - Logout \n"
         print(mensagem)
 
 class TelaInicialGerente(TemplateTela):

@@ -191,7 +191,7 @@ class GerenciadorTelas:
         return TelaVisualizarUsuario.tela(usuario)
 
     @classmethod
-    def tela_pesquisar_tela(cls) -> dict:
+    def tela_pesquisar_loja(cls) -> dict:
         return TelaPesquisarLoja.tela()
 
     @classmethod
