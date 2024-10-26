@@ -10,6 +10,6 @@ class TelaGerenciarLojas(TemplateTela):
     @classmethod
     def _menu(cls):
         mensagem: str = (
-            "1 - Pesquisar Loja \n2 - Listar Lojas \n3 - Voltar \n"
+            "1 - Administrar Loja \n2 - Listar Lojas \n3 - Voltar \n"
         )
         print(mensagem)

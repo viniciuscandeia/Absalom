@@ -1,6 +1,6 @@
 from sqlite3 import Connection
 from src.entidades.entidade_produto import Produto
-from src.repositorios.estrategias.gerenciamento_estrategia import InterfaceEstrategia
+from src.repositorios.estrategias.interface_estrategia import InterfaceEstrategia
 
 
 class EstrategiaProdutosRAM(InterfaceEstrategia):
@@ -40,7 +40,6 @@ class EstrategiaProdutosRAM(InterfaceEstrategia):
             informacoes[loja.id_] = loja
         return informacoes
 
-
     def gerar_novo_id(self) -> int:
         if len(self.repositorio) == 0:
             return 1
@@ -57,14 +56,14 @@ class EstrategiaProdutosDB(InterfaceEstrategia):
         query = """
                 INSERT INTO produtos (
                 nome,
-                tipo,
+                descricao,
                 preco,
                 quantidade,
                 id_loja)
                 VALUES (?, ?, ?, ?, ?)
             """
         cursor.execute(query, (entidade.nome,
-                               entidade.tipo,
+                               entidade.descricao,
                                entidade.preco,
                                entidade.quantidade,
                                entidade.id_loja))
@@ -129,14 +128,14 @@ class EstrategiaProdutosDB(InterfaceEstrategia):
         informacoes: dict = {}
         cursor = self.repositorio_db.cursor()
 
-        query = "SELECT id, nome, tipo, preco, quantidade, id_loja FROM produtos"
+        query = "SELECT id, nome, descricao, preco, quantidade, id_loja FROM produtos"
 
         cursor.execute(query)
         for resultado in cursor.fetchall():
             produto = Produto(
                 id_=resultado[0],
                 nome=resultado[1],
-                tipo=resultado[2],
+                descricao=resultado[2],
                 preco=resultado[3],
                 quantidade=resultado[4],
                 id_loja=resultado[5]

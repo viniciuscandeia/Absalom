@@ -43,7 +43,7 @@ class TelaVisualizarProduto(TemplateTela):
     @classmethod
     def _listar_informacoes(cls, produto: Produto):
         mensagem: str = (
-            f"ID: {produto.id_} \nNome: {produto.nome} \Descrição: {produto.descricao} \nPreço (R$): {produto.preco} \nQuantidade: {produto.quantidade} \n"
+            f"ID: {produto.id_} \nNome: {produto.nome} \nDescrição: {produto.descricao} \nPreço (R$): {produto.preco} \nQuantidade: {produto.quantidade} \n"
         )
         print(mensagem)
 

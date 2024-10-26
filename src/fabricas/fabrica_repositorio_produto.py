@@ -1,8 +1,7 @@
 from src.fabricas.fabrica_repositorio import FabricaRepositorio
-from src.repositorios.estrategias.estrategias_gerenciamento_produto import GerenciamentoProdutoRAM, \
-    GerenciamentoProdutoDB
-from src.repositorios.estrategias.gerenciador_repositorio_produto import GerenciadorRepositorioProduto
 from src.repositorios.repositorio_produto import RepositorioProdutoRAM, RepositorioProdutoDB
+from src.repositorios.gerenciadores.gerenciador_produtos import GerenciadorProdutos
+from src.repositorios.estrategias.estrategias_produtos import EstrategiaProdutosRAM, EstrategiaProdutosDB
 
 
 class FabricaRepositorioProduto(FabricaRepositorio):
@@ -25,8 +24,8 @@ class FabricaRepositorioProduto(FabricaRepositorio):
 
 class FabricaGerenciadorProdutos:
     _repositorios = {
-        'ram': GerenciadorRepositorioProduto(GerenciamentoProdutoRAM(RepositorioProdutoRAM().pegar_repositorio())),
-        'db': GerenciadorRepositorioProduto(GerenciamentoProdutoDB(RepositorioProdutoDB().pegar_repositorio()))
+        'ram': GerenciadorProdutos(EstrategiaProdutosRAM(RepositorioProdutoRAM().pegar_repositorio())),
+        'db': GerenciadorProdutos(EstrategiaProdutosDB(RepositorioProdutoDB().pegar_repositorio()))
     }
 
     @staticmethod

@@ -54,19 +54,28 @@ class ValidadorInformacoes:
         return True
 
     @classmethod
-    def validacao_produto_nome_descricao(cls, texto: str) -> bool:
-        if not texto:
+    def validacao_produto_nome(cls, repositorio: dict, nome: str) -> bool:
+        for item in repositorio:
+            if repositorio[item].nome == nome:
+                return False
+        return True
+
+    @classmethod
+    def validacao_produto_descricao(cls, descricao: str) -> bool:
+        if descricao == "":
             return False
         return True
 
     @classmethod
-    def validacao_produto_preco(cls, preco: float) -> bool:
-        if not isinstance(preco, (int, float)) or preco <= 0:
-            return False
+    def validacao_produto_preco(cls, preco: str) -> bool:
+        if preco.isnumeric():
+            if not isinstance(float(preco), (int, float)) or float(preco) <= 0:
+                return False
         return True
 
     @classmethod
     def validacao_produto_quantidade(cls, quantidade: int) -> bool:
-        if not isinstance(quantidade, int) or quantidade < 0:
-            return False
+        if quantidade.isnumeric():
+            if not isinstance(int(quantidade), int) or int(quantidade) < 0:
+                return False
         return True

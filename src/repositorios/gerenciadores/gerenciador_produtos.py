@@ -20,3 +20,6 @@ class GerenciadorProdutos:
 
     def listar(self) -> dict:
         return self.estrategia.listar()
+
+    def gerar_novo_id(self) -> int:
+        return self.estrategia.gerar_novo_id()

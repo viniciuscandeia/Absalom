@@ -1,7 +1,7 @@
 from .template_tela import TemplateTela
 
 
-class TelaAdicionarProdutos(TemplateTela):
+class TelaAdicionarProduto(TemplateTela):
 
     @classmethod
     def _titulo(cls):

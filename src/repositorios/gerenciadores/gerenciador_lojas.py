@@ -1,4 +1,5 @@
 from src.entidades.entidade_loja import Loja
+
 from ..estrategias.interface_estrategia import InterfaceEstrategia
 
 

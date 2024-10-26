@@ -10,8 +10,7 @@ class TelaEditarProduto(TemplateTela):
     @classmethod
     def _listar_informacoes(cls, informacoes: dict):
         mensagem: str = (
-            f"ID: {informacoes['id']} \nNome: {informacoes['nome']} \nDescrição: {
-                informacoes['descricao']} \nPreço: {informacoes['preco']} \nQuantidade: {informacoes['quantidade']} \n"
+            f"ID: {informacoes['id']} \nNome: {informacoes['nome']} \nDescrição: {informacoes['descricao']} \nPreço: {informacoes['preco']} \nQuantidade: {informacoes['quantidade']} \n"
         )
         print(mensagem)
 
