@@ -1,26 +1,25 @@
 from src.entidades.entidade_loja import Loja
 
-from ..estrategias.interface_estrategia import InterfaceEstrategia
-
+from ..estrategias.estrategias_lojas import InterfaceEstrategiaLojas
 
 class GerenciadorLojas:
-    def __init__(self, estrategia: InterfaceEstrategia):
+    def __init__(self, estrategia: InterfaceEstrategiaLojas):
         self.estrategia = estrategia
 
-    def adicionar(self, entidade: Loja):
-        self.estrategia.adicionar(entidade)
+    def adicionar(self, loja: Loja):
+        self.estrategia.adicionar(loja)
 
-    def remover(self, id_: int):
-        self.estrategia.remover(id_)
+    def remover(self, id_loja: int):
+        self.estrategia.remover(id_loja)
 
-    def editar(self, id_: int, entidade: Loja):
-        self.estrategia.editar(id_, entidade)
+    def editar(self, id_loja: int, loja: Loja):
+        self.estrategia.editar(id_loja, loja)
 
-    def buscar(self, id_: int):
-        return self.estrategia.buscar(id_)
+    def buscar(self, id_loja: int):
+        return self.estrategia.buscar(id_loja)
 
-    def verificar_existencia(self, id_: int) -> bool:
-        return self.estrategia.verificar_existencia(id_)
+    def verificar_existencia(self, id_loja: int) -> bool:
+        return self.estrategia.verificar_existencia(id_loja)
 
     def listar(self) -> dict:
         return self.estrategia.listar()

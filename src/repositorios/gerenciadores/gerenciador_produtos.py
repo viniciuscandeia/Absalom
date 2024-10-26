@@ -1,22 +1,22 @@
 from src.entidades.entidade_produto import Produto
-from ..estrategias.interface_estrategia import InterfaceEstrategia
+from src.repositorios.estrategias.estrategias_produtos import InterfaceEstrategiaProdutos
 
 
 class GerenciadorProdutos:
-    def __init__(self, estrategia: InterfaceEstrategia):
+    def __init__(self, estrategia: InterfaceEstrategiaProdutos):
         self.estrategia = estrategia
 
-    def adicionar(self, entidade: Produto):
-        self.estrategia.adicionar(entidade)
+    def adicionar(self, produto: Produto):
+        self.estrategia.adicionar(produto)
 
-    def remover(self, id_: int):
-        self.estrategia.remover(id_)
+    def remover(self, id_produto: int):
+        self.estrategia.remover(id_produto)
 
-    def editar(self, id_: int, entidade: Produto):
-        self.estrategia.editar(id_, entidade)
+    def editar(self, id_produto: int, produto: Produto):
+        self.estrategia.editar(id_produto, produto)
 
-    def buscar(self, id_: int):
-        return self.estrategia.buscar(id_)
+    def buscar(self, id_produto: int):
+        return self.estrategia.buscar(id_produto)
 
     def listar(self, id_loja: int = None) -> dict:
         return self.estrategia.listar(id_loja)
