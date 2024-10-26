@@ -54,21 +54,19 @@ class ValidadorInformacoes:
         return True
 
     @classmethod
-    def validacao_produto(cls, produto) -> bool:
-        # Verificar se todos os campos obrigatórios estão preenchidos
-        if not produto.nome or not produto.descricao:
-            print("Erro: Nome ou descrição do produto não podem estar vazios.")
+    def validacao_produto_nome_descricao(cls, texto: str) -> bool:
+        if not texto:
             return False
+        return True
 
-        # Verificar se o preço é um número válido e positivo
-        if not isinstance(produto.preco, (int, float)) or produto.preco <= 0:
-            print("Erro: Preço deve ser um número positivo.")
+    @classmethod
+    def validacao_produto_preco(cls, preco: float) -> bool:
+        if not isinstance(preco, (int, float)) or preco <= 0:
             return False
+        return True
 
-        # Verificar se a quantidade é um número inteiro positivo
-        if not isinstance(produto.quantidade, int) or produto.quantidade < 0:
-            print("Erro: Quantidade deve ser um número inteiro não negativo.")
+    @classmethod
+    def validacao_produto_quantidade(cls, quantidade: int) -> bool:
+        if not isinstance(quantidade, int) or quantidade < 0:
             return False
-
-        # Se todas as verificações passarem, o produto é válido
         return True
