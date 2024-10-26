@@ -1,14 +1,10 @@
-from ..entidades.entidade_loja import Loja
 from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
 from ..fabricas.fabrica_repositorio_loja import FabricaGerenciadorLojas
-from ..memento.loja.caretaker_loja import CaretakerLoja
-from ..memento.loja.originator_loja import OriginatorLoja
 from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 from ..fabricas.fabrica_repositorio_produto import FabricaGerenciadorProdutos
-
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
 # Garantir que exista sempre ao menos 1 gerente por loja (a restrição não se aplica a vendedor)
@@ -240,12 +236,12 @@ class Fachada:
 
             # Realizar validação dos dados
             if not ValidadorInformacoes.validacao_username(
-                    repositorio, retorno["username"]
+                repositorio, retorno["username"]
             ):
                 # Erro por causa do username
                 GerenciadorTelas.tela_adicionar_usuario_erro_username()
             elif not ValidadorInformacoes.validacao_email(
-                    repositorio, retorno["email"]
+                repositorio, retorno["email"]
             ):
                 # Erro por causa do email
                 GerenciadorTelas.tela_adicionar_usuario_erro_email()
@@ -272,12 +268,12 @@ class Fachada:
 
             # Realizar validação dos dados
             if not ValidadorInformacoes.validacao_username(
-                    repositorio, retorno["username"]
+                repositorio, retorno["username"]
             ):
                 # Erro por causa do username
                 GerenciadorTelas.tela_adicionar_usuario_erro_username()
             elif not ValidadorInformacoes.validacao_email(
-                    repositorio, retorno["email"]
+                repositorio, retorno["email"]
             ):
                 # Erro por causa do email
                 GerenciadorTelas.tela_adicionar_usuario_erro_email()
@@ -297,7 +293,7 @@ class Fachada:
     def adicionar_usuario_como_gerente(self, tipo_usuario: str):
         while True:
             retorno: dict = {}
-            if tipo_usuario == "gerente": 
+            if tipo_usuario == "gerente":
                 retorno: dict = GerenciadorTelas.tela_adicionar_gerente()
             elif tipo_usuario == "vendedor":
                 retorno: dict = GerenciadorTelas.tela_adicionar_vendedor()
@@ -306,12 +302,12 @@ class Fachada:
 
             # Realizar validação dos dados
             if not ValidadorInformacoes.validacao_username(
-                    repositorio, retorno["username"]
+                repositorio, retorno["username"]
             ):
                 # Erro por causa do username
                 GerenciadorTelas.tela_adicionar_usuario_erro_username()
             elif not ValidadorInformacoes.validacao_email(
-                    repositorio, retorno["email"]
+                repositorio, retorno["email"]
             ):
                 # Erro por causa do email
                 GerenciadorTelas.tela_adicionar_usuario_erro_email()
@@ -354,11 +350,11 @@ class Fachada:
             retorno: dict = GerenciadorTelas.tela_adicionar_loja()
 
             if not ValidadorInformacoes.validacao_nome_loja(
-                    repositorio, retorno["nome"]
+                repositorio, retorno["nome"]
             ):
                 GerenciadorTelas.tela_adicionar_loja_erro_nome()
             elif not ValidadorInformacoes.validacao_endereco(
-                    repositorio, retorno["endereco"]
+                repositorio, retorno["endereco"]
             ):
                 GerenciadorTelas.tela_adicionar_loja_erro_endereco()
             else:
@@ -538,31 +534,7 @@ class Fachada:
                     GerenciadorTelas.tela_opcao_invalida()
 
     def visualizar_loja(self, id_: int):
-        entidade = self.gerenciador_lojas.buscar(id_)
 
-<<<<<<< HEAD
-        while True:
-            retorno: dict = GerenciadorTelas.tela_visualizar_loja(entidade)
-
-            match retorno["opcao"]:
-                case "1":  # Editar Usuário / Loja
-                    informacoes: dict = {}
-                    informacoes["id"] = entidade.id_
-                    informacoes["nome"] = entidade.nome
-                    informacoes["endereco"] = entidade.endereco
-
-                    loja_initial = FabricaEntidades.criar_entidade('loja', informacoes)
-                    # Memento
-                    originator_loja = OriginatorLoja(loja_initial)
-                    caretaker_loja = CaretakerLoja()
-                    caretaker_loja.add_memento(originator_loja.create_memento())
-                    originator_loja.set_state(loja_initial)
-
-                    self.editar_loja(caretaker_loja, originator_loja)
-                    entidade = self.gerenciador_lojas.buscar(id_)
-
-                case "2":  # Excluir Usuário / Loja
-=======
         entidade = self.gerenciador_lojas.buscar(id_)
 
         while True:
@@ -581,18 +553,12 @@ class Fachada:
                     self.editar_loja(informacoes)
                     entidade = self.gerenciador_lojas.buscar(id_)
                 case "4":  # Excluir Loja
->>>>>>> c0f8c76 (feat(adicionar): Adicionar produto)
                     resultado: bool = self.excluir_loja()
                     if resultado:
                         self.gerenciador_lojas.remover(entidade.id_)
                         GerenciadorTelas.tela_excluir_loja_sucesso()
                         return
-<<<<<<< HEAD
-
-                case "3":  # Voltar
-=======
                 case "5":  # Voltar
->>>>>>> c0f8c76 (feat(adicionar): Adicionar produto)
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
@@ -629,15 +595,7 @@ class Fachada:
                         informacoes["id"] = entidade.id_
                         informacoes["nome"] = entidade.nome
                         informacoes["endereco"] = entidade.endereco
-
-                        loja_initial = FabricaEntidades.criar_entidade('loja', informacoes)
-                        # Memento
-                        originator_loja = OriginatorLoja(loja_initial)
-                        caretaker_loja = CaretakerLoja()
-                        caretaker_loja.add_memento(originator_loja.create_memento())
-                        originator_loja.set_state(loja_initial)
-
-                        self.editar_loja(caretaker_loja, originator_loja)
+                        self.editar_loja(informacoes)
                         entidade = self.gerenciador_lojas.buscar(id_)
                 case "2":  # Excluir Usuário / Loja
                     if tipo_entidade == "usuario":
@@ -702,7 +660,7 @@ class Fachada:
             retorno: dict = GerenciadorTelas.tela_editar_usuario_username(username)
             if retorno["username"] != "":
                 if not ValidadorInformacoes.validacao_username(
-                        repositorio, retorno["username"]
+                    repositorio, retorno["username"]
                 ):
                     GerenciadorTelas.tela_editar_usuario_erro_username()
                 else:
@@ -716,7 +674,7 @@ class Fachada:
             retorno: dict = GerenciadorTelas.tela_editar_usuario_email(email)
             if retorno["email"] != "":
                 if not ValidadorInformacoes.validacao_email(
-                        repositorio, retorno["email"]
+                    repositorio, retorno["email"]
                 ):
                     GerenciadorTelas.tela_editar_usuario_erro_email()
                 else:
@@ -765,57 +723,41 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def editar_loja(self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja):
-        # Memento
+    def editar_loja(self, informacoes: dict):
 
+        novas_informacoes: dict = informacoes.copy()
         while True:
-            estado_atual = originator_loja.get_state()
-            caretaker_loja.get_mementos()
+            retorno: dict = GerenciadorTelas.tela_editar_loja(novas_informacoes)
 
-            retorno: dict = GerenciadorTelas.tela_editar_loja(estado_atual.toDict())
             match retorno["opcao"]:
-                case "1":
-                    estado_atual = originator_loja.get_state()
-                    novo_nome: str = self.editar_loja_nome(estado_atual.nome)
-                    loja_att = estado_atual.setNome(novo_nome)
-                    originator_loja.set_state(loja_att)
-
+                case "1":  # Editar Nome
+                    novo_nome: str = self.editar_loja_nome(novas_informacoes["nome"])
+                    novas_informacoes["nome"] = novo_nome
                 case "2":  # Editar Endereço
-                    estado_atual = originator_loja.get_state()
-                    novo_nome: str = self.editar_loja_endereco(estado_atual.endereco)
-                    loja_att = estado_atual.setEndereco(novo_nome)
-
-                    originator_loja.set_state(loja_att)
+                    novo_endereco: str = self.editar_loja_endereco(
+                        novas_informacoes["endereco"]
+                    )
+                    novas_informacoes["endereco"] = novo_endereco
                 case "3":  # Confirmar edição
-                    estado_atual = originator_loja.get_state()
-                    resultado: bool = self.editar_loja_confirmacao(estado_atual)
+                    resultado: bool = self.editar_loja_confirmacao(novas_informacoes)
                     if resultado:
                         return
                 case "4":  # Descartar edição
                     resultado: bool = self.editar_loja_descartar()
                     if resultado:
-                        originator_loja.restore(caretaker_loja.get_memento(0))
-                        estado_atual = originator_loja.get_state()
-                        print(estado_atual)
-
                         return
                 case "5":  # Voltar
-                    originator_loja.restore(caretaker_loja.get_memento(0))
-                    estado_atual = originator_loja.get_state()
-                    print(estado_atual)
-
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
     def editar_loja_nome(self, nome: str) -> str:
         repositorio: dict = self.gerenciador_lojas.listar()
-
         while True:
             retorno: dict = GerenciadorTelas.tela_editar_loja_nome(nome)
             if retorno["nome"] != "":
                 if not ValidadorInformacoes.validacao_nome_loja(
-                        repositorio, retorno["nome"]
+                    repositorio, retorno["nome"]
                 ):
                     GerenciadorTelas.tela_editar_loja_erro_nome()
                 else:
@@ -829,7 +771,7 @@ class Fachada:
             retorno: dict = GerenciadorTelas.tela_editar_loja_endereco(endereco)
             if retorno["endereco"] != "":
                 if not ValidadorInformacoes.validacao_endereco(
-                        repositorio, retorno["endereco"]
+                    repositorio, retorno["endereco"]
                 ):
                     GerenciadorTelas.tela_editar_loja_erro_endereco()
                 else:
@@ -837,13 +779,14 @@ class Fachada:
             else:
                 return endereco
 
-    def editar_loja_confirmacao(self, loja: Loja) -> bool:
+    def editar_loja_confirmacao(self, informacoes: dict) -> bool:
         while True:
             retorno: dict = GerenciadorTelas.tela_editar_loja_confirmacao()
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    self.gerenciador_lojas.editar(loja.id_, loja)
+                    loja = FabricaEntidades.criar_entidade("loja", informacoes)
+                    self.gerenciador_lojas.editar(informacoes["id"], loja)
                     GerenciadorTelas.tela_editar_loja_sucesso()
                     return True
                 case "2":  # Voltar

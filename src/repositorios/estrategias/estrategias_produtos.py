@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from sqlite3 import Connection
-
 from src.entidades.entidade_produto import Produto
 
 

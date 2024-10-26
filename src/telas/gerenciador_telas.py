@@ -1,4 +1,98 @@
-from src.telas import *
+from .tela_escolha_persistencia import TelaEscolhaPersistencia
+from .tela_gerenciar_lojas import TelaGerenciarLojas
+from .tela_gerenciar_usuarios import TelaGerenciarUsuarios
+from .tela_opcao_invalida import TelaOpcaoInvalida
+from .telas_adicionar_loja import (
+    TelaAdicionarLoja,
+    TelaAdicionarLojaErroEndereco,
+    TelaAdicionarLojaErroNome,
+    TelaAdicionarLojaSucesso,
+    TelaAssociarLoja,
+    TelaAssociarLojaInicial,
+)
+from .telas_adicionar_produto import (
+    TelaAdicionarProduto,
+    TelaAdicionarProdutoErroDescricao,
+    TelaAdicionarProdutoErroNome,
+    TelaAdicionarProdutoErroPreco,
+    TelaAdicionarProdutoErroQuantidade,
+    TelaAdicionarProdutoSucesso,
+)
+from .telas_adicionar_usuario import (
+    TelaAdicionarAdministrador,
+    TelaAdicionarErroEmail,
+    TelaAdicionarErroSenha,
+    TelaAdicionarErroUsername,
+    TelaAdicionarGerente,
+    TelaAdicionarSucesso,
+    TelaAdicionarUsuarios_Administrador,
+    TelaAdicionarUsuarios_Gerente,
+    TelaAdicionarVendedor,
+)
+from .telas_editar_loja import (
+    TelaEditarLoja,
+    TelaEditarLojaConfirmacao,
+    TelaEditarLojaDescartar,
+    TelaEditarLojaEndereco,
+    TelaEditarLojaErroEndereco,
+    TelaEditarLojaErroNome,
+    TelaEditarLojaNome,
+    TelaEditarLojaSucesso,
+)
+from .telas_editar_produto import (
+    TelaEditarProduto,
+    TelaEditarProdutoConfirmacao,
+    TelaEditarProdutoDescartar,
+    TelaEditarProdutoDescricao,
+    TelaEditarProdutoErroNome,
+    TelaEditarProdutoErroPreco,
+    TelaEditarProdutoErroQuantidade,
+    TelaEditarProdutoNome,
+    TelaEditarProdutoPreco,
+    TelaEditarProdutoQuantidade,
+    TelaEditarProdutoSucesso,
+)
+from .telas_editar_usuarios import (
+    TelaEditarUsuario,
+    TelaEditarUsuarioConfirmacao,
+    TelaEditarUsuarioDescartar,
+    TelaEditarUsuarioEmail,
+    TelaEditarUsuarioErroEmail,
+    TelaEditarUsuarioErroUsername,
+    TelaEditarUsuarioNome,
+    TelaEditarUsuarioSucesso,
+    TelaEditarUsuarioUsername,
+)
+from .telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
+from .telas_excluir_produto import TelaExcluirProduto, TelaExcluirProdutoSucesso
+from .telas_excluir_usuario import TelaExcluirUsuario, TelaExcluirUsuarioSucesso
+from .telas_iniciais import (
+    TelaInicialAdministrador,
+    TelaInicialGerente,
+    TelaInicialVendedor,
+)
+from .telas_listar_lojas import (
+    TelaFiltrarLoja,
+    TelaListarLojas,
+    TelaListarLojasFluxoFiltro,
+    TelaPesquisarLoja,
+    TelaVisualizarLoja,
+)
+from .telas_listar_usuarios import (
+    TelaListar_Administrador,
+    TelaListar_Gerente,
+    TelaListarAdministradores,
+    TelaListarUsuarios,
+    TelaPesquisarUsuario,
+    TelaVisualizarUsuario,
+)
+from .telas_listas_produtos import (
+    TelaListarProdutos,
+    TelaPesquisarProduto,
+    TelaVisualizarProduto,
+)
+from .telas_login import TelaLogin, TelaLoginErro
+from .tela_gerenciar_produtos import TelaGerenciarProdutos
 
 class GerenciadorTelas:
 
@@ -275,8 +369,8 @@ class GerenciadorTelas:
         return TelaEditarProdutoDescricao.tela(descricao)
 
     @classmethod
-    def tela_editar_produto_preco(cls, preco: str) -> dict:
-        return TelaEditarProdutoPreco.tela(preco)
+    def tela_editar_produto_preco(cls, preco: float) -> dict:
+        return TelaEditarProdutoPreco.tela()
 
     @classmethod
     def tela_editar_produto_quantidade(cls, quantidade: int) -> dict:
@@ -290,7 +384,6 @@ class GerenciadorTelas:
     def tela_editar_produto_descartar(cls) -> dict:
         return TelaEditarProdutoDescartar.tela()
 
-    @classmethod
     def tela_editar_produto_sucesso(cls) -> None:
         TelaEditarProdutoSucesso.tela()
 
@@ -309,8 +402,8 @@ class GerenciadorTelas:
     # * Excluir produto
 
     @classmethod
-    def tela_excluir_produto(cls) -> dict:
-        return TelaExcluirProduto.tela()
+    def tela_excluir_produto(cls) -> None:
+        TelaExcluirProduto.tela()
 
     @classmethod
     def tela_excluir_produto_sucesso(cls) -> None:

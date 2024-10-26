@@ -23,3 +23,6 @@ class GerenciadorProdutos:
 
     def gerar_novo_id(self) -> int:
         return self.estrategia.gerar_novo_id()
+
+    def gerar_novo_id(self) -> int:
+        return self.estrategia.gerar_novo_id()
