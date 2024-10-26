@@ -18,8 +18,8 @@ class GerenciadorProdutos:
     def buscar(self, id_: int):
         return self.estrategia.buscar(id_)
 
-    def listar(self) -> dict:
-        return self.estrategia.listar()
+    def listar(self, id_loja: int = None) -> dict:
+        return self.estrategia.listar(id_loja)
 
     def gerar_novo_id(self) -> int:
         return self.estrategia.gerar_novo_id()
