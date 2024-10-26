@@ -384,6 +384,7 @@ class GerenciadorTelas:
     def tela_editar_produto_descartar(cls) -> dict:
         return TelaEditarProdutoDescartar.tela()
 
+    @classmethod
     def tela_editar_produto_sucesso(cls) -> None:
         TelaEditarProdutoSucesso.tela()
 
@@ -402,8 +403,8 @@ class GerenciadorTelas:
     # * Excluir produto
 
     @classmethod
-    def tela_excluir_produto(cls) -> None:
-        TelaExcluirProduto.tela()
+    def tela_excluir_produto(cls) -> dict:
+        return TelaExcluirProduto.tela()
 
     @classmethod
     def tela_excluir_produto_sucesso(cls) -> None:

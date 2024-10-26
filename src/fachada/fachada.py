@@ -1,14 +1,16 @@
 from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
 from ..fabricas.fabrica_repositorio_loja import FabricaGerenciadorLojas
+from ..fabricas.fabrica_repositorio_produto import FabricaGerenciadorProdutos
 from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
-from ..fabricas.fabrica_repositorio_produto import FabricaGerenciadorProdutos
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
 # Garantir que exista sempre ao menos 1 gerente por loja (a restrição não se aplica a vendedor)
 # * Trocar nome de fabrica_repositorio_loja para fabrica_gerenciadores_loja (o mesmo para produto)
+# As entidades têm alguns métodos similares (confirmação, descartar). Poderiam usar o mesmo método.
+
 
 class Fachada:
 
@@ -19,7 +21,9 @@ class Fachada:
         self.gerenciador_lojas = FabricaGerenciadorLojas.criar_gerenciador(
             tipo_persistencia
         )
-        self.gerenciador_produtos = FabricaGerenciadorProdutos.criar_gerenciador(tipo_persistencia)
+        self.gerenciador_produtos = FabricaGerenciadorProdutos.criar_gerenciador(
+            tipo_persistencia
+        )
 
         self.autenticador = AutenticacaoUsuario(self.gerenciador_usuarios)
         self.usuario_autenticado = None
@@ -190,9 +194,10 @@ class Fachada:
                 case "1":  # Adicionar Produto
                     self.adicionar_produto(id_loja)
                 case "2":  # Administrar Produto
-                    pass
+                    repositorio: dict = self.gerenciador_produtos.listar(id_loja)
+                    self.pesquisar_entidade(repositorio, "produto")
                 case "3":  # Listar Produtos
-                    pass
+                    self.listar_produtos(id_loja)
                 case "4":
                     return
                 case _:  # Opção inválida
@@ -475,6 +480,8 @@ class Fachada:
                 retorno: dict = GerenciadorTelas.tela_pesquisar_usuario()
             elif tipo_entidade == "loja":
                 retorno: dict = GerenciadorTelas.tela_pesquisar_loja()
+            elif tipo_entidade == "produto":
+                retorno: dict = GerenciadorTelas.tela_pesquisar_produto()
 
             if str(retorno["id"]).isdigit():
                 if int(retorno["id"]) in dados.keys():
@@ -484,7 +491,6 @@ class Fachada:
                         self.visualizar_loja(int(retorno["id"]))
                     if tipo_entidade == "produto":
                         self.visualizar_produto(int(retorno["id"]))
-
                     return
             else:  # Opção inválida
                 GerenciadorTelas.tela_opcao_invalida()
@@ -563,53 +569,30 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def visualizar_produto(self, tipo_entidade: str, id_: int):
+    def visualizar_produto(self, id_: int):
 
-        entidade = None
-        if tipo_entidade == "usuario":
-            entidade = self.gerenciador_usuarios.buscar(id_)
-        elif tipo_entidade == "loja":
-            entidade = self.gerenciador_lojas.buscar(id_)
+        entidade = self.gerenciador_produtos.buscar(id_)
 
         while True:
-            if tipo_entidade == "usuario":
-                retorno: dict = GerenciadorTelas.tela_visualizar_usuario(entidade)
-            elif tipo_entidade == "loja":
-                retorno: dict = GerenciadorTelas.tela_visualizar_loja(entidade)
+            retorno: dict = GerenciadorTelas.tela_visualizar_produto(entidade)
 
             match retorno["opcao"]:
-                case "1":  # Editar Usuário / Loja
-                    if tipo_entidade == "usuario":
-                        informacoes: dict = {}
-                        informacoes["id"] = entidade.id_
-                        informacoes["nome"] = entidade.nome
-                        informacoes["username"] = entidade.username
-                        informacoes["email"] = entidade.email
-                        informacoes["senha"] = entidade.senha
-                        informacoes["tipo"] = entidade.tipo
-                        informacoes["id_loja"] = entidade.id_loja
-                        self.editar_usuario(informacoes)
-                        entidade = self.gerenciador_usuarios.buscar(id_)
-                    elif tipo_entidade == "loja":
-                        informacoes: dict = {}
-                        informacoes["id"] = entidade.id_
-                        informacoes["nome"] = entidade.nome
-                        informacoes["endereco"] = entidade.endereco
-                        self.editar_loja(informacoes)
-                        entidade = self.gerenciador_lojas.buscar(id_)
-                case "2":  # Excluir Usuário / Loja
-                    if tipo_entidade == "usuario":
-                        resultado: bool = self.excluir_usuario()
-                        if resultado:
-                            self.gerenciador_usuarios.remover(entidade.id_)
-                            GerenciadorTelas.tela_excluir_usuario_sucesso()
-                            return
-                    if tipo_entidade == "loja":
-                        resultado: bool = self.excluir_loja()
-                        if resultado:
-                            self.gerenciador_usuarios.remover(entidade.id_)
-                            GerenciadorTelas.tela_excluir_usuario_sucesso()
-                            return
+                case "1":  # Editar Produto
+                    informacoes: dict = {}
+                    informacoes["id"] = entidade.id_
+                    informacoes["nome"] = entidade.nome
+                    informacoes["descricao"] = entidade.descricao
+                    informacoes["preco"] = entidade.preco
+                    informacoes["quantidade"] = entidade.quantidade
+                    informacoes["id_loja"] = entidade.id_loja
+                    self.editar_produto(informacoes)
+                    entidade = self.gerenciador_produtos.buscar(id_)
+                case "2":  # Excluir Produto
+                    resultado: bool = self.excluir_produto()
+                    if resultado:
+                        self.gerenciador_produtos.remover(entidade.id_)
+                        GerenciadorTelas.tela_excluir_produto_sucesso()
+                        return
                 case "3":  # Voltar
                     return
                 case _:  # Opção inválida
@@ -818,32 +801,183 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
+    # * Adicionar produto
+
     def adicionar_produto(self, id_loja: int) -> None:
-        repositorio: dict = self.gerenciador_produtos.listar()
+        repositorio: dict = self.gerenciador_produtos.listar(id_loja)
         while True:
             retorno: dict = GerenciadorTelas.tela_adicionar_produto()
-            if not ValidadorInformacoes.validacao_produto_nome(repositorio, retorno['nome']):
+            if not ValidadorInformacoes.validacao_produto_nome(
+                repositorio, retorno["nome"]
+            ):
                 # Erro por causa do nome
                 GerenciadorTelas.tela_adicionar_produto_erro_nome()
 
-            elif not ValidadorInformacoes.validacao_produto_descricao(retorno['descricao']):
+            elif not ValidadorInformacoes.validacao_produto_descricao(
+                retorno["descricao"]
+            ):
                 # Erro por causa da descrição
                 GerenciadorTelas.tela_adicionar_produto_erro_descricao()
 
-            elif not ValidadorInformacoes.validacao_produto_preco(retorno['preco']):
+            elif not ValidadorInformacoes.validacao_produto_preco(retorno["preco"]):
                 # Erro por causa do preço
                 GerenciadorTelas.tela_adicionar_produto_erro_preco()
 
-            elif not ValidadorInformacoes.validacao_produto_quantidade(retorno['quantidade']):
+            elif not ValidadorInformacoes.validacao_produto_quantidade(
+                retorno["quantidade"]
+            ):
                 # Erro por causa da quantidade
                 GerenciadorTelas.tela_adicionar_produto_erro_quantidade()
 
-            else: # Informações válidas
+            else:  # Informações válidas
                 id_novo_produto: int = self.gerenciador_produtos.gerar_novo_id()
                 retorno["id"] = id_novo_produto
-                retorno['id_loja'] = id_loja
-                produto = FabricaEntidades.criar_entidade(
-                    "produto", retorno)
+                retorno["id_loja"] = id_loja
+                produto = FabricaEntidades.criar_entidade("produto", retorno)
                 self.gerenciador_produtos.adicionar(produto)
                 GerenciadorTelas.tela_adicionar_produto_sucesso()
                 return
+
+    # * Listar produtos
+
+    def editar_produto(self, informacoes: dict) -> None:
+        novas_informacoes: dict = informacoes.copy()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_produto(novas_informacoes)
+
+            match retorno["opcao"]:
+                case "1":  # Editar Nome
+                    novo_nome: str = self.editar_produto_nome(novas_informacoes["nome"])
+                    novas_informacoes["nome"] = novo_nome
+                case "2":  # Editar Descrição
+                    nova_descricao: str = self.editar_produto_descricao(
+                        novas_informacoes["descricao"]
+                    )
+                    novas_informacoes["username"] = nova_descricao
+                case "3":  # Editar Preço
+                    novo_preco: str = self.editar_produto_preco(
+                        novas_informacoes["preco"]
+                    )
+                    novas_informacoes["preco"] = novo_preco
+                case "4":  # Editar Quantidade
+                    nova_quantidade: str = self.editar_produto_quantidade(
+                        novas_informacoes["quantidade"]
+                    )
+                    novas_informacoes["quantidade"] = nova_quantidade
+                case "5":  # Confirmar edição
+                    resultado: bool = self.editar_produto_confirmacao(novas_informacoes)
+                    if resultado:
+                        return
+                case "6":  # Descartar edição
+                    resultado: bool = self.editar_produto_descartar()
+                    if resultado:
+                        return
+                case "7":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_produto_nome(self, nome: str) -> str:
+        repositorio: dict = self.gerenciador_produtos.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_produto_nome(nome)
+            if retorno["nome"] != "":
+                if not ValidadorInformacoes.validacao_produto_nome(
+                    repositorio, retorno["nome"]
+                ):
+                    GerenciadorTelas.tela_editar_produto_erro_nome()
+                else:
+                    return retorno["nome"]
+            else:
+                return nome
+
+    def editar_produto_descricao(self, descricao: str) -> str:
+        retorno: dict = GerenciadorTelas.tela_editar_produto_descricao(descricao)
+        if retorno["descricao"] != "":
+            return retorno["descricao"]
+        return descricao
+
+    def editar_produto_preco(self, preco: str) -> str:
+        repositorio: dict = self.gerenciador_produtos.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_produto_preco(preco)
+            if retorno["preco"] != "":
+                if not ValidadorInformacoes.validacao_produto_preco(
+                    repositorio, retorno["preco"]
+                ):
+                    GerenciadorTelas.tela_editar_produto_erro_preco()
+                else:
+                    return retorno["preco"]
+            else:
+                return preco
+
+    def editar_produto_quantidade(self, quantidade: str) -> str:
+        repositorio: dict = self.gerenciador_produtos.listar()
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_produto_quantidade(quantidade)
+            if retorno["quantidade"] != "":
+                if not ValidadorInformacoes.validacao_produto_quantidade(
+                    repositorio, retorno["quantidade"]
+                ):
+                    GerenciadorTelas.tela_editar_produto_erro_quantidade()
+                else:
+                    return retorno["quantidade"]
+            else:
+                return quantidade
+
+    def editar_produto_confirmacao(self, informacoes: dict) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_produto_confirmacao()
+
+            match retorno["opcao"]:
+                case "1":  # Confirmar
+                    produto = FabricaEntidades.criar_entidade("produto", informacoes)
+                    self.gerenciador_produtos.editar(informacoes["id"], produto)
+                    GerenciadorTelas.tela_editar_produto_sucesso()
+                    return True
+                case "2":  # Voltar
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def editar_produto_descartar(self) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_editar_produto_descartar()
+
+            match retorno["opcao"]:
+                case "1":  # Descartar
+                    return True
+                case "2":  # Voltar
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    # * Excluir produto
+
+    def excluir_produto(self) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_excluir_produto()
+
+            match retorno["opcao"]:
+                case "1":
+                    return True
+                case "2":
+                    return False
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    # * Listar produtos
+
+    def listar_produtos(self, id_loja):
+        repositorio: dict = self.gerenciador_produtos.listar(id_loja)
+        while True:
+            retorno: dict = GerenciadorTelas.tela_listar_produtos(repositorio)
+
+            match retorno["opcao"]:
+                case "1":  # Visualizar Produto
+                    self.pesquisar_entidade(repositorio, "produto")
+                    repositorio: dict = self.gerenciador_produtos.listar(id_loja)
+                case "2":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
