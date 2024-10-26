@@ -1,3 +1,5 @@
+from ..command.command_adicionar_usuario_command import AdicionarUsuarioCommand
+from ..command.command_excluir_usuario import ExcluirUsuarioCommand
 from ..entidades.entidades_usuarios import Usuario
 from .template_tela import TemplateTela
 
@@ -79,7 +81,28 @@ class TelaPesquisarUsuario(TemplateTela):
         return {"id": cls._coletar_entrada("ID: ")}
 
 
+# class TelaVisualizarUsuario(TemplateTela):
+#
+#     @classmethod
+#     def _titulo(cls):
+#         print("--- Visualizar Usuário --- \n")
+#
+#     @classmethod
+#     def _listar_informacoes(cls, usuario: Usuario):
+#         mensagem: str = (
+#             f"ID: {usuario.id_} \nNome: {usuario.nome} \nUsername: {usuario.username} \nEmail: {usuario.email} \nTipo: {usuario.tipo} \n"
+#         )
+#         print(mensagem)
+#
+#     @classmethod
+#     def _menu(cls):
+#         mensagem: str = "1 - Editar Usuário \n2 - Excluir Usuário \n3 - Voltar"
+#         print(mensagem)
+
 class TelaVisualizarUsuario(TemplateTela):
+    def __init__(self, invoker, gerenciador_usuarios):
+        self.invoker = invoker
+        self.gerenciador_usuarios = gerenciador_usuarios
 
     @classmethod
     def _titulo(cls):
@@ -96,3 +119,11 @@ class TelaVisualizarUsuario(TemplateTela):
     def _menu(cls):
         mensagem: str = "1 - Editar Usuário \n2 - Excluir Usuário \n3 - Voltar"
         print(mensagem)
+
+    def excluir_usuario(self, usuario):
+        command = ExcluirUsuarioCommand(self.gerenciador_usuarios, usuario)
+        self.invoker.execute_command(command)
+
+    def adicionar_usuario(self, usuario):
+        command = AdicionarUsuarioCommand(self.gerenciador_usuarios, usuario)
+        self.invoker.execute_command(command)

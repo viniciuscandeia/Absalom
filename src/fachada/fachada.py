@@ -1,3 +1,5 @@
+from ..command.command_login import CommandLogin
+from ..command.invoker import Invoker
 from ..entidades.entidade_loja import Loja
 from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
@@ -8,6 +10,8 @@ from ..fabricas.fabrica_repositorio_produto import FabricaGerenciadorProdutos
 from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
+from ..telas.telas_login import TelaLogin
+
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
 # Garantir que exista sempre ao menos 1 gerente por loja (a restrição não se aplica a vendedor)
@@ -18,6 +22,9 @@ from ..telas.gerenciador_telas import GerenciadorTelas
 class Fachada:
 
     def __init__(self, tipo_persistencia: str):
+
+        self.invoker = Invoker()
+
         self.gerenciador_usuarios = FabricaGerenciadorUsuarios.criar_gerenciador(
             tipo_persistencia
         )
@@ -68,15 +75,40 @@ class Fachada:
             usuario = FabricaEntidades.criar_entidade("vendedor", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
+    # def login(self):
+    #     while True:
+    #         retorno: dict = GerenciadorTelas.tela_login()
+    #
+    #         # Autentica o usuário
+    #         self.autenticador.autenticar(
+    #             retorno.get("username", None), retorno.get("senha", None)
+    #         )
+    #         self.usuario_autenticado = self.autenticador.usuario_autenticado()
+    #
+    #         # Usuário autenticado
+    #         if self.usuario_autenticado:
+    #             # Direcionar para a tela certa
+    #             match self.usuario_autenticado.tipo:
+    #                 case "administrador":
+    #                     self.inicial_administrador()
+    #                 case "gerente":
+    #                     self.inicial_gerente()
+    #                 case "vendedor":
+    #                     self.inicial_vendedor()
+    #
+    #         # Erro ao logar: exibe tela de erro e volta para a tela de login
+    #         else:
+    #             GerenciadorTelas.tela_login_erro()
     def login(self):
         while True:
-            retorno: dict = GerenciadorTelas.tela_login()
+            tela = TelaLogin()
+            retorno: dict = tela.tela()  # Coleta as informações de login
 
-            # Autentica o usuário
-            self.autenticador.autenticar(
-                retorno.get("username", None), retorno.get("senha", None)
-            )
-            self.usuario_autenticado = self.autenticador.usuario_autenticado()
+            # criando o comando de login
+            command = CommandLogin(self.autenticador, retorno.get("username"), retorno.get("senha"))
+
+            # Executa o comando e armazena o resultado da autenticação
+            self.usuario_autenticado = self.invoker.execute_command(command)
 
             # Usuário autenticado
             if self.usuario_autenticado:
@@ -88,10 +120,9 @@ class Fachada:
                         self.inicial_gerente()
                     case "vendedor":
                         self.inicial_vendedor()
-
-            # Erro ao logar: exibe tela de erro e volta para a tela de login
             else:
                 GerenciadorTelas.tela_login_erro()
+
 
     def inicial_administrador(self):
         while True:
