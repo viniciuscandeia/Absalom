@@ -2,6 +2,9 @@ from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
 from ..fabricas.fabrica_repositorio_loja import FabricaGerenciadorLojas
 from ..fabricas.fabrica_repositorio_produto import FabricaGerenciadorProdutos
+from ..memento.caretaker import Caretaker
+from ..memento.loja.caretaker_loja import CaretakerLoja
+from ..memento.loja.originator_loja import OriginatorLoja
 from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
@@ -556,7 +559,15 @@ class Fachada:
                     informacoes["id"] = entidade.id_
                     informacoes["nome"] = entidade.nome
                     informacoes["endereco"] = entidade.endereco
-                    self.editar_loja(informacoes)
+
+                    loja_initial = FabricaEntidades.criar_entidade('loja', informacoes)
+                    #Memento
+                    originator_loja = OriginatorLoja(loja_initial)
+                    caretaker_loja = CaretakerLoja()
+                    caretaker_loja.add_memento(originator_loja.create_memento())
+                    originator_loja.set_state(loja_initial)
+
+                    self.editar_loja(caretaker_loja, originator_loja)
                     entidade = self.gerenciador_lojas.buscar(id_)
                 case "4":  # Excluir Loja
                     resultado: bool = self.excluir_loja()
@@ -706,30 +717,45 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def editar_loja(self, informacoes: dict):
+    def editar_loja(self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja):
+        # Memento
 
-        novas_informacoes: dict = informacoes.copy()
         while True:
-            retorno: dict = GerenciadorTelas.tela_editar_loja(novas_informacoes)
+            estado_atual = originator_loja.get_state()
+            caretaker_loja.get_mementos()
 
+            retorno: dict = GerenciadorTelas.tela_editar_loja(estado_atual.toDict())
             match retorno["opcao"]:
-                case "1":  # Editar Nome
-                    novo_nome: str = self.editar_loja_nome(novas_informacoes["nome"])
-                    novas_informacoes["nome"] = novo_nome
+                case "1":
+                    estado_atual = originator_loja.get_state()
+                    novo_nome: str = self.editar_loja_nome(estado_atual.nome)
+                    loja_att = estado_atual.setNome(novo_nome)
+                    originator_loja.set_state(loja_att)
+
                 case "2":  # Editar Endereço
-                    novo_endereco: str = self.editar_loja_endereco(
-                        novas_informacoes["endereco"]
-                    )
-                    novas_informacoes["endereco"] = novo_endereco
+                    estado_atual = originator_loja.get_state()
+                    novo_nome: str = self.editar_loja_endereco(estado_atual.endereco)
+                    loja_att = estado_atual.setEndereco(novo_nome)
+
+                    originator_loja.set_state(loja_att)
                 case "3":  # Confirmar edição
-                    resultado: bool = self.editar_loja_confirmacao(novas_informacoes)
+                    estado_atual = originator_loja.get_state()
+                    resultado: bool = self.editar_loja_confirmacao(estado_atual.toDict())
                     if resultado:
                         return
                 case "4":  # Descartar edição
                     resultado: bool = self.editar_loja_descartar()
                     if resultado:
+                        originator_loja.restore(caretaker_loja.get_memento(0))
+                        estado_atual = originator_loja.get_state()
+                        print(estado_atual)
+
                         return
                 case "5":  # Voltar
+                    originator_loja.restore(caretaker_loja.get_memento(0))
+                    estado_atual = originator_loja.get_state()
+                    print(estado_atual)
+
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
