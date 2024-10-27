@@ -1,72 +1,4 @@
-from .tela_escolha_persistencia import TelaEscolhaPersistencia
-from .tela_gerenciar_usuarios import TelaGerenciarUsuarios
-from .tela_opcao_invalida import TelaOpcaoInvalida
-from .telas_adicionar_loja import (
-    TelaAdicionarLoja,
-    TelaAdicionarLojaErroEndereco,
-    TelaAdicionarLojaErroNome,
-    TelaAdicionarLojaSucesso,
-    TelaAssociarLoja,
-    TelaAssociarLojaInicial,
-)
-from .telas_adicionar_usuario import (
-    TelaAdicionarAdministrador,
-    TelaAdicionarErroEmail,
-    TelaAdicionarErroSenha,
-    TelaAdicionarErroUsername,
-    TelaAdicionarGerente,
-    TelaAdicionarSucesso,
-    TelaAdicionarUsuarios_Administrador,
-    TelaAdicionarUsuarios_Gerente,
-    TelaAdicionarVendedor,
-)
-from .telas_editar_loja import (
-    TelaEditarLoja,
-    TelaEditarLojaConfirmacao,
-    TelaEditarLojaDescartar,
-    TelaEditarLojaEndereco,
-    TelaEditarLojaErroEndereco,
-    TelaEditarLojaErroNome,
-    TelaEditarLojaNome,
-    TelaEditarLojaSucesso,
-)
-from .telas_editar_usuarios import (
-    TelaEditarUsuario,
-    TelaEditarUsuarioConfirmacao,
-    TelaEditarUsuarioDescartar,
-    TelaEditarUsuarioEmail,
-    TelaEditarUsuarioErroEmail,
-    TelaEditarUsuarioErroUsername,
-    TelaEditarUsuarioNome,
-    TelaEditarUsuarioSucesso,
-    TelaEditarUsuarioUsername,
-)
-from .telas_excluir_usuario import TelaExcluirUsuario, TelaExcluirUsuarioSucesso
-
-from .telas_iniciais import (
-    TelaInicialAdministrador,
-    TelaInicialGerente,
-    TelaInicialVendedor,
-)
-from .telas_listar_lojas import (
-    TelaFiltrarLoja,
-    TelaListarLojas,
-    TelaListarLojasFluxoFiltro,
-    TelaPesquisarLoja,
-    TelaVisualizarLoja,
-)
-from .telas_listar_usuarios import (
-    TelaListar_Administrador,
-    TelaListar_Gerente,
-    TelaListarAdministradores,
-    TelaListarUsuarios,
-    TelaPesquisarUsuario,
-    TelaVisualizarUsuario,
-)
-from .telas_login import TelaLogin, TelaLoginErro
-
-from.telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
-
+from src.telas import *
 
 class GerenciadorTelas:
 
@@ -289,3 +221,111 @@ class GerenciadorTelas:
     @classmethod
     def tela_excluir_loja_sucesso(cls) -> None:
         TelaExcluirLojaSucesso.tela()
+
+    # * Gerenciar Lojas
+
+    @classmethod
+    def tela_gerenciar_lojas(cls) -> dict:
+        return TelaGerenciarLojas.tela()
+
+    # * Gerenciar Produtos
+
+    @classmethod
+    def tela_gerenciar_produtos(cls) -> dict:
+        return TelaGerenciarProdutos.tela()
+
+    # * Adicionar produto
+
+    @classmethod
+    def tela_adicionar_produto(cls) -> dict:
+        return TelaAdicionarProduto.tela()
+
+    @classmethod
+    def tela_adicionar_produto_sucesso(cls) -> None:
+        TelaAdicionarProdutoSucesso.tela()
+
+    @classmethod
+    def tela_adicionar_produto_erro_nome(cls) -> None:
+        TelaAdicionarProdutoErroNome.tela()
+
+    @classmethod
+    def tela_adicionar_produto_erro_descricao(cls) -> None:
+        TelaAdicionarProdutoErroDescricao.tela()
+
+    @classmethod
+    def tela_adicionar_produto_erro_preco(cls) -> None:
+        TelaAdicionarProdutoErroPreco.tela()
+
+    @classmethod
+    def tela_adicionar_produto_erro_quantidade(cls) -> None:
+        TelaAdicionarProdutoErroQuantidade.tela()
+
+    # * Editar produto
+
+    @classmethod
+    def tela_editar_produto(cls, informacoes: dict) -> dict:
+        return TelaEditarProduto.tela(informacoes)
+
+    @classmethod
+    def tela_editar_produto_nome(cls, nome: str) -> dict:
+        return TelaEditarProdutoNome.tela(nome)
+
+    @classmethod
+    def tela_editar_produto_descricao(cls, descricao: str) -> dict:
+        return TelaEditarProdutoDescricao.tela(descricao)
+
+    @classmethod
+    def tela_editar_produto_preco(cls, preco: str) -> dict:
+        return TelaEditarProdutoPreco.tela(preco)
+
+    @classmethod
+    def tela_editar_produto_quantidade(cls, quantidade: int) -> dict:
+        return TelaEditarProdutoQuantidade.tela(quantidade)
+
+    @classmethod
+    def tela_editar_produto_confirmacao(cls) -> dict:
+        return TelaEditarProdutoConfirmacao.tela()
+
+    @classmethod
+    def tela_editar_produto_descartar(cls) -> dict:
+        return TelaEditarProdutoDescartar.tela()
+
+    @classmethod
+    def tela_editar_produto_sucesso(cls) -> None:
+        TelaEditarProdutoSucesso.tela()
+
+    @classmethod
+    def tela_editar_produto_erro_nome(cls) -> None:
+        TelaEditarProdutoErroNome.tela()
+
+    @classmethod
+    def tela_editar_produto_erro_preco(cls) -> None:
+        TelaEditarProdutoErroPreco.tela()
+
+    @classmethod
+    def tela_editar_produto_erro_quantidade(cls) -> None:
+        TelaEditarProdutoErroQuantidade.tela()
+
+    # * Excluir produto
+
+    @classmethod
+    def tela_excluir_produto(cls) -> dict:
+        return TelaExcluirProduto.tela()
+
+    @classmethod
+    def tela_excluir_produto_sucesso(cls) -> None:
+        TelaExcluirProdutoSucesso.tela()
+
+    # * Listar produtos
+
+    @classmethod
+    def tela_listar_produtos(cls, informacoes: dict) -> dict:
+        return TelaListarProdutos.tela(informacoes)
+
+    @classmethod
+    def tela_pesquisar_produto(cls) -> dict:
+        return TelaPesquisarProduto.tela()
+
+    @classmethod
+    def tela_visualizar_produto(cls, produto) -> dict:
+        return TelaVisualizarProduto.tela(produto)

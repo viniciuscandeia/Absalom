@@ -1,3 +1,5 @@
+from ..command.command_adicionar_usuario_command import AdicionarUsuarioCommand
+from ..command.command_excluir_usuario import ExcluirUsuarioCommand
 from ..entidades.entidades_usuarios import Usuario
 from .template_tela import TemplateTela
 

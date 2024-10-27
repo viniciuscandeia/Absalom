@@ -1,3 +1,5 @@
+from ..command.command_adicionar_loja import AdicionarLojaCommand
+from ..command.command_excluir_loja import ExcluirLojaCommand
 from ..entidades.entidade_loja import Loja
 from .template_tela import TemplateTela
 
@@ -74,5 +76,7 @@ class TelaVisualizarLoja(TemplateTela):
 
     @classmethod
     def _menu(cls):
-        mensagem: str = "1 - Editar Loja \n2 - Excluir Loja \n3 - Voltar"
+        mensagem: str = (
+            "1 - Gerenciar Funcionários \n2 - Gerenciar Produtos \n3 - Editar Loja \n4 - Excluir Loja \n5 - Voltar \n"
+        )
         print(mensagem)

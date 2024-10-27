@@ -1,6 +1,4 @@
-from ..entidades.entidade_loja import Loja
-from ..entidades.entidades_usuarios import Usuario
-from ..entidades.entidade import Entidade
+from src.entidades import *
 
 class FabricaEntidades:
     _entidades: dict = {
@@ -35,6 +33,14 @@ class FabricaEntidades:
             id_=dados["id"],
             nome=dados["nome"],
             endereco=dados["endereco"],
+        ),
+        "produto": lambda dados: Produto(
+            id_=dados["id"],
+            nome=dados["nome"],
+            descricao=dados["descricao"],
+            preco=dados["preco"],
+            quantidade=dados["quantidade"],
+            id_loja=dados["id_loja"],
         ),
     }
 
