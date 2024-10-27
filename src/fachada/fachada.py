@@ -4,6 +4,7 @@ from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciador_lojas import FabricaGerenciadorLojas
 from ..fabricas.fabrica_gerenciador_produtos import FabricaGerenciadorProdutos
 from ..fabricas.fabrica_gerenciador_usuarios import FabricaGerenciadorUsuarios
+from ..fabricas.fabrica_gerenciador_vendas import FabricaGerenciadorVendas
 from ..memento.loja.caretaker_loja import CaretakerLoja
 from ..memento.loja.originator_loja import OriginatorLoja
 from ..relatorios.relatorio_html import RelatorioHTML
@@ -27,6 +28,7 @@ class Fachada:
         self.gerenciador_produtos = FabricaGerenciadorProdutos().criar(
             tipo_persistencia
         )
+        self.gerenciador_vendas = FabricaGerenciadorVendas().criar(tipo_persistencia)
 
         self.autenticador = AutenticacaoUsuario(self.gerenciador_usuarios)
         self.notificator = NotificatorApiSingleton()
@@ -76,8 +78,8 @@ class Fachada:
             # Autentica o usuário
             self.usuario_autenticado = GerenciadorComandos.comando_autenticar_usuario(
                 self.autenticador,
-                retorno.get("username", None),
-                retorno.get("senha", None),
+                retorno.get("username"),
+                retorno.get("senha"),
             )
 
             # Usuário autenticado
@@ -122,7 +124,7 @@ class Fachada:
                 case "2":  # Gerenciar Produtos
                     self.gerenciar_produtos(self.usuario_autenticado.id_loja)
                 case "3":  # Realizar Venda
-                    pass
+                    self.gerenciar_vendas(self.usuario_autenticado.id_loja)
                 case "4":
                     self.visualizar_notificacoes()
                 case "5":  # Logout
@@ -130,6 +132,24 @@ class Fachada:
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
+
+
+
+    def inicial_vendedor(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_inicial_vendedor()
+
+            match retorno["opcao"]:
+                case "1":  # Realizar Venda
+                    self.realizar_venda(self.usuario_autenticado.id_loja)
+                case "2":
+                    self.visualizar_notificacoes()
+                case "3":  # Logout
+                    self.usuario_autenticado = None
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
 
     def visualizar_notificacoes(self):
         notificacoes = GerenciadorComandos.comando_listar_notificacoes(
@@ -140,21 +160,6 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":
-                    return
-                case _:  # Opção inválida
-                    GerenciadorTelas.tela_opcao_invalida()
-
-    def inicial_vendedor(self):
-        while True:
-            retorno: dict = GerenciadorTelas.tela_inicial_vendedor()
-
-            match retorno["opcao"]:
-                case "1":  # Realizar Venda
-                    pass
-                case "2":
-                    self.visualizar_noticacoes()
-                case "3":  # Logout
-                    self.usuario_autenticado = None
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
@@ -514,6 +519,8 @@ class Fachada:
                 retorno: dict = GerenciadorTelas.tela_pesquisar_loja()
             elif tipo_entidade == "produto":
                 retorno: dict = GerenciadorTelas.tela_pesquisar_produto()
+            elif tipo_entidade == "venda":
+                retorno: dict = GerenciadorTelas.tela_pesquisar_venda()
 
             if str(retorno["id"]).isdigit():
                 if int(retorno["id"]) in dados.keys():
@@ -523,6 +530,8 @@ class Fachada:
                         self.visualizar_loja(int(retorno["id"]))
                     if tipo_entidade == "produto":
                         self.visualizar_produto(int(retorno["id"]))
+                    if tipo_entidade == "venda":
+                        self.visualizar_venda(int(retorno["id"]))
                     return
             else:  # Opção inválida
                 GerenciadorTelas.tela_opcao_invalida()
@@ -985,12 +994,11 @@ class Fachada:
                 return preco
 
     def editar_produto_quantidade(self, quantidade: str) -> str:
-        repositorio: dict = self.gerenciador_produtos.listar()
         while True:
             retorno: dict = GerenciadorTelas.tela_editar_produto_quantidade(quantidade)
             if retorno["quantidade"] != "":
                 if not ValidadorInformacoes.validacao_produto_quantidade(
-                    repositorio, retorno["quantidade"]
+                    retorno["quantidade"]
                 ):
                     GerenciadorTelas.tela_editar_produto_erro_quantidade()
                 else:
@@ -1080,5 +1088,111 @@ class Fachada:
                         GerenciadorTelas.tela_relatorios_erro()
                 case "3":
                     return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def gerenciar_vendas(self, id_loja: int):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_gerenciar_vendas()
+
+            match retorno["opcao"]:
+                case "1":  # Realizar Venda
+                    self.realizar_venda(id_loja)
+                case "2":  # Listar Vendas
+                    repositorio: dict = self.gerenciador_vendas.listar(id_loja)
+                    GerenciadorTelas.tela_listar_vendas(repositorio)
+                case "3":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def realizar_venda(self, id_loja: int):
+        repositorio: dict = self.gerenciador_produtos.listar(id_loja)
+
+        informacoes: dict = {
+            "id": 0,
+            "preco": 0,
+            "quant_disponivel": 0,
+            "quant_desejada": 0,
+        }
+
+        while True:
+            retorno: dict = GerenciadorTelas.tela_realizar_venda(informacoes)
+
+            match retorno["opcao"]:
+                case "1":  # ID do produto
+                    id_produto: int = self.definir_id_produto(repositorio)
+                    informacoes["id"] = id_produto
+                    produto = self.gerenciador_produtos.buscar(id_produto)
+                    informacoes["preco"] = produto.preco
+                    informacoes["quant_disponivel"] = produto.quantidade
+                case "2":  # Quantidade do produto
+                    quantidade: int = self.definir_quantidade_produto(
+                        produto.quantidade
+                    )
+                    informacoes["quant_desejada"] = quantidade
+                    informacoes["preco_total"] = produto.preco * quantidade
+                case "3":  # Finalizar Venda
+                    resultado: bool = self.realizar_venda_confirmacao(informacoes)
+                    if resultado:
+                        return
+                case "4":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+    def definir_id_produto(self, repositorio: dict) -> int:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_definir_id_produto_venda()
+
+            if str(retorno["id_produto"]).isdigit():
+                if int(retorno["id_produto"]) in repositorio:
+                    return int(retorno["id_produto"])
+            else:
+                GerenciadorTelas.tela_opcao_invalida()
+
+    def definir_quantidade_produto(self, quant_disponivel: int) -> int:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_definir_quantidade_produto_venda(
+                quant_disponivel
+            )
+
+            if str(retorno["quantidade"]).isdigit():
+                if (
+                    int(retorno["quantidade"]) <= quant_disponivel
+                    and int(retorno["quantidade"]) > 0
+                ):
+                    return int(retorno["quantidade"])
+            else:
+                GerenciadorTelas.tela_opcao_invalida()
+
+    def realizar_venda_confirmacao(self, informacoes: dict) -> bool:
+        while True:
+            retorno: dict = GerenciadorTelas.tela_finalizar_venda(informacoes)
+
+            match retorno["opcao"]:
+                case "1":  # Confirmar
+
+                    # Aplicar comando
+                    produto = self.gerenciador_produtos.buscar(informacoes["id"])
+                    produto.quantidade -= int(informacoes["quant_desejada"])
+                    self.gerenciador_produtos.editar(informacoes["id"], produto)
+
+                    dados: dict = {}
+                    dados["id"] = self.gerenciador_vendas.gerar_novo_id()
+                    dados["id_produto"] = informacoes["id"]
+                    dados["id_vendedor"] = self.usuario_autenticado.id_
+                    dados["id_loja"] = self.usuario_autenticado.id_loja
+                    dados["quantidade"] = informacoes["quant_desejada"]
+                    dados["preco_total"] = informacoes["preco_total"]
+
+                    venda = FabricaEntidades().criar("venda", dados)
+
+                    # Aplicar comando
+                    self.gerenciador_vendas.adicionar(venda)
+                    GerenciadorTelas.tela_venda_sucesso()
+                    return True
+                case "2":  # Voltar
+                    return False
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
