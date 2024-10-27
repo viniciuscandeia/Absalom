@@ -1,3 +1,5 @@
+from .comando_enviar_notificacao import EnviarNotificacaoComando
+from .comando_ver_notificacoes import VerNotificacoesComando
 from ..entidades.entidades_usuarios import Usuario
 from .comando_adicionar_loja import AdicionarLojaComando
 from .comando_adicionar_produto import AdicionarProdutoComando
@@ -42,8 +44,8 @@ class GerenciadorComandos:
         Invocador.executar_comando(comando)
 
     @classmethod
-    def comando_editar_loja(cls, gerenciador_lojas, id_loja: int, loja):
-        comando = EditarLojaComando(gerenciador_lojas, id_loja, loja)
+    def comando_editar_loja(cls, gerenciador_lojas, id_loja: int, loja, id_usuario:int):
+        comando = EditarLojaComando(gerenciador_lojas, id_loja, loja, id_usuario)
         Invocador.executar_comando(comando)
 
     @classmethod
@@ -65,3 +67,13 @@ class GerenciadorComandos:
     def comando_excluir_produto(cls, gerenciador_produtos, id_produto: int):
         comando = ExcluirProdutoComando(gerenciador_produtos, id_produto)
         Invocador.executar_comando(comando)
+
+    @classmethod
+    def comando_enviar_notificacao(self, loja, id_usuario:int):
+        comando = EnviarNotificacaoComando(loja=loja, id_usuario=id_usuario)
+        Invocador.executar_comando(comando)
+
+    @classmethod
+    def comando_listar_notificacoes(loja, id_loja):
+        comando = VerNotificacoesComando(id_loja=id_loja)
+        return Invocador.executar_comando(comando)

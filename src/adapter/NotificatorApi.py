@@ -12,5 +12,5 @@ class NotificatorApi(ABC):
         pass
 
     @abstractmethod
-    def receive(id_loja, id_usuario):
+    def receive(id_loja, id_usuario) -> list[Notificacao]:
         pass
