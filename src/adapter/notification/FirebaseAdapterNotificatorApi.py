@@ -1,6 +1,6 @@
 from src.adapter.NotificatorApi import NotificatorApi
 from src.entidades.entidade_notificacao import Notificacao
-from src.fabricas.fabrica_repositorio_notificacoes import FabricaGerenciadorNotificacoes
+from src.fabricas.fabrica_gerenciador_notificacoes import FabricaGerenciadorNotificacoes
 
 
 class FirebaseAdapterNotificatorApi(NotificatorApi):
