@@ -25,4 +25,4 @@ class TemplateTela:
 
     @classmethod
     def _coletar_entrada(cls, prompt: str) -> str:
-        return input(prompt)
+        return str(input(prompt))

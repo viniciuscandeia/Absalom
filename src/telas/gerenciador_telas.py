@@ -369,8 +369,8 @@ class GerenciadorTelas:
         return TelaEditarProdutoDescricao.tela(descricao)
 
     @classmethod
-    def tela_editar_produto_preco(cls, preco: float) -> dict:
-        return TelaEditarProdutoPreco.tela()
+    def tela_editar_produto_preco(cls, preco: str) -> dict:
+        return TelaEditarProdutoPreco.tela(preco)
 
     @classmethod
     def tela_editar_produto_quantidade(cls, quantidade: int) -> dict:

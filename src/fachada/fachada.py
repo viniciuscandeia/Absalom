@@ -1,6 +1,11 @@
 from ..command.command_adicionar_loja import AdicionarLojaCommand
+from ..command.command_adicionar_produto import AdicionarProdutoCommand
 from ..command.command_adicionar_usuario_command import AdicionarUsuarioCommand
+from ..command.command_editar_loja import EditarLojaCommand
+from ..command.command_editar_produto import EditarProdutoCommand
+from ..command.command_editar_usuario import EditarUsuarioCommand
 from ..command.command_excluir_loja import ExcluirLojaCommand
+from ..command.command_excluir_produto import ExcluirProdutoCommand
 from ..command.command_excluir_usuario import ExcluirUsuarioCommand
 from ..command.command_login import CommandLogin
 from ..command.invoker import Invoker
@@ -579,7 +584,6 @@ class Fachada:
                     if resultado:
                         command = ExcluirUsuarioCommand(self.gerenciador_usuarios, entidade.id_)
                         self.invoker.execute_command(command)
-                        # self.gerenciador_usuarios.remover(entidade.id_)
                         GerenciadorTelas.tela_excluir_usuario_sucesso()
                         return
 
@@ -654,7 +658,9 @@ class Fachada:
                 case "2":  # Excluir Produto
                     resultado: bool = self.excluir_produto()
                     if resultado:
-                        self.gerenciador_produtos.remover(entidade.id_)
+                        command = ExcluirProdutoCommand(self.gerenciador_produtos, entidade.id_)
+                        self.invoker.execute_command(command)
+
                         GerenciadorTelas.tela_excluir_produto_sucesso()
                         return
                 case "1":  # Editar Usuário / Loja
@@ -778,7 +784,10 @@ class Fachada:
                     usuario = FabricaEntidades.criar_entidade(
                         informacoes["tipo"], informacoes
                     )
-                    self.gerenciador_usuarios.editar(informacoes["id"], usuario)
+
+                    command = EditarUsuarioCommand(self.gerenciador_usuarios, informacoes["id"], usuario)
+                    self.invoker.execute_command(command)
+
                     GerenciadorTelas.tela_editar_usuario_sucesso()
                     return True
                 case "2":  # Voltar
@@ -953,7 +962,10 @@ class Fachada:
                 retorno["id"] = id_novo_produto
                 retorno["id_loja"] = id_loja
                 produto = FabricaEntidades.criar_entidade("produto", retorno)
-                self.gerenciador_produtos.adicionar(produto)
+
+                command = AdicionarProdutoCommand(self.gerenciador_produtos, produto)
+                self.invoker.execute_command(command)
+
                 GerenciadorTelas.tela_adicionar_produto_sucesso()
                 return
 
@@ -972,7 +984,7 @@ class Fachada:
                     nova_descricao: str = self.editar_produto_descricao(
                         novas_informacoes["descricao"]
                     )
-                    novas_informacoes["username"] = nova_descricao
+                    novas_informacoes["descricao"] = nova_descricao
                 case "3":  # Editar Preço
                     novo_preco: str = self.editar_produto_preco(
                         novas_informacoes["preco"]
@@ -1012,6 +1024,7 @@ class Fachada:
 
     def editar_produto_descricao(self, descricao: str) -> str:
         retorno: dict = GerenciadorTelas.tela_editar_produto_descricao(descricao)
+
         if retorno["descricao"] != "":
             return retorno["descricao"]
         return descricao
@@ -1021,9 +1034,7 @@ class Fachada:
         while True:
             retorno: dict = GerenciadorTelas.tela_editar_produto_preco(preco)
             if retorno["preco"] != "":
-                if not ValidadorInformacoes.validacao_produto_preco(
-                    repositorio, retorno["preco"]
-                ):
+                if not ValidadorInformacoes.validacao_produto_preco(retorno["preco"]):
                     GerenciadorTelas.tela_editar_produto_erro_preco()
                 else:
                     return retorno["preco"]
@@ -1035,9 +1046,7 @@ class Fachada:
         while True:
             retorno: dict = GerenciadorTelas.tela_editar_produto_quantidade(quantidade)
             if retorno["quantidade"] != "":
-                if not ValidadorInformacoes.validacao_produto_quantidade(
-                    repositorio, retorno["quantidade"]
-                ):
+                if not ValidadorInformacoes.validacao_produto_quantidade(retorno["quantidade"]):
                     GerenciadorTelas.tela_editar_produto_erro_quantidade()
                 else:
                     return retorno["quantidade"]
@@ -1051,7 +1060,10 @@ class Fachada:
             match retorno["opcao"]:
                 case "1":  # Confirmar
                     produto = FabricaEntidades.criar_entidade("produto", informacoes)
-                    self.gerenciador_produtos.editar(informacoes["id"], produto)
+
+                    command = EditarProdutoCommand(self.gerenciador_produtos, informacoes["id"], produto)
+                    self.invoker.execute_command(command)
+
                     GerenciadorTelas.tela_editar_produto_sucesso()
                     return True
                 case "2":  # Voltar
