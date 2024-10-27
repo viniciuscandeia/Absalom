@@ -1,10 +1,10 @@
-from src.command.command import Command
+from .comando import Comando
 
-class CommandLogin(Command):
-    def __init__(self, autenticador, username, senha):
+class ComandoLogin(Comando):
+    def __init__(self, autenticador, username: str, senha: str):
         self.autenticador = autenticador
-        self.username = username
-        self.senha = senha
+        self.username: str = username
+        self.senha: str = senha
 
     def execute(self):
         # Lógica de autenticação
