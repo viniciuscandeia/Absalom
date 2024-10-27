@@ -36,7 +36,7 @@ class InterfaceEstrategiaProdutos(ABC):
 
 class EstrategiaProdutosRAM(InterfaceEstrategiaProdutos):
     def __init__(self, repositorio: dict):
-        self.repositorio = repositorio
+        self.repositorio: dict = repositorio
 
     def adicionar(self, entidade: Produto):
         self.repositorio[entidade.id_] = entidade

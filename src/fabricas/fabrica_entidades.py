@@ -2,6 +2,7 @@ from ..entidades.entidade import Entidade
 from ..entidades.entidade_loja import Loja
 from ..entidades.entidade_notificacao import Notificacao
 from ..entidades.entidade_produto import Produto
+from ..entidades.entidade_venda import Venda
 from ..entidades.entidades_usuarios import Usuario
 from .fabrica_abstrata import FabricaAbstrata
 
@@ -53,6 +54,14 @@ class FabricaEntidades(FabricaAbstrata):
             mensagem=dados["mensagem"],
             from_user_id=dados["from_user_id"],
             to_loja_id=dados["to_loja_id"],
+        ),
+        "venda": lambda dados: Venda(
+            id_=dados["id"],
+            id_produto=dados["id_produto"],
+            id_vendedor=dados["id_vendedor"],
+            id_loja=dados["id_loja"],
+            quantidade=dados["quantidade"],
+            preco_total=dados["preco_total"],
         ),
     }
 
