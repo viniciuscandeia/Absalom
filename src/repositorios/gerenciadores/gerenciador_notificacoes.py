@@ -1,5 +1,5 @@
 from src.entidades.entidade_notificacao import Notificacao
-from src.repositorios.estrategias.interface_estrategia_notificacao import InterfaceEstrategiaNotificacao
+from ..estrategias.estrategias_notificacoes import InterfaceEstrategiaNotificacao
 
 
 class GerenciadorNotificacoes:

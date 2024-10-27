@@ -13,7 +13,7 @@ class ValidadorInformacoes:
     @classmethod
     def validacao_email(cls, repositorio: dict, email: str) -> bool:
         for item in repositorio:
-            if repositorio[item].username == email:
+            if repositorio[item].email == email:
                 return False
         return True
 

@@ -4,8 +4,6 @@ from src.entidades.entidade_notificacao import Notificacao
 
 
 class NotificatorApi(ABC):
-    def __init__(self) -> None:
-        pass
 
     @abstractmethod
     def send(self, notificacao: Notificacao):

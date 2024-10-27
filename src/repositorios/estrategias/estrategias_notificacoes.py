@@ -1,9 +1,18 @@
-import uuid
+from abc import ABC, abstractmethod
 from copy import deepcopy
+from sqlite3 import Connection
 
 from src.entidades.entidade_notificacao import Notificacao
-from sqlite3 import Connection
-from src.repositorios.estrategias.interface_estrategia_notificacao import InterfaceEstrategiaNotificacao
+
+
+class InterfaceEstrategiaNotificacao(ABC):
+    @abstractmethod
+    def send(self, entidade: Notificacao):
+        pass
+
+    @abstractmethod
+    def receive(self, id_loja: int):
+        pass
 
 
 class EstrategiaNotificacoesFirebase(InterfaceEstrategiaNotificacao):
@@ -20,7 +29,7 @@ class EstrategiaNotificacoesFirebase(InterfaceEstrategiaNotificacao):
         entidade_copy = deepcopy(entidade)
         self.repositorio.append(entidade_copy)
 
-    def receive(self, id_loja:int):
+    def receive(self, id_loja: int):
         filteredItems = []
         for notificacao in self.repositorio:
             if notificacao.to_loja_id == id_loja:
@@ -39,21 +48,24 @@ class EstrategiaNotificacoesDB(InterfaceEstrategiaNotificacao):
                 INSERT INTO notificacoes (from_user_id, to_loja_id, mensagem)
                 VALUES (?, ?, ?)
             """
-        cursor.execute(query, (notificacao.from_user_id, notificacao.to_loja_id, notificacao.mensagem))
+        cursor.execute(
+            query,
+            (notificacao.from_user_id, notificacao.to_loja_id, notificacao.mensagem),
+        )
         self.repositorio_db.commit()
 
-    def receive(self, id_loja:int):
+    def receive(self, id_loja: int):
         cursor = self.repositorio_db.cursor()
         query = "SELECT id, mensagem, from_user_id, to_loja_id FROM notificacoes WHERE to_loja_id = ?"
         cursor.execute(query, (id_loja,))
         notificacoes = []
 
         for resultado in cursor.fetchall():
-            notificacao =  Notificacao(
+            notificacao = Notificacao(
                 id_=resultado[0],
                 mensagem=resultado[1],
                 from_user_id=resultado[2],
-                to_loja_id=resultado[3]
+                to_loja_id=resultado[3],
             )
             notificacoes.append(notificacao)
 

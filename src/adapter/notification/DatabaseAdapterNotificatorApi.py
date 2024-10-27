@@ -7,7 +7,7 @@ class DatabaseAdapterNotificatorApi(NotificatorApi):
     def __init__(self):
         super().__init__()
         self.gerenciador_notificacoes = FabricaGerenciadorNotificacoes().criar(
-            tipo='db'
+            tipo="db"
         )
 
     def send(self, notificacao: Notificacao):

@@ -1,22 +1,19 @@
-from ..adapter.NotificatorApi import NotificatorApi
 from ..adapter.notification.NotificatorApiSingleton import NotificatorApiSingleton
 from ..comandos.gerenciador_comandos import GerenciadorComandos
 from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciador_lojas import FabricaGerenciadorLojas
 from ..fabricas.fabrica_gerenciador_produtos import FabricaGerenciadorProdutos
 from ..fabricas.fabrica_gerenciador_usuarios import FabricaGerenciadorUsuarios
-from ..memento.caretaker import Caretaker
 from ..memento.loja.caretaker_loja import CaretakerLoja
 from ..memento.loja.originator_loja import OriginatorLoja
-from ..relatorios.relatorio_html import RelatorioHtml
-from ..relatorios.relatorio_pdf import RelatorioPdf
+from ..relatorios.relatorio_html import RelatorioHTML
+from ..relatorios.relatorio_pdf import RelatorioPDF
 from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados
 # Garantir que exista sempre ao menos 1 gerente por loja (a restrição não se aplica a vendedor)
-# * Trocar nome de fabrica_repositorio_loja para fabrica_gerenciadores_loja (o mesmo para produto)
 # As entidades têm alguns métodos similares (confirmação, descartar). Poderiam usar o mesmo método.
 
 
@@ -47,7 +44,7 @@ class Fachada:
                 "email": "admin",
                 "senha": "admin",
             }
-            usuario = FabricaEntidades.criar("administrador", dados)
+            usuario = FabricaEntidades().criar("administrador", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
             dados: dict = {
@@ -58,7 +55,7 @@ class Fachada:
                 "senha": "gerente",
                 "id_loja": 1,
             }
-            usuario = FabricaEntidades.criar("gerente", dados)
+            usuario = FabricaEntidades().criar("gerente", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
             dados: dict = {
@@ -69,7 +66,7 @@ class Fachada:
                 "senha": "vendedor",
                 "id_loja": 1,
             }
-            usuario = FabricaEntidades.criar("vendedor", dados)
+            usuario = FabricaEntidades().criar("vendedor", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
     def login(self):
@@ -77,10 +74,11 @@ class Fachada:
             retorno: dict = GerenciadorTelas.tela_login()
 
             # Autentica o usuário
-            self.autenticador.autenticar(
-                retorno.get("username", None), retorno.get("senha", None)
+            self.usuario_autenticado = GerenciadorComandos.comando_autenticar_usuario(
+                self.autenticador,
+                retorno.get("username", None),
+                retorno.get("senha", None),
             )
-            self.usuario_autenticado = self.autenticador.usuario_autenticado()
 
             # Usuário autenticado
             if self.usuario_autenticado:
@@ -126,7 +124,7 @@ class Fachada:
                 case "3":  # Realizar Venda
                     pass
                 case "4":
-                    self.visualizar_noticacoes()
+                    self.visualizar_notificacoes()
                 case "5":  # Logout
                     self.usuario_autenticado = None
                     return
@@ -134,10 +132,17 @@ class Fachada:
                     GerenciadorTelas.tela_opcao_invalida()
 
     def visualizar_notificacoes(self):
-        notificacoes = GerenciadorComandos.comando_listar_notificacoes(self.usuario_autenticado.id_loja)
+        notificacoes = GerenciadorComandos.comando_listar_notificacoes(
+            self.usuario_autenticado.id_loja
+        )
+        while True:
+            retorno: dict = GerenciadorTelas.tela_visualizar_notificacoes(notificacoes)
 
-        for notificacao in notificacoes:
-            print(notificacao)
+            match retorno["opcao"]:
+                case "1":
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
 
     def inicial_vendedor(self):
         while True:
@@ -148,8 +153,7 @@ class Fachada:
                     pass
                 case "2":
                     self.visualizar_noticacoes()
-
-                case "3": # Logout
+                case "3":  # Logout
                     self.usuario_autenticado = None
                     return
                 case _:  # Opção inválida
@@ -276,7 +280,7 @@ class Fachada:
             else:
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
-                usuario = FabricaEntidades.criar("administrador", retorno)
+                usuario = FabricaEntidades().criar("administrador", retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
@@ -306,12 +310,18 @@ class Fachada:
                 # Erro por causa da senha
                 GerenciadorTelas.tela_adicionar_usuario_erro_senha()
             else:  # Dados válidos
-                id_loja: int = self.associar_loja_tela_inicial()
+                id_loja: int = 0
+                if tipo_usuario == "gerente":
+                    id_loja: int = self.associar_loja_tela_inicial()
+                else:
+                    id_loja: int = self.associar_loja()
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
                 retorno["id_loja"] = id_loja
-                usuario = FabricaEntidades.criar(tipo_usuario, retorno)
-                self.gerenciador_usuarios.adicionar(usuario)
+                usuario = FabricaEntidades().criar(tipo_usuario, retorno)
+                GerenciadorComandos.comando_adicionar_usuario(
+                    self.gerenciador_usuarios, usuario
+                )
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
 
@@ -343,8 +353,10 @@ class Fachada:
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
                 retorno["id_loja"] = self.usuario_autenticado.id_loja
-                usuario = FabricaEntidades.criar(tipo_usuario, retorno)
-                self.gerenciador_usuarios.adicionar(usuario)
+                usuario = FabricaEntidades().criar(tipo_usuario, retorno)
+                GerenciadorComandos.comando_adicionar_usuario(
+                    self.gerenciador_usuarios, usuario
+                )
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
 
@@ -385,8 +397,8 @@ class Fachada:
             else:
                 id_nova_loja: int = self.gerenciador_lojas.gerar_novo_id()
                 retorno["id"] = id_nova_loja
-                loja = FabricaEntidades.criar("loja", retorno)
-                self.gerenciador_lojas.adicionar(loja)
+                loja = FabricaEntidades().criar("loja", retorno)
+                GerenciadorComandos.comando_adicionar_loja(self.gerenciador_lojas, loja)
                 GerenciadorTelas.tela_adicionar_loja_sucesso()
                 return id_nova_loja
 
@@ -550,7 +562,9 @@ class Fachada:
                 case "2":  # Excluir Usuário
                     resultado: bool = self.excluir_usuario()
                     if resultado:
-                        self.gerenciador_usuarios.remover(entidade.id_)
+                        GerenciadorComandos.comando_excluir_usuario(
+                            self.gerenciador_usuarios, entidade.id_
+                        )
                         GerenciadorTelas.tela_excluir_usuario_sucesso()
                         return
 
@@ -559,9 +573,9 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def visualizar_loja(self, id_: int):
+    def visualizar_loja(self, id_loja: int):
 
-        entidade = self.gerenciador_lojas.buscar(id_)
+        entidade = self.gerenciador_lojas.buscar(id_loja)
 
         while True:
             retorno: dict = GerenciadorTelas.tela_visualizar_loja(entidade)
@@ -570,26 +584,30 @@ class Fachada:
                 case "1":  # Gerenciar Funcionários
                     self.gerenciar_funcionarios()
                 case "2":  # Gerenciar Produtos
-                    self.gerenciar_produtos(id_)
+                    self.gerenciar_produtos(id_loja)
                 case "3":  # Editar Loja
                     informacoes: dict = {}
-                    informacoes["id"] = entidade.id_
+                    informacoes["id"] = entidade.id_loja
                     informacoes["nome"] = entidade.nome
                     informacoes["endereco"] = entidade.endereco
 
-                    loja_initial = FabricaEntidades.criar("loja", informacoes)
+                    loja_initial = FabricaEntidades().criar("loja", informacoes)
                     # Memento
                     originator_loja = OriginatorLoja(loja_initial)
                     caretaker_loja = CaretakerLoja()
                     caretaker_loja.add_memento(originator_loja.create_memento())
                     originator_loja.set_state(loja_initial)
 
-                    self.editar_loja(caretaker_loja, originator_loja, self.usuario_autenticado.id_)
-                    entidade = self.gerenciador_lojas.buscar(id_)
+                    self.editar_loja(
+                        caretaker_loja, originator_loja, self.usuario_autenticado.id_
+                    )
+                    entidade = self.gerenciador_lojas.buscar(id_loja)
                 case "4":  # Excluir Loja
                     resultado: bool = self.excluir_loja()
                     if resultado:
-                        self.gerenciador_lojas.remover(entidade.id_)
+                        GerenciadorComandos.comando_excluir_loja(
+                            self.gerenciador_lojas, entidade.id_
+                        )
                         GerenciadorTelas.tela_excluir_loja_sucesso()
                         return
                 case "5":  # Voltar
@@ -618,7 +636,9 @@ class Fachada:
                 case "2":  # Excluir Produto
                     resultado: bool = self.excluir_produto()
                     if resultado:
-                        self.gerenciador_produtos.remover(entidade.id_)
+                        GerenciadorComandos.comando_excluir_produto(
+                            self.gerenciador_produtos, entidade.id_
+                        )
                         GerenciadorTelas.tela_excluir_produto_sucesso()
                         return
                 case "3":  # Voltar
@@ -699,8 +719,10 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    usuario = FabricaEntidades.criar(informacoes["tipo"], informacoes)
-                    self.gerenciador_usuarios.editar(informacoes["id"], usuario)
+                    usuario = FabricaEntidades().criar(informacoes["tipo"], informacoes)
+                    GerenciadorComandos.comando_editar_usuario(
+                        self.gerenciador_usuarios, informacoes["id"], usuario
+                    )
                     GerenciadorTelas.tela_editar_usuario_sucesso()
                     return True
                 case "2":  # Voltar
@@ -733,7 +755,10 @@ class Fachada:
                     GerenciadorTelas.tela_opcao_invalida()
 
     def editar_loja(
-        self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja, id_usuario:int
+        self,
+        caretaker_loja: CaretakerLoja,
+        originator_loja: OriginatorLoja,
+        id_usuario: int,
     ):
         # Memento
 
@@ -761,22 +786,19 @@ class Fachada:
                         estado_atual.toDict()
                     )
                     if resultado:
-                        GerenciadorComandos.comando_enviar_notificacao(loja=estado_atual,
-                                                                       id_usuario=id_usuario)
+                        GerenciadorComandos.comando_enviar_notificacao(
+                            loja=estado_atual, id_usuario=id_usuario
+                        )
                         return
                 case "4":  # Descartar edição
                     resultado: bool = self.editar_loja_descartar()
                     if resultado:
                         originator_loja.restore(caretaker_loja.get_memento(0))
                         estado_atual = originator_loja.get_state()
-                        print(estado_atual)
-
                         return
                 case "5":  # Voltar
                     originator_loja.restore(caretaker_loja.get_memento(0))
                     estado_atual = originator_loja.get_state()
-                    print(estado_atual)
-
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
@@ -815,8 +837,10 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    loja = FabricaEntidades.criar("loja", informacoes)
-                    self.gerenciador_lojas.editar(informacoes["id"], loja)
+                    loja = FabricaEntidades().criar("loja", informacoes)
+                    GerenciadorComandos.comando_editar_loja(
+                        self.gerenciador_lojas, informacoes["id"], loja
+                    )
                     GerenciadorTelas.tela_editar_loja_sucesso()
                     return True
                 case "2":  # Voltar
@@ -880,8 +904,10 @@ class Fachada:
                 id_novo_produto: int = self.gerenciador_produtos.gerar_novo_id()
                 retorno["id"] = id_novo_produto
                 retorno["id_loja"] = id_loja
-                produto = FabricaEntidades.criar("produto", retorno)
-                self.gerenciador_produtos.adicionar(produto)
+                produto = FabricaEntidades().criar("produto", retorno)
+                GerenciadorComandos.comando_adicionar_produto(
+                    self.gerenciador_produtos, produto
+                )
                 GerenciadorTelas.tela_adicionar_produto_sucesso()
                 return
 
@@ -978,8 +1004,10 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    produto = FabricaEntidades.criar("produto", informacoes)
-                    self.gerenciador_produtos.editar(informacoes["id"], produto)
+                    produto = FabricaEntidades().criar("produto", informacoes)
+                    GerenciadorComandos.comando_editar_produto(
+                        self.gerenciador_produtos, informacoes["id"], produto
+                    )
                     GerenciadorTelas.tela_editar_produto_sucesso()
                     return True
                 case "2":  # Voltar
@@ -1029,16 +1057,27 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-
     def opcoes_relatorios(self):
         while True:
             retorno = GerenciadorTelas.tela_relatorios()
 
             match retorno["opcao"]:
                 case "1":
-                    RelatorioHtml(self.gerenciador_usuarios).gerar_relatorio()
+                    resultado: bool = RelatorioHTML(
+                        self.gerenciador_usuarios
+                    ).gerar_relatorio()
+                    if resultado:
+                        GerenciadorTelas.tela_relatorios_html_sucesso()
+                    else:
+                        GerenciadorTelas.tela_relatorios_erro()
                 case "2":
-                    RelatorioPdf(self.gerenciador_usuarios).gerar_relatorio()
+                    resultado: bool = RelatorioPDF(
+                        self.gerenciador_usuarios
+                    ).gerar_relatorio()
+                    if resultado:
+                        GerenciadorTelas.tela_relatorios_pdf_sucesso()
+                    else:
+                        GerenciadorTelas.tela_relatorios_erro()
                 case "3":
                     return
                 case _:  # Opção inválida
