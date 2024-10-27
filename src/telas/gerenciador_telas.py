@@ -87,7 +87,7 @@ from .telas_listar_usuarios import (
     TelaPesquisarUsuario,
     TelaVisualizarUsuario,
 )
-from .telas_listas_produtos import (
+from .telas_listar_produtos import (
     TelaListarProdutos,
     TelaPesquisarProduto,
     TelaVisualizarProduto,

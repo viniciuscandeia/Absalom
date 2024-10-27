@@ -76,8 +76,8 @@ class Fachada:
             # Autentica o usuário
             self.usuario_autenticado = GerenciadorComandos.comando_autenticar_usuario(
                 self.autenticador,
-                retorno.get("username", None),
-                retorno.get("senha", None),
+                retorno.get("username"),
+                retorno.get("senha"),
             )
 
             # Usuário autenticado
@@ -131,18 +131,7 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def visualizar_notificacoes(self):
-        notificacoes = GerenciadorComandos.comando_listar_notificacoes(
-            self.usuario_autenticado.id_loja
-        )
-        while True:
-            retorno: dict = GerenciadorTelas.tela_visualizar_notificacoes(notificacoes)
 
-            match retorno["opcao"]:
-                case "1":
-                    return
-                case _:  # Opção inválida
-                    GerenciadorTelas.tela_opcao_invalida()
 
     def inicial_vendedor(self):
         while True:
@@ -152,9 +141,23 @@ class Fachada:
                 case "1":  # Realizar Venda
                     pass
                 case "2":
-                    self.visualizar_noticacoes()
+                    self.visualizar_notificacoes()
                 case "3":  # Logout
                     self.usuario_autenticado = None
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+
+    def visualizar_notificacoes(self):
+        notificacoes = GerenciadorComandos.comando_listar_notificacoes(
+            self.usuario_autenticado.id_loja
+        )
+        while True:
+            retorno: dict = GerenciadorTelas.tela_visualizar_notificacoes(notificacoes)
+
+            match retorno["opcao"]:
+                case "1":
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()

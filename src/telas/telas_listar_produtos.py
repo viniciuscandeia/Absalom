@@ -10,12 +10,15 @@ class TelaListarProdutos(TemplateTela):
 
     @classmethod
     def _listar_informacoes(cls, informacoes: dict = None):
-        chaves: list = list(informacoes.keys())
-        id_loja: int = informacoes[chaves[0]].id_loja
-        print(f"--- Produtos da Loja {id_loja} --- \n")
+        if informacoes:
+            chaves: list = list(informacoes.keys())
+            id_loja: int = informacoes[chaves[0]].id_loja
+            print(f"--- Produtos da Loja {id_loja} --- \n")
 
-        for item in informacoes:
-            print(informacoes[item])
+            for item in informacoes:
+                print(informacoes[item])
+        else:
+            print("--- Não há produtos cadastrados! ---\n")
 
     @classmethod
     def _menu(cls):
