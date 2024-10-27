@@ -1,7 +1,7 @@
-from src.command.command import Command
+from .comando import Comando
 
 
-class AdicionarUsuarioCommand(Command):
+class AdicionarUsuarioComando(Comando):
     def __init__(self, gerenciador_usuarios, usuario):
         self.gerenciador_usuarios = gerenciador_usuarios
         self.usuario = usuario

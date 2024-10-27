@@ -7,9 +7,10 @@ from ..repositorios.repositorios_usuarios import (
     RepositorioUsuariosDB,
     RepositorioUsuariosRAM,
 )
+from .fabrica_abstrata import FabricaAbstrata
 
 
-class FabricaGerenciadorUsuarios:
+class FabricaGerenciadorUsuarios(FabricaAbstrata):
     _repositorios = {
         "ram": GerenciadorUsuarios(
             EstrategiaUsuariosRAM(RepositorioUsuariosRAM().pegar_repositorio())
@@ -19,13 +20,6 @@ class FabricaGerenciadorUsuarios:
         ),
     }
 
-    @staticmethod
-    def criar_gerenciador(tipo: str):
+    def criar(self, tipo: str):
         gerenciador = FabricaGerenciadorUsuarios._repositorios.get(tipo)
-        if gerenciador:
-            return gerenciador
-        else:
-            raise ValueError(f"Tipo de persistência desconhecido: {tipo}")
-
-    def __str__(self):
-        return "Fábrica dos Gerenciadores de Usuários"
+        return gerenciador

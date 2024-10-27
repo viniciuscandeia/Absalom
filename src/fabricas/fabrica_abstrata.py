@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
-class Command(ABC):
+
+class FabricaAbstrata(ABC):
+
     @abstractmethod
-    def execute(self):
+    def criar(self, tipo: str):
         pass

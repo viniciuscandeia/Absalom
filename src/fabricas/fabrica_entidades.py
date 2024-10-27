@@ -1,11 +1,12 @@
 from ..entidades.entidade import Entidade
 from ..entidades.entidade_loja import Loja
-from ..entidades.entidade_produto import Produto
 from ..entidades.entidade_notificacao import Notificacao
+from ..entidades.entidade_produto import Produto
 from ..entidades.entidades_usuarios import Usuario
+from .fabrica_abstrata import FabricaAbstrata
 
 
-class FabricaEntidades:
+class FabricaEntidades(FabricaAbstrata):
     _entidades: dict = {
         "administrador": lambda dados: Usuario(
             id_=dados["id"],
@@ -53,21 +54,9 @@ class FabricaEntidades:
             from_user_id=dados["from_user_id"],
             to_loja_id=dados["to_loja_id"],
         ),
-        "produto": lambda dados: Produto(
-            id_=dados["id"],
-            nome=dados["nome"],
-            descricao=dados["descricao"],
-            preco=dados["preco"],
-            quantidade=dados["quantidade"],
-            id_loja=dados["id_loja"],
-        ),
     }
 
     @staticmethod
-    def criar_entidade(tipo: str, dados: dict) -> Entidade:
+    def criar(tipo: str, dados: dict) -> Entidade:
         entidade_func = FabricaEntidades._entidades.get(tipo)
-        if entidade_func:
-            # Chama a função lambda passando os dados
-            return entidade_func(dados)
-        else:
-            raise ValueError(f"Tipo de entidade desconhecido: {tipo}")
+        return entidade_func(dados)

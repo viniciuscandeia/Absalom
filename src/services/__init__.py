@@ -1,2 +1,0 @@
-from .autenticacao_usuario import AutenticacaoUsuario
-from .validador_informacoes import ValidadorInformacoes

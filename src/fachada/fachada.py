@@ -1,7 +1,7 @@
 from ..fabricas.fabrica_entidades import FabricaEntidades
-from ..fabricas.fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
-from ..fabricas.fabrica_repositorio_loja import FabricaGerenciadorLojas
-from ..fabricas.fabrica_repositorio_produto import FabricaGerenciadorProdutos
+from ..fabricas.fabrica_gerenciador_lojas import FabricaGerenciadorLojas
+from ..fabricas.fabrica_gerenciador_produtos import FabricaGerenciadorProdutos
+from ..fabricas.fabrica_gerenciador_usuarios import FabricaGerenciadorUsuarios
 from ..memento.caretaker import Caretaker
 from ..memento.loja.caretaker_loja import CaretakerLoja
 from ..memento.loja.originator_loja import OriginatorLoja
@@ -18,13 +18,11 @@ from ..telas.gerenciador_telas import GerenciadorTelas
 class Fachada:
 
     def __init__(self, tipo_persistencia: str):
-        self.gerenciador_usuarios = FabricaGerenciadorUsuarios.criar_gerenciador(
+        self.gerenciador_usuarios = FabricaGerenciadorUsuarios().criar(
             tipo_persistencia
         )
-        self.gerenciador_lojas = FabricaGerenciadorLojas.criar_gerenciador(
-            tipo_persistencia
-        )
-        self.gerenciador_produtos = FabricaGerenciadorProdutos.criar_gerenciador(
+        self.gerenciador_lojas = FabricaGerenciadorLojas().criar(tipo_persistencia)
+        self.gerenciador_produtos = FabricaGerenciadorProdutos().criar(
             tipo_persistencia
         )
 
@@ -43,7 +41,7 @@ class Fachada:
                 "email": "admin",
                 "senha": "admin",
             }
-            usuario = FabricaEntidades.criar_entidade("administrador", dados)
+            usuario = FabricaEntidades.criar("administrador", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
             dados: dict = {
@@ -54,7 +52,7 @@ class Fachada:
                 "senha": "gerente",
                 "id_loja": 1,
             }
-            usuario = FabricaEntidades.criar_entidade("gerente", dados)
+            usuario = FabricaEntidades.criar("gerente", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
             dados: dict = {
@@ -65,7 +63,7 @@ class Fachada:
                 "senha": "vendedor",
                 "id_loja": 1,
             }
-            usuario = FabricaEntidades.criar_entidade("vendedor", dados)
+            usuario = FabricaEntidades.criar("vendedor", dados)
             self.gerenciador_usuarios.adicionar(usuario)
 
     def login(self):
@@ -259,7 +257,7 @@ class Fachada:
             else:
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
-                usuario = FabricaEntidades.criar_entidade("administrador", retorno)
+                usuario = FabricaEntidades.criar("administrador", retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
@@ -293,7 +291,7 @@ class Fachada:
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
                 retorno["id_loja"] = id_loja
-                usuario = FabricaEntidades.criar_entidade(tipo_usuario, retorno)
+                usuario = FabricaEntidades.criar(tipo_usuario, retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
@@ -326,7 +324,7 @@ class Fachada:
                 id_novo_usuario: int = self.gerenciador_usuarios.gerar_novo_id()
                 retorno["id"] = id_novo_usuario
                 retorno["id_loja"] = self.usuario_autenticado.id_loja
-                usuario = FabricaEntidades.criar_entidade(tipo_usuario, retorno)
+                usuario = FabricaEntidades.criar(tipo_usuario, retorno)
                 self.gerenciador_usuarios.adicionar(usuario)
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
@@ -368,7 +366,7 @@ class Fachada:
             else:
                 id_nova_loja: int = self.gerenciador_lojas.gerar_novo_id()
                 retorno["id"] = id_nova_loja
-                loja = FabricaEntidades.criar_entidade("loja", retorno)
+                loja = FabricaEntidades.criar("loja", retorno)
                 self.gerenciador_lojas.adicionar(loja)
                 GerenciadorTelas.tela_adicionar_loja_sucesso()
                 return id_nova_loja
@@ -560,8 +558,8 @@ class Fachada:
                     informacoes["nome"] = entidade.nome
                     informacoes["endereco"] = entidade.endereco
 
-                    loja_initial = FabricaEntidades.criar_entidade('loja', informacoes)
-                    #Memento
+                    loja_initial = FabricaEntidades.criar("loja", informacoes)
+                    # Memento
                     originator_loja = OriginatorLoja(loja_initial)
                     caretaker_loja = CaretakerLoja()
                     caretaker_loja.add_memento(originator_loja.create_memento())
@@ -682,9 +680,7 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    usuario = FabricaEntidades.criar_entidade(
-                        informacoes["tipo"], informacoes
-                    )
+                    usuario = FabricaEntidades.criar(informacoes["tipo"], informacoes)
                     self.gerenciador_usuarios.editar(informacoes["id"], usuario)
                     GerenciadorTelas.tela_editar_usuario_sucesso()
                     return True
@@ -717,7 +713,9 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-    def editar_loja(self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja):
+    def editar_loja(
+        self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja
+    ):
         # Memento
 
         while True:
@@ -740,7 +738,9 @@ class Fachada:
                     originator_loja.set_state(loja_att)
                 case "3":  # Confirmar edição
                     estado_atual = originator_loja.get_state()
-                    resultado: bool = self.editar_loja_confirmacao(estado_atual.toDict())
+                    resultado: bool = self.editar_loja_confirmacao(
+                        estado_atual.toDict()
+                    )
                     if resultado:
                         return
                 case "4":  # Descartar edição
@@ -794,7 +794,7 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    loja = FabricaEntidades.criar_entidade("loja", informacoes)
+                    loja = FabricaEntidades.criar("loja", informacoes)
                     self.gerenciador_lojas.editar(informacoes["id"], loja)
                     GerenciadorTelas.tela_editar_loja_sucesso()
                     return True
@@ -859,7 +859,7 @@ class Fachada:
                 id_novo_produto: int = self.gerenciador_produtos.gerar_novo_id()
                 retorno["id"] = id_novo_produto
                 retorno["id_loja"] = id_loja
-                produto = FabricaEntidades.criar_entidade("produto", retorno)
+                produto = FabricaEntidades.criar("produto", retorno)
                 self.gerenciador_produtos.adicionar(produto)
                 GerenciadorTelas.tela_adicionar_produto_sucesso()
                 return
@@ -957,7 +957,7 @@ class Fachada:
 
             match retorno["opcao"]:
                 case "1":  # Confirmar
-                    produto = FabricaEntidades.criar_entidade("produto", informacoes)
+                    produto = FabricaEntidades.criar("produto", informacoes)
                     self.gerenciador_produtos.editar(informacoes["id"], produto)
                     GerenciadorTelas.tela_editar_produto_sucesso()
                     return True

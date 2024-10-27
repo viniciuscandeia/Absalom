@@ -1,4 +1,0 @@
-from .fabrica_entidades import FabricaEntidades
-from .fabrica_gerenciadores_usuarios import FabricaGerenciadorUsuarios
-from .fabrica_repositorio_loja import FabricaGerenciadorLojas
-from .fabrica_repositorio_produto import FabricaGerenciadorProdutos

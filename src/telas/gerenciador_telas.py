@@ -1,5 +1,6 @@
 from .tela_escolha_persistencia import TelaEscolhaPersistencia
 from .tela_gerenciar_lojas import TelaGerenciarLojas
+from .tela_gerenciar_produtos import TelaGerenciarProdutos
 from .tela_gerenciar_usuarios import TelaGerenciarUsuarios
 from .tela_opcao_invalida import TelaOpcaoInvalida
 from .telas_adicionar_loja import (
@@ -92,7 +93,7 @@ from .telas_listas_produtos import (
     TelaVisualizarProduto,
 )
 from .telas_login import TelaLogin, TelaLoginErro
-from .tela_gerenciar_produtos import TelaGerenciarProdutos
+
 
 class GerenciadorTelas:
 
