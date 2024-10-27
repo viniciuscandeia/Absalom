@@ -25,7 +25,7 @@ class TelaInicialGerente(TemplateTela):
     @classmethod
     def _menu(cls):
         mensagem: str = (
-            "1 - Gerenciar Usuários \n2 - Gerenciar Produtos \n3 - Realizar Venda \n4 - Ver Notificações \n5 - Logout \n"
+            "1 - Gerenciar Usuários \n2 - Gerenciar Produtos \n3 - Gerenciar Vendas \n4 - Ver Notificações \n5 - Logout \n"
         )
         print(mensagem)
 

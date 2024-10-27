@@ -71,11 +71,11 @@ class GerenciadorComandos:
         Invocador.executar_comando(comando)
 
     @classmethod
-    def comando_enviar_notificacao(self, loja, id_usuario: int):
+    def comando_enviar_notificacao(cls, loja, id_usuario: int):
         comando = EnviarNotificacaoComando(loja=loja, id_usuario=id_usuario)
         Invocador.executar_comando(comando)
 
     @classmethod
-    def comando_listar_notificacoes(loja, id_loja):
+    def comando_listar_notificacoes(cls, loja, id_loja):
         comando = VerNotificacoesComando(id_loja=id_loja)
         return Invocador.executar_comando(comando)
