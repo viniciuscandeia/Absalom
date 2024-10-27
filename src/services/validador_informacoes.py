@@ -1,6 +1,5 @@
 import re
 
-
 class ValidadorInformacoes:
 
     @classmethod
@@ -14,7 +13,7 @@ class ValidadorInformacoes:
     @classmethod
     def validacao_email(cls, repositorio: dict, email: str) -> bool:
         for item in repositorio:
-            if repositorio[item].username == email:
+            if repositorio[item].email == email:
                 return False
         return True
 
@@ -54,21 +53,28 @@ class ValidadorInformacoes:
         return True
 
     @classmethod
-    def validacao_produto(cls, produto) -> bool:
-        # Verificar se todos os campos obrigatórios estão preenchidos
-        if not produto.nome or not produto.descricao:
-            print("Erro: Nome ou descrição do produto não podem estar vazios.")
-            return False
+    def validacao_produto_nome(cls, repositorio: dict, nome: str) -> bool:
+        for item in repositorio:
+            if repositorio[item].nome == nome:
+                return False
+        return True
 
-        # Verificar se o preço é um número válido e positivo
-        if not isinstance(produto.preco, (int, float)) or produto.preco <= 0:
-            print("Erro: Preço deve ser um número positivo.")
+    @classmethod
+    def validacao_produto_descricao(cls, descricao: str) -> bool:
+        if descricao == "":
             return False
+        return True
 
-        # Verificar se a quantidade é um número inteiro positivo
-        if not isinstance(produto.quantidade, int) or produto.quantidade < 0:
-            print("Erro: Quantidade deve ser um número inteiro não negativo.")
-            return False
+    @classmethod
+    def validacao_produto_preco(cls, preco: str) -> bool:
+        if preco.isnumeric():
+            if not isinstance(float(preco), (int, float)) or float(preco) <= 0:
+                return False
+        return True
 
-        # Se todas as verificações passarem, o produto é válido
+    @classmethod
+    def validacao_produto_quantidade(cls, quantidade: int) -> bool:
+        if quantidade.isnumeric():
+            if not isinstance(int(quantidade), int) or int(quantidade) < 0:
+                return False
         return True

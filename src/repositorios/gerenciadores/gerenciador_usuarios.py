@@ -14,17 +14,17 @@ class GerenciadorUsuarios:
     def adicionar(self, entidade: Usuario):
         self.estrategia.adicionar(entidade)
 
-    def remover(self, id_: int):
-        self.estrategia.remover(id_)
+    def remover(self, id_usuario: int):
+        self.estrategia.remover(id_usuario)
 
-    def editar(self, id_: int, entidade: Usuario):
-        self.estrategia.editar(id_, entidade)
+    def editar(self, id_usuario: int, entidade: Usuario):
+        self.estrategia.editar(id_usuario, entidade)
 
-    def buscar(self, id_: int):
-        return self.estrategia.buscar(id_)
+    def buscar(self, id_usuario: int):
+        return self.estrategia.buscar(id_usuario)
 
-    def verificar_existencia(self, id_: int) -> bool:
-        return self.estrategia.verificar_existencia(id_)
+    def verificar_existencia(self, id_usuario: int) -> bool:
+        return self.estrategia.verificar_existencia(id_usuario)
 
     def listar(self, tipo: str = None, id_loja: int = None) -> dict:
         return self.estrategia.listar(tipo, id_loja)
