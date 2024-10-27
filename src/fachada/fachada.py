@@ -1,3 +1,7 @@
+from ..command.command_adicionar_loja import AdicionarLojaCommand
+from ..command.command_adicionar_usuario_command import AdicionarUsuarioCommand
+from ..command.command_excluir_loja import ExcluirLojaCommand
+from ..command.command_excluir_usuario import ExcluirUsuarioCommand
 from ..command.command_login import CommandLogin
 from ..command.invoker import Invoker
 from ..entidades.entidade_loja import Loja
@@ -325,7 +329,10 @@ class Fachada:
                 retorno["id"] = id_novo_usuario
                 retorno["id_loja"] = id_loja
                 usuario = FabricaEntidades.criar_entidade(tipo_usuario, retorno)
-                self.gerenciador_usuarios.adicionar(usuario)
+
+                command = AdicionarUsuarioCommand(self.gerenciador_usuarios, usuario)
+                self.invoker.execute_command(command)
+
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
 
@@ -358,7 +365,10 @@ class Fachada:
                 retorno["id"] = id_novo_usuario
                 retorno["id_loja"] = self.usuario_autenticado.id_loja
                 usuario = FabricaEntidades.criar_entidade(tipo_usuario, retorno)
-                self.gerenciador_usuarios.adicionar(usuario)
+
+                command = AdicionarUsuarioCommand(self.gerenciador_usuarios, usuario)
+                self.invoker.execute_command(command)
+
                 GerenciadorTelas.tela_adicionar_usuario_sucesso()
                 return
 
@@ -400,7 +410,10 @@ class Fachada:
                 id_nova_loja: int = self.gerenciador_lojas.gerar_novo_id()
                 retorno["id"] = id_nova_loja
                 loja = FabricaEntidades.criar_entidade("loja", retorno)
-                self.gerenciador_lojas.adicionar(loja)
+
+                command = AdicionarLojaCommand(self.gerenciador_lojas, loja)
+                self.invoker.execute_command(command)
+
                 GerenciadorTelas.tela_adicionar_loja_sucesso()
                 return id_nova_loja
 
@@ -564,7 +577,9 @@ class Fachada:
                 case "2":  # Excluir Usuário
                     resultado: bool = self.excluir_usuario()
                     if resultado:
-                        self.gerenciador_usuarios.remover(entidade.id_)
+                        command = ExcluirUsuarioCommand(self.gerenciador_usuarios, entidade.id_)
+                        self.invoker.execute_command(command)
+                        # self.gerenciador_usuarios.remover(entidade.id_)
                         GerenciadorTelas.tela_excluir_usuario_sucesso()
                         return
 
@@ -601,7 +616,9 @@ class Fachada:
                 case "4":  # Excluir Loja
                     resultado: bool = self.excluir_loja()
                     if resultado:
-                        self.gerenciador_lojas.remover(entidade.id_)
+                        command = ExcluirLojaCommand(self.gerenciador_lojas, entidade.id_)
+                        self.invoker.execute_command(command)
+
                         GerenciadorTelas.tela_excluir_loja_sucesso()
                         return
                 case "5":  # Voltar
