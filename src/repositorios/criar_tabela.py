@@ -49,6 +49,17 @@ def criar_tabela():
     );
     """
 
+    comando_sql_notificacoes = """ 
+        CREATE TABLE notificacoes (
+            id integer primary key  autoincrement,
+            mensagem text,
+            from_user_id integer,
+            to_loja_id integer,
+            foreign key (from_user_id) references usuarios(id),
+            foreign key (to_loja_id) references lojas(id)
+        )
+    """
+
     # Executar os comandos SQL
     cursor.execute(comando_sql_usuarios)
     cursor.execute(comando_sql_lojas)
