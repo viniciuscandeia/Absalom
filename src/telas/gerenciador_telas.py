@@ -82,6 +82,11 @@ from .telas_listar_lojas import (
     TelaPesquisarLoja,
     TelaVisualizarLoja,
 )
+from .telas_listar_produtos import (
+    TelaListarProdutos,
+    TelaPesquisarProduto,
+    TelaVisualizarProduto,
+)
 from .telas_listar_usuarios import (
     TelaListar_Administrador,
     TelaListar_Gerente,
@@ -91,11 +96,6 @@ from .telas_listar_usuarios import (
     TelaVisualizarUsuario,
 )
 from .telas_listar_vendas import TelaListarVendas, TelaPesquisarVenda
-from .telas_listar_produtos import (
-    TelaListarProdutos,
-    TelaPesquisarProduto,
-    TelaVisualizarProduto,
-)
 from .telas_login import TelaLogin, TelaLoginErro
 from .telas_realizar_venda import (
     TelaDefinirIDProdutoVenda,
@@ -452,7 +452,7 @@ class GerenciadorTelas:
 
     @classmethod
     def tela_relatorios_html_sucesso(cls) -> None:
-        TelaRelatoriosPDFSucesso.tela()
+        TelaRelatoriosHTMLSucesso.tela()
 
     @classmethod
     def tela_relatorios_erro(cls) -> None:
