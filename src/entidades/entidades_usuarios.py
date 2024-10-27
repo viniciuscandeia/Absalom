@@ -1,5 +1,6 @@
 from .entidade import Entidade
 
+
 class Usuario(Entidade):
     def __init__(
         self,

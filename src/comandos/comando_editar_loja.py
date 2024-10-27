@@ -1,9 +1,9 @@
-from src.command.command import Command
+from .comando import Comando
 
-class EditarLojaCommand(Command):
-    def __init__(self, gerenciador_lojas, id_loja, loja):
+class EditarLojaComando(Comando):
+    def __init__(self, gerenciador_lojas, id_loja: int, loja):
         self.gerenciador_lojas = gerenciador_lojas
-        self.id_loja = id_loja
+        self.id_loja: int = id_loja
         self.loja = loja
 
     def execute(self):

@@ -7,7 +7,6 @@ class Loja(Entidade):
         self.nome: str = nome
         self.endereco: str = endereco
 
-
     def setNome(self, nome: str):
         self.nome = nome
         return self
@@ -21,7 +20,7 @@ class Loja(Entidade):
         informacoes["id"] = self.id_
         informacoes["nome"] = self.nome
         informacoes["endereco"] = self.endereco
-
         return informacoes
+
     def __str__(self):
         return f"[{self.id_}] Nome: {self.nome}, Endereço: {self.endereco}"

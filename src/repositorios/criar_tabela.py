@@ -49,7 +49,7 @@ def criar_tabela():
     );
     """
 
-    comando_sql_notificacoes = """ 
+    comando_sql_notificacoes = """
         CREATE TABLE notificacoes (
             id integer primary key  autoincrement,
             mensagem text,
@@ -64,6 +64,7 @@ def criar_tabela():
     cursor.execute(comando_sql_usuarios)
     cursor.execute(comando_sql_lojas)
     cursor.execute(comando_sql_produtos)
+    cursor.execute(comando_sql_notificacoes)
 
     # Commit e fechar a conexão
     conexao.commit()

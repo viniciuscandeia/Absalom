@@ -1,6 +1,7 @@
-from src.command.command import Command
+from .comando import Comando
 
-class AdicionarProdutoCommand(Command):
+
+class AdicionarProdutoComando(Comando):
     def __init__(self, gerenciador_produtos, produto):
         self.gerenciador_produtos = gerenciador_produtos
         self.produto = produto

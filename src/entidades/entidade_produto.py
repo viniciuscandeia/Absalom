@@ -2,12 +2,15 @@ from .entidade import Entidade
 
 
 class Produto(Entidade):
-    def __init__(self, id_: int,
-                 nome: str,
-                 descricao: str,
-                 preco: float,
-                 quantidade: int,
-                 id_loja: int):
+    def __init__(
+        self,
+        id_: int,
+        nome: str,
+        descricao: str,
+        preco: float,
+        quantidade: int,
+        id_loja: int,
+    ):
         super().__init__(id_)
         self.nome: str = nome
         self.descricao = descricao
