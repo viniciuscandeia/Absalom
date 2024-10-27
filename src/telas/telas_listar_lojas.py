@@ -1,5 +1,3 @@
-from ..command.command_adicionar_loja import AdicionarLojaCommand
-from ..command.command_excluir_loja import ExcluirLojaCommand
 from ..entidades.entidade_loja import Loja
 from .template_tela import TemplateTela
 

@@ -1,5 +1,4 @@
 from src.entidades.entidade_loja import Loja
-
 from ..estrategias.estrategias_lojas import InterfaceEstrategiaLojas
 
 class GerenciadorLojas:
