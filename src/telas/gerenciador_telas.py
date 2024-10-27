@@ -95,6 +95,18 @@ from .telas_listas_produtos import (
 from .telas_login import TelaLogin, TelaLoginErro
 
 
+from telas_realizar_venda import (
+    TelaInicialVenda,
+    TelaDefinirIDProdutoVenda,
+    TelaDefinirQuantidadeVenda,
+    TelaFinalizarVenda,
+    TelaVendaFinalizada,
+)
+
+from tela_gerenciar_vendas import TelaGerenciarVendas
+from tela_listar_vendas import TelaListarVendas, TelaPesquisarVenda 
+from telas_excluir_venda import TelaExcluirVenda, TelaExcluirVendaSucesso
+
 class GerenciadorTelas:
 
     @classmethod
@@ -424,3 +436,47 @@ class GerenciadorTelas:
     @classmethod
     def tela_visualizar_produto(cls, produto) -> dict:
         return TelaVisualizarProduto.tela(produto)
+
+
+#--------------------------------------------------------
+# Vendas
+
+    @classmethod
+    def tela_gerenciar_vendas(cls) -> dict:
+        return TelaGerenciarVendas.tela()
+    
+    @classmethod
+    def tela_listar_vendas(cls) -> dict:
+        return TelaListarVendas.tela()
+    
+    @classmethod
+    def tela_pesquisa_vendas(cls) -> dict:
+        return TelaPesquisarVenda.tela()
+    
+    @classmethod
+    def tela_excluir_venda(cls) -> dict:
+        return TelaExcluirVenda.tela()
+    
+    @classmethod
+    def tela_excluir_venda_sucesso(cls) -> dict:
+        return TelaExcluirVendaSucesso.tela()
+
+    @classmethod
+    def tela_inicial_venda(cls) -> dict:
+        return TelaInicialVenda.tela()
+
+    @classmethod
+    def tela_definir_id_produto_venda(cls) -> dict:
+        return TelaDefinirIDProdutoVenda.tela()
+    
+    @classmethod
+    def tela_definir_quantidade_venda(cls) -> dict:
+       return TelaDefinirQuantidadeVenda.tela()
+
+    @classmethod
+    def tela_finalizar_venda(cls) -> dict:
+       return TelaFinalizarVenda.tela()
+
+    @classmethod
+    def tela_venda_finalizada(cls) -> dict:
+       return TelaVendaFinalizada.tela()

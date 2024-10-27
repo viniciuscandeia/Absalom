@@ -1007,3 +1007,110 @@ class Fachada:
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
+
+
+
+#----------------------------------------------------------------------------------
+
+    def gerenciar_venda(self):
+        while True:
+            retorno: dict = GerenciadorTelas.tela_gerenciar_vendas()
+
+            match retorno["opcao"]:
+            
+                case "1": # Realizar Venda
+                    self.iniciar_venda()
+
+                case "2": # Listar Vendas
+                    self.listar_vendas()
+
+                case "3": # Excluir Venda
+                    self.finalizar_venda(informacoes)
+                    return
+
+                case "4": # Cancelar Venda
+                    return
+
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+
+    def listar_vendas():
+            retorno: dict = GerenciadorTelas.tela_listar_vendas()
+            
+            if retorno["opcao"]:
+                    return
+
+
+    def excluir_venda():
+        print()
+
+            
+
+
+
+
+
+    def iniciar_venda(self):
+
+        informacoes:dict = {}
+
+        while True:
+
+            retorno: dict = GerenciadorTelas.tela_inicial_venda()
+
+
+            match retorno["opcao"]:
+            
+
+                case "1": # ID do produto
+                    informacoes.id_produto = self.definir_id_produto()
+
+                case "2": # Quantidade do produto
+                    informacoes.quantidade = self.definir_quantidade_venda()
+
+                case "3": # Finalizar Venda
+                    self.finalizar_venda(informacoes)
+                    return
+
+                case "4": # Cancelar Venda
+                    return
+
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+
+
+
+        
+    def definir_id_produto():
+        while True:
+            retorno: dict = GerenciadorTelas.tela_definir_id_produto_venda()
+            return retorno
+    
+    def definir_quantidade_venda():
+        while True:
+            retorno: dict = GerenciadorTelas.tela_definir_quantidade_venda()
+            return retorno
+        
+    def finalizar_venda():
+        while True:
+            retorno: dict = GerenciadorTelas.tela_finalizar_venda()
+
+            match retorno["opcao"]:
+                case "1": # Confirmar e Finalizar
+                    return True
+                    
+                case "2": # Voltar
+                    return
+                
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+
+            return retorno
+        
+    def venda_finalizada():
+        while True:
+            retorno: dict = GerenciadorTelas.tela_venda_finalizada()
+            return retorno

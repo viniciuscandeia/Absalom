@@ -60,11 +60,26 @@ def criar_tabela():
         )
     """
 
+    comando_sql_vendas = """
+    CREATE TABLE IF NOT EXISTS vendas (
+        id INT PRIMARY KEY,
+        id_loja INT NOT NULL,
+        id_vendedor INT NOT NULL,
+        id_produto INT NOT NULL,
+        quantidade INT NOT NULL,
+        preco_total FLOAT NOT NULL,
+        FOREIGN KEY (id_loja) REFERENCES loja(id),
+        FOREIGN KEY (id_vendedor) REFERENCES vendedor(id)
+        FOREIGN KEY (id_produto) REFERENCES produto(id), 
+    );
+    """
+
     # Executar os comandos SQL
     cursor.execute(comando_sql_usuarios)
     cursor.execute(comando_sql_lojas)
     cursor.execute(comando_sql_produtos)
     cursor.execute(comando_sql_notificacoes)
+    cursor.execute(comando_sql_vendas)
 
     # Commit e fechar a conexão
     conexao.commit()
