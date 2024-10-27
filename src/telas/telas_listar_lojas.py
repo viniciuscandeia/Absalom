@@ -22,8 +22,11 @@ class TelaListarLojas(TemplateTela):
 
     @classmethod
     def _listar_informacoes(cls, informacoes: dict = None):
-        for item in informacoes:
-            print(informacoes[item])
+        if informacoes:
+            for item in informacoes:
+                print(informacoes[item])
+        else:
+            print("--- Não há lojas cadastradas! ---\n")
 
     @classmethod
     def _menu(cls):
@@ -39,8 +42,11 @@ class TelaListarLojasFluxoFiltro(TemplateTela):
 
     @classmethod
     def _listar_informacoes(cls, informacoes: dict = None):
-        for item in informacoes:
-            print(informacoes[item])
+        if informacoes:
+            for item in informacoes:
+                print(informacoes[item])
+        else:
+            print("--- Não há lojas cadastradas! ---\n")
 
     @classmethod
     def _menu(cls):
