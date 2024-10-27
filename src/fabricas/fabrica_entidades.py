@@ -1,4 +1,5 @@
 from ..entidades.entidade_loja import Loja
+from ..entidades.entidade_notificacao import Notificacao
 from ..entidades.entidades_usuarios import Usuario
 from ..entidades.entidade import Entidade
 
@@ -36,6 +37,12 @@ class FabricaEntidades:
             nome=dados["nome"],
             endereco=dados["endereco"],
         ),
+        "notificacao": lambda dados: Notificacao(
+            id_=dados["id"],
+            mensagem=dados["mensagem"],
+            from_user_id=dados["from_user_id"],
+            to_loja_id=dados["to_loja_id"],
+        )
     }
 
     @staticmethod
