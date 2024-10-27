@@ -20,6 +20,11 @@ from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
 from ..telas.telas_login import TelaLogin
+from src.command import *
+from src.fabricas import *
+from src.services import *
+from src.telas.gerenciador_telas import GerenciadorTelas
+from src.telas.telas_login import TelaLogin
 
 
 # * Possível uso do Observer para ficar analisando alguma mudança no banco de dados

@@ -1,8 +1,4 @@
-from ..entidades.entidade import Entidade
-from ..entidades.entidade_loja import Loja
-from ..entidades.entidade_produto import Produto
-from ..entidades.entidades_usuarios import Usuario
-
+from src.entidades import *
 
 class FabricaEntidades:
     _entidades: dict = {
