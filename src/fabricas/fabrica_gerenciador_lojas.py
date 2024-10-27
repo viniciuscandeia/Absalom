@@ -21,3 +21,4 @@ class FabricaGerenciadorLojas(FabricaAbstrata):
     def criar(self, tipo: str):
         gerenciador = FabricaGerenciadorLojas._repositorios.get(tipo)
         return gerenciador
+

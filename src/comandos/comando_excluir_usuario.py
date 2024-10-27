@@ -1,4 +1,4 @@
-from src.command.command import Comando
+from src.comandos.comando import Comando
 
 
 class ExcluirUsuarioComando(Comando):

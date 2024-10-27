@@ -25,7 +25,6 @@ class FabricaGerenciadorNotificacoes(FabricaAbstrata):
         ),
     }
 
-    @staticmethod
-    def criar(cls, tipo: str):
+    def criar(self, tipo: str):
         gerenciador = FabricaGerenciadorNotificacoes._repositorios.get(tipo)
         return gerenciador

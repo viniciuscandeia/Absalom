@@ -1,3 +1,6 @@
+from ..adapter.NotificatorApi import NotificatorApi
+from ..adapter.notification.NotificatorApiSingleton import NotificatorApiSingleton
+from ..comandos.gerenciador_comandos import GerenciadorComandos
 from ..fabricas.fabrica_entidades import FabricaEntidades
 from ..fabricas.fabrica_gerenciador_lojas import FabricaGerenciadorLojas
 from ..fabricas.fabrica_gerenciador_produtos import FabricaGerenciadorProdutos
@@ -27,6 +30,7 @@ class Fachada:
         )
 
         self.autenticador = AutenticacaoUsuario(self.gerenciador_usuarios)
+        self.notificator = NotificatorApiSingleton()
         self.usuario_autenticado = None
 
         # Ao usar a RAM, não terá nenhum usuário cadastrado.
@@ -117,11 +121,19 @@ class Fachada:
                     self.gerenciar_produtos(self.usuario_autenticado.id_loja)
                 case "3":  # Realizar Venda
                     pass
-                case "4":  # Logout
+                case "4":
+                    self.visualizar_noticacoes()
+                case "5":  # Logout
                     self.usuario_autenticado = None
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
+
+    def visualizar_notificacoes(self):
+        notificacoes = GerenciadorComandos.comando_listar_notificacoes(self.usuario_autenticado.id_loja)
+
+        for notificacao in notificacoes:
+            print(notificacao)
 
     def inicial_vendedor(self):
         while True:
@@ -130,7 +142,10 @@ class Fachada:
             match retorno["opcao"]:
                 case "1":  # Realizar Venda
                     pass
-                case "2":  # Logout
+                case "2":
+                    self.visualizar_noticacoes()
+
+                case "3": # Logout
                     self.usuario_autenticado = None
                     return
                 case _:  # Opção inválida
@@ -565,7 +580,7 @@ class Fachada:
                     caretaker_loja.add_memento(originator_loja.create_memento())
                     originator_loja.set_state(loja_initial)
 
-                    self.editar_loja(caretaker_loja, originator_loja)
+                    self.editar_loja(caretaker_loja, originator_loja, self.usuario_autenticado.id_)
                     entidade = self.gerenciador_lojas.buscar(id_)
                 case "4":  # Excluir Loja
                     resultado: bool = self.excluir_loja()
@@ -714,7 +729,7 @@ class Fachada:
                     GerenciadorTelas.tela_opcao_invalida()
 
     def editar_loja(
-        self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja
+        self, caretaker_loja: CaretakerLoja, originator_loja: OriginatorLoja, id_usuario:int
     ):
         # Memento
 
@@ -742,6 +757,8 @@ class Fachada:
                         estado_atual.toDict()
                     )
                     if resultado:
+                        GerenciadorComandos.comando_enviar_notificacao(loja=estado_atual,
+                                                                       id_usuario=id_usuario)
                         return
                 case "4":  # Descartar edição
                     resultado: bool = self.editar_loja_descartar()
