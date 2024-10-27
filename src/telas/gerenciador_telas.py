@@ -91,7 +91,7 @@ from .telas_listar_usuarios import (
     TelaVisualizarUsuario,
 )
 from .telas_listar_vendas import TelaListarVendas, TelaPesquisarVenda
-from .telas_listas_produtos import (
+from .telas_listar_produtos import (
     TelaListarProdutos,
     TelaPesquisarProduto,
     TelaVisualizarProduto,
