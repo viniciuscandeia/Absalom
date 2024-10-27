@@ -2,7 +2,9 @@ from .tela_escolha_persistencia import TelaEscolhaPersistencia
 from .tela_gerenciar_lojas import TelaGerenciarLojas
 from .tela_gerenciar_produtos import TelaGerenciarProdutos
 from .tela_gerenciar_usuarios import TelaGerenciarUsuarios
+from .tela_gerenciar_vendas import TelaGerenciarVendas
 from .tela_opcao_invalida import TelaOpcaoInvalida
+from .tela_visualizar_notificacoes import TelaVisualizarNotificacoes
 from .telas_adicionar_loja import (
     TelaAdicionarLoja,
     TelaAdicionarLojaErroEndereco,
@@ -67,6 +69,7 @@ from .telas_editar_usuarios import (
 from .telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
 from .telas_excluir_produto import TelaExcluirProduto, TelaExcluirProdutoSucesso
 from .telas_excluir_usuario import TelaExcluirUsuario, TelaExcluirUsuarioSucesso
+from .telas_excluir_venda import TelaExcluirVenda, TelaExcluirVendaSucesso
 from .telas_iniciais import (
     TelaInicialAdministrador,
     TelaInicialGerente,
@@ -87,16 +90,26 @@ from .telas_listar_usuarios import (
     TelaPesquisarUsuario,
     TelaVisualizarUsuario,
 )
+from .telas_listar_vendas import TelaListarVendas, TelaPesquisarVenda
 from .telas_listar_produtos import (
     TelaListarProdutos,
     TelaPesquisarProduto,
     TelaVisualizarProduto,
 )
 from .telas_login import TelaLogin, TelaLoginErro
-
-from.telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
-from .telas_relatorios import TelaRelatorios, TelaRelatoriosPDFSucesso, TelaRelatoriosHTMLSucesso, TelaRelatoriosErro
-from .tela_visualizar_notificacoes import TelaVisualizarNotificacoes
+from .telas_realizar_venda import (
+    TelaDefinirIDProdutoVenda,
+    TelaDefinirQuantidadeVenda,
+    TelaFinalizarVenda,
+    TelaInicialVenda,
+    TelaVendaSucesso,
+)
+from .telas_relatorios import (
+    TelaRelatorios,
+    TelaRelatoriosErro,
+    TelaRelatoriosHTMLSucesso,
+    TelaRelatoriosPDFSucesso,
+)
 
 
 class GerenciadorTelas:
@@ -448,3 +461,45 @@ class GerenciadorTelas:
     @classmethod
     def tela_visualizar_notificacoes(cls, informacoes: dict) -> dict:
         return TelaVisualizarNotificacoes.tela(informacoes)
+
+    # * Vendas
+
+    @classmethod
+    def tela_gerenciar_vendas(cls) -> dict:
+        return TelaGerenciarVendas.tela()
+
+    @classmethod
+    def tela_realizar_venda(cls, informacoes: dict) -> dict:
+        return TelaInicialVenda.tela(informacoes)
+
+    @classmethod
+    def tela_definir_id_produto_venda(cls) -> dict:
+        return TelaDefinirIDProdutoVenda.tela()
+
+    @classmethod
+    def tela_definir_quantidade_produto_venda(cls, quant_disponivel: int) -> dict:
+        return TelaDefinirQuantidadeVenda.tela(quant_disponivel)
+
+    @classmethod
+    def tela_finalizar_venda(cls, informacoes: dict) -> dict:
+        return TelaFinalizarVenda.tela(informacoes)
+
+    @classmethod
+    def tela_venda_sucesso(cls) -> None:
+        TelaVendaSucesso.tela()
+
+    @classmethod
+    def tela_listar_vendas(cls, informacoes: dict) -> None:
+        TelaListarVendas.tela(informacoes)
+
+    @classmethod
+    def tela_pesquisar_venda(cls) -> dict:
+        return TelaPesquisarVenda.tela()
+
+    @classmethod
+    def tela_excluir_venda(cls) -> dict:
+        return TelaExcluirVenda.tela()
+
+    @classmethod
+    def tela_exluir_venda_sucesso(cls) -> None:
+        TelaExcluirVendaSucesso.tela()

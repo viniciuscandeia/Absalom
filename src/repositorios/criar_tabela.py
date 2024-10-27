@@ -49,15 +49,31 @@ def criar_tabela():
     );
     """
 
+    # Comando SQL para criar a tabela 'notificacoes'
     comando_sql_notificacoes = """
-        CREATE TABLE notificacoes (
-            id integer primary key  autoincrement,
-            mensagem text,
-            from_user_id integer,
-            to_loja_id integer,
-            foreign key (from_user_id) references usuarios(id),
-            foreign key (to_loja_id) references lojas(id)
-        )
+    CREATE TABLE IF NOT EXISTS notificacoes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        mensagem TEXT,
+        from_user_id INTEGER,
+        to_loja_id INTEGER,
+        FOREIGN KEY (from_user_id) REFERENCES usuarios(id),
+        FOREIGN KEY (to_loja_id) REFERENCES lojas(id)
+    );
+    """
+
+    # Comando SQL para criar a tabela 'vendas'
+    comando_sql_vendas = """
+    CREATE TABLE IF NOT EXISTS vendas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_produto INTEGER NOT NULL,
+        id_vendedor INTEGER NOT NULL,
+        id_loja INTEGER NOT NULL,
+        quantidade INTEGER NOT NULL,
+        preco_total REAL NOT NULL,
+        FOREIGN KEY (id_produto) REFERENCES produtos(id),
+        FOREIGN KEY (id_vendedor) REFERENCES usuarios(id),
+        FOREIGN KEY (id_loja) REFERENCES lojas(id)
+    );
     """
 
     # Executar os comandos SQL
@@ -65,6 +81,7 @@ def criar_tabela():
     cursor.execute(comando_sql_lojas)
     cursor.execute(comando_sql_produtos)
     cursor.execute(comando_sql_notificacoes)
+    cursor.execute(comando_sql_vendas)
 
     # Commit e fechar a conexão
     conexao.commit()
@@ -202,3 +219,4 @@ if __name__ == "__main__":
     adicionar_loja("Loja Exemplo", "Rua Exemplo, 123")
 
     adicionar_produto("Produto Exemplo", 29.99, "Descrição do produto", 10, 1)
+
