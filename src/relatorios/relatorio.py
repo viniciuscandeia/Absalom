@@ -1,5 +1,7 @@
 import datetime
 from abc import ABC, abstractmethod
+
+from src.execoes.RelatorioError import RelatorioError
 from src.repositorios.gerenciadores.gerenciador_usuarios import GerenciadorUsuarios
 
 
@@ -59,22 +61,31 @@ class Relatorio(ABC):
     def formatar_relatorio(self, data: dict):
         pass
 
+    @abstractmethod
+    def sucesso_relatorio(self):
+        pass
+
     #template method
     def gerar_relatorio(self):
-        total = self.get_total_usuarios()
-        porcentagem_adm = self.get_porcentagem_adms()
-        porcentagem_gerente = self.get_porcentagem_gerente()
-        porcentagem_vendedore = self.get_porcentagem_vendedor()
-        quantidade_gerente = self.get_total_gerente()
-        quantidade_adm = self.get_total_adm()
-        quantidade_vendedor = self.get_total_vendedor()
+        try:
+            total = self.get_total_usuarios()
+            porcentagem_adm = self.get_porcentagem_adms()
+            porcentagem_gerente = self.get_porcentagem_gerente()
+            porcentagem_vendedore = self.get_porcentagem_vendedor()
+            quantidade_gerente = self.get_total_gerente()
+            quantidade_adm = self.get_total_adm()
+            quantidade_vendedor = self.get_total_vendedor()
 
-        data_relatorio = {'total': total,
-                          'quantidade_adm': quantidade_adm,
-                          'quantidade_gerente': quantidade_gerente,
-                          'quantidade_vendedor': quantidade_vendedor,
-                          'porcentagemVendedores': porcentagem_vendedore,
-                          'porcentagemAdm': porcentagem_adm,
-                          'porcentagemGerente': porcentagem_gerente,
-                          }
-        self.formatar_relatorio(data=data_relatorio)
+            data_relatorio = {'total': total,
+                              'quantidade_adm': quantidade_adm,
+                              'quantidade_gerente': quantidade_gerente,
+                              'quantidade_vendedor': quantidade_vendedor,
+                              'porcentagemVendedores': porcentagem_vendedore,
+                              'porcentagemAdm': porcentagem_adm,
+                              'porcentagemGerente': porcentagem_gerente,
+                              }
+            self.formatar_relatorio(data=data_relatorio)
+            self.sucesso_relatorio()
+        except RelatorioError as e:
+            print('Erro ao enviar relatorio')
+

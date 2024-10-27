@@ -94,6 +94,9 @@ from .telas_listas_produtos import (
 )
 from .telas_login import TelaLogin, TelaLoginErro
 
+from.telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
+from .telas_relatorios import TelaRelatorios
+
 
 class GerenciadorTelas:
 
@@ -424,3 +427,7 @@ class GerenciadorTelas:
     @classmethod
     def tela_visualizar_produto(cls, produto) -> dict:
         return TelaVisualizarProduto.tela(produto)
+
+    @classmethod
+    def tela_relatorios(cls) -> dict:
+        return TelaRelatorios.tela()
