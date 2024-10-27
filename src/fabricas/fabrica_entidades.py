@@ -56,7 +56,6 @@ class FabricaEntidades(FabricaAbstrata):
         ),
     }
 
-    @staticmethod
-    def criar(tipo: str, dados: dict) -> Entidade:
+    def criar(self, tipo: str, dados: dict) -> Entidade:
         entidade_func = FabricaEntidades._entidades.get(tipo)
         return entidade_func(dados)

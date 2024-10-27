@@ -5,7 +5,7 @@ from src.relatorios.relatorio import Relatorio
 from src.repositorios.gerenciadores.gerenciador_usuarios import GerenciadorUsuarios
 
 
-class RelatorioHtml(Relatorio):
+class RelatorioHTML(Relatorio):
     def __init__(self, gerenciador_usuarios: GerenciadorUsuarios):
         super().__init__(gerenciador_usuarios=gerenciador_usuarios)
 
@@ -26,9 +26,9 @@ class RelatorioHtml(Relatorio):
                     background-color: #32435e;
                     font-family: 'Poppins', sans-serif;
                 }}
-                
+
                 #relatorioChart {{
-                    
+
                     height: 400px !important;
                     max-width: 100%;
                     max-height: 100%;
@@ -81,18 +81,18 @@ class RelatorioHtml(Relatorio):
                             title: {{
                                 display: true,
                                 text: 'Distribuição de Usuários',
-                                color: '#FFF' 
+                                color: '#FFF'
                             }}
                         }},
                         scales: {{
-                            x: {{  
+                            x: {{
                                 ticks: {{
-                                    color: '#FFF'  
+                                    color: '#FFF'
                                 }}
                             }},
-                            y: {{  
+                            y: {{
                                 ticks: {{
-                                    color: '#FFF' 
+                                    color: '#FFF'
                                 }}
                             }}
                         }}
@@ -111,11 +111,5 @@ class RelatorioHtml(Relatorio):
             # Escreve o conteúdo HTML em um arquivo
             with open(nome_arquivo, "w", encoding="utf-8") as file:
                 file.write(html_content)
-
-            print(f"Relatório gerado: {nome_arquivo}")
-
         except UnexpectedException as e:
             raise RelatorioError(e)
-
-    def sucesso_relatorio(self):
-        print('Relatório em HTML criado com sucesso na raiz!')

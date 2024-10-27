@@ -1,5 +1,3 @@
-from .comando_enviar_notificacao import EnviarNotificacaoComando
-from .comando_ver_notificacoes import VerNotificacoesComando
 from ..entidades.entidades_usuarios import Usuario
 from .comando_adicionar_loja import AdicionarLojaComando
 from .comando_adicionar_produto import AdicionarProdutoComando
@@ -7,10 +5,12 @@ from .comando_adicionar_usuario import AdicionarUsuarioComando
 from .comando_editar_loja import EditarLojaComando
 from .comando_editar_produto import EditarProdutoComando
 from .comando_editar_usuario import EditarUsuarioComando
+from .comando_enviar_notificacao import EnviarNotificacaoComando
 from .comando_excluir_loja import ExcluirLojaComando
 from .comando_excluir_produto import ExcluirProdutoComando
 from .comando_excluir_usuario import ExcluirUsuarioComando
 from .comando_login import ComandoLogin
+from .comando_ver_notificacoes import VerNotificacoesComando
 from .invocador import Invocador
 
 
@@ -34,8 +34,8 @@ class GerenciadorComandos:
         Invocador.executar_comando(comando)
 
     @classmethod
-    def comando_adicionar_produto(cls, gerenciador_produtos, produtos):
-        comando = AdicionarProdutoComando(gerenciador_produtos, produtos)
+    def comando_adicionar_produto(cls, gerenciador_produtos, produto):
+        comando = AdicionarProdutoComando(gerenciador_produtos, produto)
         Invocador.executar_comando(comando)
 
     @classmethod
@@ -44,7 +44,9 @@ class GerenciadorComandos:
         Invocador.executar_comando(comando)
 
     @classmethod
-    def comando_editar_loja(cls, gerenciador_lojas, id_loja: int, loja, id_usuario:int):
+    def comando_editar_loja(
+        cls, gerenciador_lojas, id_loja: int, loja, id_usuario: int
+    ):
         comando = EditarLojaComando(gerenciador_lojas, id_loja, loja, id_usuario)
         Invocador.executar_comando(comando)
 
@@ -69,7 +71,7 @@ class GerenciadorComandos:
         Invocador.executar_comando(comando)
 
     @classmethod
-    def comando_enviar_notificacao(self, loja, id_usuario:int):
+    def comando_enviar_notificacao(self, loja, id_usuario: int):
         comando = EnviarNotificacaoComando(loja=loja, id_usuario=id_usuario)
         Invocador.executar_comando(comando)
 

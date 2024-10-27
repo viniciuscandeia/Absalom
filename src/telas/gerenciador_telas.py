@@ -95,7 +95,8 @@ from .telas_listas_produtos import (
 from .telas_login import TelaLogin, TelaLoginErro
 
 from.telas_excluir_loja import TelaExcluirLoja, TelaExcluirLojaSucesso
-from .telas_relatorios import TelaRelatorios
+from .telas_relatorios import TelaRelatorios, TelaRelatoriosPDFSucesso, TelaRelatoriosHTMLSucesso, TelaRelatoriosErro
+from .tela_visualizar_notificacoes import TelaVisualizarNotificacoes
 
 
 class GerenciadorTelas:
@@ -431,3 +432,19 @@ class GerenciadorTelas:
     @classmethod
     def tela_relatorios(cls) -> dict:
         return TelaRelatorios.tela()
+
+    @classmethod
+    def tela_relatorios_pdf_sucesso(cls) -> None:
+        TelaRelatoriosPDFSucesso.tela()
+
+    @classmethod
+    def tela_relatorios_html_sucesso(cls) -> None:
+        TelaRelatoriosPDFSucesso.tela()
+
+    @classmethod
+    def tela_relatorios_erro(cls) -> None:
+        TelaRelatoriosErro.tela()
+
+    @classmethod
+    def tela_visualizar_notificacoes(cls, informacoes: dict) -> dict:
+        return TelaVisualizarNotificacoes.tela(informacoes)

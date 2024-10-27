@@ -61,10 +61,6 @@ class Relatorio(ABC):
     def formatar_relatorio(self, data: dict):
         pass
 
-    @abstractmethod
-    def sucesso_relatorio(self):
-        pass
-
     #template method
     def gerar_relatorio(self):
         try:
@@ -85,7 +81,7 @@ class Relatorio(ABC):
                               'porcentagemGerente': porcentagem_gerente,
                               }
             self.formatar_relatorio(data=data_relatorio)
-            self.sucesso_relatorio()
-        except RelatorioError as e:
-            print('Erro ao enviar relatorio')
+            return True
+        except Exception:
+            return False
 

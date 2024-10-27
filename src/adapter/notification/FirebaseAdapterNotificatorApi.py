@@ -6,8 +6,8 @@ from src.fabricas.fabrica_gerenciador_notificacoes import FabricaGerenciadorNoti
 class FirebaseAdapterNotificatorApi(NotificatorApi):
     def __init__(self):
         super().__init__()
-        self.gerenciador_notificacoes = FabricaGerenciadorNotificacoes.criar_gerenciador(
-            'firebase'
+        self.gerenciador_notificacoes = (
+            FabricaGerenciadorNotificacoes.criar_gerenciador("firebase")
         )
 
     def send(self, notificacao: Notificacao):
