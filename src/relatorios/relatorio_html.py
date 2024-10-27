@@ -1,3 +1,6 @@
+from doctest import UnexpectedException
+
+from src.execoes.RelatorioError import RelatorioError
 from src.relatorios.relatorio import Relatorio
 from src.repositorios.gerenciadores.gerenciador_usuarios import GerenciadorUsuarios
 
@@ -104,8 +107,15 @@ class RelatorioHtml(Relatorio):
         </html>
         """
 
-        # Escreve o conteúdo HTML em um arquivo
-        with open(nome_arquivo, "w", encoding="utf-8") as file:
-            file.write(html_content)
+        try:
+            # Escreve o conteúdo HTML em um arquivo
+            with open(nome_arquivo, "w", encoding="utf-8") as file:
+                file.write(html_content)
 
-        print(f"Relatório gerado: {nome_arquivo}")
+            print(f"Relatório gerado: {nome_arquivo}")
+
+        except UnexpectedException as e:
+            raise RelatorioError(e)
+
+    def sucesso_relatorio(self):
+        print('Relatório em HTML criado com sucesso na raiz!')

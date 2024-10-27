@@ -8,6 +8,8 @@ from ..fabricas.fabrica_gerenciador_usuarios import FabricaGerenciadorUsuarios
 from ..memento.caretaker import Caretaker
 from ..memento.loja.caretaker_loja import CaretakerLoja
 from ..memento.loja.originator_loja import OriginatorLoja
+from ..relatorios.relatorio_html import RelatorioHtml
+from ..relatorios.relatorio_pdf import RelatorioPdf
 from ..services.autenticacao_usuario import AutenticacaoUsuario
 from ..services.validador_informacoes import ValidadorInformacoes
 from ..telas.gerenciador_telas import GerenciadorTelas
@@ -104,7 +106,9 @@ class Fachada:
                     self.gerenciar_usuarios_como_administrador()
                 case "2":  # Gerenciar Lojas
                     self.gerenciar_lojas()
-                case "3":  # Logout
+                case "3":
+                    self.opcoes_relatorios()
+                case "4":  # Logout
                     self.usuario_autenticado = None
                     return
                 case _:  # Opção inválida
@@ -1021,6 +1025,21 @@ class Fachada:
                     self.pesquisar_entidade(repositorio, "produto")
                     repositorio: dict = self.gerenciador_produtos.listar(id_loja)
                 case "2":  # Voltar
+                    return
+                case _:  # Opção inválida
+                    GerenciadorTelas.tela_opcao_invalida()
+
+
+    def opcoes_relatorios(self):
+        while True:
+            retorno = GerenciadorTelas.tela_relatorios()
+
+            match retorno["opcao"]:
+                case "1":
+                    RelatorioHtml(self.gerenciador_usuarios).gerar_relatorio()
+                case "2":
+                    RelatorioPdf(self.gerenciador_usuarios).gerar_relatorio()
+                case "3":
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
