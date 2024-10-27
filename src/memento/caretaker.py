@@ -1,7 +1,7 @@
 from src.memento.memento import Memento
 
 
-class Caretaker:
+class  Caretaker:
     def __init__(self):
         self.mementos = []
 
