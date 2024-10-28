@@ -133,8 +133,6 @@ class Fachada:
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
 
-
-
     def inicial_vendedor(self):
         while True:
             retorno: dict = GerenciadorTelas.tela_inicial_vendedor()
@@ -149,7 +147,6 @@ class Fachada:
                     return
                 case _:  # Opção inválida
                     GerenciadorTelas.tela_opcao_invalida()
-
 
     def visualizar_notificacoes(self):
         notificacoes = GerenciadorComandos.comando_listar_notificacoes(
@@ -1051,7 +1048,7 @@ class Fachada:
 
     # * Listar produtos
 
-    def listar_produtos(self, id_loja):
+    def listar_produtos(self, id_loja: int):
         repositorio: dict = self.gerenciador_produtos.listar(id_loja)
         while True:
             retorno: dict = GerenciadorTelas.tela_listar_produtos(repositorio)
