@@ -1,6 +1,0 @@
-Para terminar o CRUD das entidades:
-
-14. Criar fluxo de realizar venda
-16. Na camada business implemente, utilizando Template Method, a geração de mais um tipo de relatórios (por exemplo, HTML e PDF). Os relatórios devem gerar estatísticas de acesso dos usuários no sistema.
-19. Implementar mais 2 (dois) padrões de projeto que ainda não foi pedido e acordo com o documento de requisitos
-
